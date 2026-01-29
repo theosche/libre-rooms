@@ -6,6 +6,7 @@ use App\Models\SystemSettings;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -364,6 +365,8 @@ class SetupController extends Controller
      */
     protected function updateEnvFile(array $values): void
     {
+        Artisan::call('config:clear');   // recharge .env
+
         $envPath = base_path('.env');
         $content = file_get_contents($envPath);
 
@@ -386,6 +389,8 @@ class SetupController extends Controller
         }
 
         file_put_contents($envPath, $content);
+
+        Artisan::call('config:cache');   // recache pour prod
     }
 
     /**
