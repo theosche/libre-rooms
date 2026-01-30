@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/owners/owner-form.js',
                 'resources/js/reservations/reservation-form.js',
                 'resources/js/rooms/room-form.js',
+                'resources/js/rooms/geocoding.js',
                 'resources/js/system-settings/system-settings-form.js',
                 'resources/js/config-test.js',
             ],
