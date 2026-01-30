@@ -133,7 +133,7 @@
 
                     <!-- Détails dépliables -->
                     <tr id="details-{{ $owner->id }}" class="details-row hidden">
-                        <td colspan="4" class="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                        <td colspan="4" class="px-6 py-4 bg-slate-50 border-t border-slate-200 w-0">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 <!-- Facturation -->
                                 <div>

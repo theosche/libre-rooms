@@ -184,7 +184,7 @@
 
                     <!-- Détails dépliables -->
                     <tr id="details-{{ $reservation->id }}" class="details-row hidden">
-                        <td colspan="8" class="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                        <td colspan="8" class="px-6 py-4 bg-slate-50 border-t border-slate-200 w-0">
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 <!-- Colonne 1: Description & Événements -->
                                 <div class="space-y-4">

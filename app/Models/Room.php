@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
+use App\Enums\CalendarViewModes;
+use App\Enums\CharterModes;
 use App\Enums\EmbedCalendarModes;
 use App\Enums\ExternalSlotProviders;
+use App\Enums\PriceModes;
 use App\Services\Settings\SettingsService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\PriceModes;
-use App\Enums\CharterModes;
-use App\Enums\CalendarViewModes;
-use App\Enums\RoomUserRoles;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Room extends Model
 {
@@ -25,6 +25,12 @@ class Room extends Model
         'name',
         'slug',
         'description',
+        'street',
+        'postal_code',
+        'city',
+        'country',
+        'latitude',
+        'longitude',
         'active',
         'is_public',
         'price_mode',
@@ -53,6 +59,8 @@ class Room extends Model
     protected $casts = [
         'active' => 'boolean',
         'is_public' => 'boolean',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
         'price_mode' => PriceModes::class,
         'use_special_discount' => 'boolean',
         'use_donation' => 'boolean',
@@ -64,15 +72,18 @@ class Room extends Model
         'disable_mailer' => 'boolean',
     ];
 
-    public function getTimezone(): string {
+    public function getTimezone(): string
+    {
         return app(SettingsService::class)->timezone(room: $this);
     }
 
-    public function getCurrency(): string {
+    public function getCurrency(): string
+    {
         return app(SettingsService::class)->currency($this->owner);
     }
 
-    public function getLocale(): string {
+    public function getLocale(): string
+    {
         return app(SettingsService::class)->locale($this->owner);
     }
 
@@ -144,21 +155,66 @@ class Room extends Model
         if ($user->owners()->where('owners.id', $this->owner_id)->exists()) {
             return true;
         }
+
         // Check if user has direct access to this room
         return $this->users()->where('users.id', $user->id)->exists();
     }
 
-    public function shortPriceRuleLabel() {
-        if (!$this->price_short || !$this->max_hours_short) {
-            return "";
+    public function shortPriceRuleLabel()
+    {
+        if (! $this->price_short || ! $this->max_hours_short) {
+            return '';
         }
-        $rules = ["≤ " . $this->max_hours_short . "h"];
+        $rules = ['≤ '.$this->max_hours_short.'h'];
         if ($this->always_short_before) {
-            $rules[] = "avant " . $this->always_short_before . "h";
+            $rules[] = 'avant '.$this->always_short_before.'h';
         }
         if ($this->always_short_after) {
-            $rules[] = "après " . $this->always_short_after . "h";
+            $rules[] = 'après '.$this->always_short_after.'h';
         }
-        return implode(", ", $rules);
+
+        return implode(', ', $rules);
+    }
+
+    /**
+     * Get the images for this room.
+     */
+    public function images(): MorphMany
+    {
+        return $this->morphMany(Image::class, 'imageable')->orderBy('order');
+    }
+
+    /**
+     * Check if the room has an address.
+     */
+    public function hasAddress(): bool
+    {
+        return $this->street && $this->city;
+    }
+
+    /**
+     * Get the formatted address.
+     */
+    public function formattedAddress(): string
+    {
+        if (! $this->hasAddress()) {
+            return '';
+        }
+
+        return sprintf(
+            '%s, %s %s, %s',
+            $this->street,
+            $this->postal_code,
+            $this->city,
+            $this->country
+        );
+    }
+
+    /**
+     * Check if the room has GPS coordinates.
+     */
+    public function hasCoordinates(): bool
+    {
+        return $this->latitude !== null && $this->longitude !== null;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\OwnerUserRoles;
 use App\Enums\ReservationStatus;
+use App\Models\Image;
 use App\Models\Owner;
 use App\Models\Room;
 use App\Models\SystemSettings;
@@ -114,7 +115,7 @@ class RoomController extends Controller
         if ($user->is_global_admin) {
             $owners = Owner::with('contact')->get();
         } else {
-            $ownerIds = $user->owners(  )->wherePivot('role', OwnerUserRoles::ADMIN->value)->pluck('owners.id');
+            $ownerIds = $user->owners()->wherePivot('role', OwnerUserRoles::ADMIN->value)->pluck('owners.id');
             $owners = Owner::with('contact')->whereIn('id', $ownerIds)->get();
         }
 
@@ -159,25 +160,34 @@ class RoomController extends Controller
         $baseSlug = $validated['slug'];
         $counter = 1;
         while (Room::where('slug', $validated['slug'])->exists()) {
-            $validated['slug'] = $baseSlug . '-' . $counter;
+            $validated['slug'] = $baseSlug.'-'.$counter;
             $counter++;
         }
 
         // Create room
         $room = Room::create($validated);
 
-        return redirect()->route('rooms.index', ['view' => 'mine'])
+        // Handle image uploads
+        $this->handleImageUploads($request, $room);
+
+        return redirect()->route('rooms.show', $room)
             ->with('success', 'La salle a été créée avec succès.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Room $room)
+    public function show(Room $room): View
     {
-        $room->load(['owner', 'discounts', 'options', 'customFields']);
+        $this->authorize('view', $room);
 
-        return response()->json($room);
+        $room->load(['owner.contact', 'discounts', 'options', 'customFields', 'images']);
+
+        $user = auth()->user();
+        $isAdmin = $user && $user->isAdminOf($room->owner);
+        $canReserve = $room->active && $room->isAccessibleBy($user);
+
+        return view('rooms.show', compact('room', 'isAdmin', 'canReserve'));
     }
 
     /**
@@ -239,15 +249,21 @@ class RoomController extends Controller
             $baseSlug = $validated['slug'];
             $counter = 1;
             while (Room::where('slug', $validated['slug'])->where('id', '!=', $room->id)->exists()) {
-                $validated['slug'] = $baseSlug . '-' . $counter;
+                $validated['slug'] = $baseSlug.'-'.$counter;
                 $counter++;
             }
         }
 
+        // Handle image removals first
+        $this->handleImageRemovals($request, $room);
+
+        // Handle new image uploads
+        $this->handleImageUploads($request, $room);
+
         // Update room
         $room->update($validated);
 
-        return redirect()->route('rooms.index', ['view' => 'mine'])
+        return redirect()->route('rooms.show', $room)
             ->with('success', 'La salle a été mise à jour avec succès.');
     }
 
@@ -288,18 +304,50 @@ class RoomController extends Controller
     }
 
     /**
-     * Display calendar for a specific room.
+     * Handle image uploads for a room.
      */
-    public function calendar(Room $room): View
+    private function handleImageUploads(Request $request, Room $room): void
     {
-        $this->authorize('view', $room);
+        if (! $request->hasFile('images')) {
+            return;
+        }
 
-        $user = auth()->user();
-        $isAdmin = $user && $user->isAdminOf($room->owner);
+        $existingCount = $room->images()->count();
+        $maxImages = 3;
 
-        return view('rooms.calendar', [
-            'room' => $room,
-            'isAdmin' => $isAdmin,
-        ]);
+        foreach ($request->file('images') as $index => $file) {
+            if ($existingCount + $index >= $maxImages) {
+                break;
+            }
+
+            $path = $file->store('rooms/'.$room->id, 'public');
+
+            $room->images()->create([
+                'path' => $path,
+                'original_name' => $file->getClientOriginalName(),
+                'order' => $existingCount + $index,
+            ]);
+        }
+    }
+
+    /**
+     * Handle image removals for a room.
+     */
+    private function handleImageRemovals(Request $request, Room $room): void
+    {
+        if (! $request->filled('remove_images')) {
+            return;
+        }
+
+        $imageIds = $request->input('remove_images', []);
+
+        $images = Image::whereIn('id', $imageIds)
+            ->where('imageable_type', Room::class)
+            ->where('imageable_id', $room->id)
+            ->get();
+
+        foreach ($images as $image) {
+            $image->delete();
+        }
     }
 }

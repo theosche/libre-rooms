@@ -240,7 +240,7 @@ class ReservationController extends Controller
         );
 
         $msg = $reservation->status === ReservationStatus::PENDING ?
-            "Nouvelle réservation créée avec succès" :
+            "Nouvelle réservation créée avec succès - en attente de validation" :
             "Nouvelle réservation confirmée avec succès";
 
 
@@ -265,7 +265,7 @@ class ReservationController extends Controller
         );
 
         $msg = $reservation->status === ReservationStatus::PENDING ?
-            "Réservation mise à jour avec succès" :
+            "Réservation mise à jour avec succès - en attente de validation" :
             "Réservation confirmée avec succès";
 
         if (auth()->check()) {

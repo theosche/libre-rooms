@@ -80,8 +80,10 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($rooms as $room)
                     <tr class="hover:bg-gray-50 cursor-pointer transition" onclick="toggleDetails({{ $room->id }})">
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                            {{ $room->name }}
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900" onclick="event.stopPropagation()">
+                            <a href="{{ route('rooms.show', $room) }}" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                {{ $room->name }}
+                            </a>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ $room->owner->contact->display_name() }}
@@ -105,8 +107,8 @@
                         @endif
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" onclick="event.stopPropagation()">
                             <div class="flex gap-3">
-                                <a href="{{ route('reservations.create', $room) }}" class="link-primary">
-                                    Réserver
+                                <a href="{{ route('rooms.show', $room) }}" class="link-primary">
+                                    Voir
                                 </a>
 
                                 @can('manageUsers', $room)
@@ -135,8 +137,18 @@
 
                     <!-- Détails dépliables -->
                     <tr id="details-{{ $room->id }}" class="details-row hidden">
-                        <td colspan="{{ $view === 'mine' ? 5 : 4 }}" class="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <td colspan="{{ $view === 'mine' ? 5 : 4 }}" class="px-6 py-4 bg-slate-50 border-t border-slate-200 w-0">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                                <!-- Adresse -->
+                                <div>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Adresse</h4>
+                                    @if($room->hasAddress())
+                                        <p class="text-sm text-slate-700">{{ $room->formattedAddress() }}</p>
+                                    @else
+                                        <p class="text-sm text-slate-400">Adresse non renseignée</p>
+                                    @endif
+                                </div>
+
                                 <!-- Charte -->
                                 <div>
                                     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Charte</h4>

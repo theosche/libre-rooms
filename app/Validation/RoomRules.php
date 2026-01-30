@@ -2,24 +2,25 @@
 
 namespace App\Validation;
 
+use App\Enums\CalendarViewModes;
+use App\Enums\CharterModes;
 use App\Enums\EmbedCalendarModes;
 use App\Enums\ExternalSlotProviders;
-use App\Enums\CalendarViewModes;
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
 use App\Enums\PriceModes;
-use App\Enums\CharterModes;
 use App\Models\Owner;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class RoomRules
 {
     public static function prepare(Request $request)
     {
         $owner = Owner::find($request->input('owner_id'));
-        if ($owner && !$owner->caldavSettings()->valid()) {
+        if ($owner && ! $owner->caldavSettings()->valid()) {
             $request->merge(['external_slot_provider' => null]);
         }
     }
+
     public static function rules(Request $request): array
     {
         $user = auth()->user();
@@ -46,6 +47,22 @@ class RoomRules
                 'max:255',
             ],
             'description' => ['nullable', 'string'],
+
+            // Address (all required)
+            'street' => ['required', 'string', 'max:255'],
+            'postal_code' => ['required', 'string', 'max:25'],
+            'city' => ['required', 'string', 'max:255'],
+            'country' => ['required', 'string', 'max:100'],
+
+            // GPS coordinates (required)
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+
+            // Images
+            'images' => ['nullable', 'array', 'max:3'],
+            'images.*' => ['image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+            'remove_images' => ['nullable', 'array'],
+            'remove_images.*' => ['integer', 'exists:images,id'],
             'active' => ['boolean'],
             'is_public' => ['boolean'],
 

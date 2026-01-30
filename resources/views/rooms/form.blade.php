@@ -3,7 +3,7 @@
 @section('title', isset($room) ? 'Modifier la salle' : 'Nouvelle salle')
 
 @section('page-script')
-    @vite(['resources/js/rooms/room-form.js'])
+    @vite(['resources/js/rooms/room-form.js', 'resources/js/rooms/geocoding.js'])
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-        <form method="POST" action="{{ isset($room) ? route('rooms.update', $room) : route('rooms.store') }}" class="styled-form">
+        <form method="POST" action="{{ isset($room) ? route('rooms.update', $room) : route('rooms.store') }}" class="styled-form" enctype="multipart/form-data">
             @csrf
             @if(isset($room))
                 @method('PUT')
@@ -89,6 +89,187 @@
                             >
                             <span>Salle active (réservable)</span>
                         </label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Adresse -->
+            <div class="form-group">
+                <h3 class="form-group-title">Adresse</h3>
+
+                <fieldset class="form-element">
+                    <div class="form-field">
+                        <label for="street" class="form-element-title">Rue <span class="text-red-500">*</span></label>
+                        <input
+                            type="text"
+                            id="street"
+                            name="street"
+                            value="{{ old('street', $room?->street) }}"
+                            required
+                        >
+                        @error('street')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-element">
+                    <div class="form-element-row">
+                        <div class="form-field">
+                            <label for="postal_code" class="form-element-title">Code postal <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                id="postal_code"
+                                name="postal_code"
+                                value="{{ old('postal_code', $room?->postal_code) }}"
+                                required
+                            >
+                            @error('postal_code')
+                                <span class="text-red-600 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-field">
+                            <label for="city" class="form-element-title">Ville <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                id="city"
+                                name="city"
+                                value="{{ old('city', $room?->city) }}"
+                                required
+                            >
+                            @error('city')
+                                <span class="text-red-600 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-element">
+                    <div class="form-field">
+                        <label for="country" class="form-element-title">Pays <span class="text-red-500">*</span></label>
+                        <input
+                            type="text"
+                            id="country"
+                            name="country"
+                            value="{{ old('country', $room?->country ?? 'Suisse') }}"
+                            required
+                        >
+                        @error('country')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Coordonnées GPS -->
+            <div class="form-group">
+                <h3 class="form-group-title">Coordonnées GPS</h3>
+
+                <fieldset class="form-element">
+                    <div class="form-element-row">
+                        <div class="form-field">
+                            <label for="latitude" class="form-element-title">Latitude <span class="text-red-500">*</span></label>
+                            <input
+                                type="number"
+                                id="latitude"
+                                name="latitude"
+                                step="0.00000001"
+                                min="-90"
+                                max="90"
+                                value="{{ old('latitude', $room?->latitude) }}"
+                                required
+                            >
+                            @error('latitude')
+                                <span class="text-red-600 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-field">
+                            <label for="longitude" class="form-element-title">Longitude <span class="text-red-500">*</span></label>
+                            <input
+                                type="number"
+                                id="longitude"
+                                name="longitude"
+                                step="0.00000001"
+                                min="-180"
+                                max="180"
+                                value="{{ old('longitude', $room?->longitude) }}"
+                                required
+                            >
+                            @error('longitude')
+                                <span class="text-red-600 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-field flex items-end">
+                            <button type="button" id="geocode-button" class="btn btn-secondary btn-inline">
+                                <span id="geocode-loading" class="hidden">
+                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </span>
+                                Rechercher
+                            </button>
+                        </div>
+                    </div>
+                    <small class="text-gray-600">Cliquez sur "Rechercher" pour obtenir les coordonnées à partir de l'adresse</small>
+                    <div id="geocode-error" class="text-red-600 text-sm mt-2 hidden"></div>
+                </fieldset>
+            </div>
+
+            <!-- Images -->
+            <div class="form-group">
+                <h3 class="form-group-title">Images</h3>
+
+                @if(isset($room) && $room->images->count() > 0)
+                    <fieldset class="form-element">
+                        <label class="form-element-title">Images existantes</label>
+                        <div class="grid grid-cols-3 gap-4 mt-2">
+                            @foreach($room->images as $image)
+                                <div class="relative group" id="image-container-{{ $image->id }}">
+                                    <img src="{{ $image->url }}" alt="{{ $image->original_name }}" class="w-full h-32 object-cover rounded-lg">
+                                    <button
+                                        type="button"
+                                        onclick="markImageForRemoval({{ $image->id }})"
+                                        class="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity ignore-styled-form"
+                                        title="Supprimer cette image"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div id="remove-images-container"></div>
+                    </fieldset>
+                @endif
+
+                <fieldset class="form-element">
+                    <div class="form-field">
+                        <label for="images" class="form-element-title">Ajouter des images</label>
+                        <input
+                            type="file"
+                            id="images"
+                            name="images[]"
+                            multiple
+                            accept="image/jpeg,image/jpg,image/png,image/webp"
+                            class="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100 cursor-pointer"
+                        >
+                        <small class="text-gray-600">Maximum 3 images au total. Formats acceptés: JPEG, PNG, WebP. Taille max: 5 Mo par image.</small>
+                        @error('images')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                        @error('images.*')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                 </fieldset>
             </div>
@@ -513,6 +694,52 @@
         if (confirm('Êtes-vous sûr de vouloir supprimer cette salle ?')) {
             document.getElementById('delete-room-form').submit();
         }
+    }
+
+    function markImageForRemoval(imageId) {
+        const container = document.getElementById('image-container-' + imageId);
+        const removeContainer = document.getElementById('remove-images-container');
+
+        if (container) {
+            // Add visual indication
+            container.classList.add('opacity-50');
+
+            // Add hidden input to mark for removal
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'remove_images[]';
+            input.value = imageId;
+            input.id = 'remove-image-input-' + imageId;
+            removeContainer.appendChild(input);
+
+            // Replace remove button with restore button
+            const button = container.querySelector('button');
+            button.onclick = function() { restoreImage(imageId); };
+            button.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
+            button.classList.remove('bg-red-600');
+            button.classList.add('bg-green-600');
+            button.title = 'Restaurer cette image';
+        }
+    }
+
+    function restoreImage(imageId) {
+        const container = document.getElementById('image-container-' + imageId);
+        const input = document.getElementById('remove-image-input-' + imageId);
+
+        if (container) {
+            container.classList.remove('opacity-50');
+        }
+        if (input) {
+            input.remove();
+        }
+
+        // Restore remove button
+        const button = container.querySelector('button');
+        button.onclick = function() { markImageForRemoval(imageId); };
+        button.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+        button.classList.remove('bg-green-600');
+        button.classList.add('bg-red-600');
+        button.title = 'Supprimer cette image';
     }
 </script>
 @endsection
