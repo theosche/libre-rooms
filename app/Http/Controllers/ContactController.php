@@ -14,21 +14,42 @@ class ContactController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * Two views available for global admins:
+     * - "mine": Contacts belonging to the user (default)
+     * - "all": All contacts in the system (global admin only)
      */
     public function index(Request $request)
     {
         $user = auth()->user();
+        $view = $request->input('view', 'mine');
 
-        // Get user's contacts with users who have access to each contact
-        $contacts = $user->contacts()
-            ->with('users')
-            ->orderBy('entity_name', 'asc')
-            ->orderBy('last_name', 'asc')
-            ->paginate(15);
+        // Only global admins can view all contacts
+        if ($view === 'all' && ! $user->is_global_admin) {
+            $view = 'mine';
+        }
+
+        if ($view === 'all') {
+            // Global admin: show all contacts
+            $contacts = Contact::with('users')
+                ->orderBy('entity_name', 'asc')
+                ->orderBy('last_name', 'asc')
+                ->paginate(15)
+                ->appends($request->except('page'));
+        } else {
+            // Regular view: user's contacts only
+            $contacts = $user->contacts()
+                ->with('users')
+                ->orderBy('entity_name', 'asc')
+                ->orderBy('last_name', 'asc')
+                ->paginate(15)
+                ->appends($request->except('page'));
+        }
 
         return view('contacts.index', [
             'contacts' => $contacts,
             'user' => $user,
+            'view' => $view,
         ]);
     }
 
@@ -76,8 +97,8 @@ class ContactController extends Controller
     {
         $user = auth()->user();
 
-        // Check if contact belongs to this user
-        if (!$user->contacts()->where('contacts.id', $contact->id)->exists()) {
+        // Global admins can edit any contact, otherwise check ownership
+        if (! $user->is_global_admin && ! $user->contacts()->where('contacts.id', $contact->id)->exists()) {
             abort(403, 'Vous n\'avez pas accès à ce contact.');
         }
 
@@ -93,8 +114,8 @@ class ContactController extends Controller
     {
         $user = auth()->user();
 
-        // Check if contact belongs to this user
-        if (!$user->contacts()->where('contacts.id', $contact->id)->exists()) {
+        // Global admins can update any contact, otherwise check ownership
+        if (! $user->is_global_admin && ! $user->contacts()->where('contacts.id', $contact->id)->exists()) {
             return redirect()->route('contacts.index')
                 ->with('error', 'Vous n\'avez pas accès à ce contact.');
         }
@@ -122,22 +143,25 @@ class ContactController extends Controller
     public function destroy(Contact $contact): RedirectResponse
     {
         $user = auth()->user();
+        $userOwnsContact = $user->contacts()->where('contacts.id', $contact->id)->exists();
 
-        // Check if contact belongs to this user
-        if (! $user->contacts()->where('contacts.id', $contact->id)->exists()) {
-            return redirect()->route('contacts.index')
+        // Global admins can delete any contact, otherwise check ownership
+        if (! $user->is_global_admin && ! $userOwnsContact) {
+            return redirect()->back()
                 ->with('error', 'Vous n\'avez pas accès à ce contact.');
         }
 
-        // Check if other users have access to this contact
-        $otherUsers = $contact->users()->where('users.id', '!=', $user->id)->exists();
+        // If user owns the contact and other users have access, just detach
+        if ($userOwnsContact) {
+            $otherUsers = $contact->users()->where('users.id', '!=', $user->id)->exists();
 
-        if ($otherUsers) {
-            // Detach only this user from the contact
-            $user->contacts()->detach($contact->id);
+            if ($otherUsers) {
+                // Detach only this user from the contact
+                $user->contacts()->detach($contact->id);
 
-            return redirect()->route('contacts.index')
-                ->with('success', 'Le contact a été retiré de votre liste.');
+                return redirect()->back()
+                    ->with('success', 'Le contact a été retiré de votre liste.');
+            }
         }
 
         // Before deleting, check for active reservations
@@ -146,7 +170,7 @@ class ContactController extends Controller
             ->exists();
 
         if ($activeReservations) {
-            return redirect()->route('contacts.index')
+            return redirect()->back()
                 ->with('error', 'Ce contact a des réservations en cours (en attente ou confirmées). Veuillez les annuler avant de supprimer le contact.');
         }
 
@@ -159,14 +183,14 @@ class ContactController extends Controller
             ->exists();
 
         if ($unpaidInvoices) {
-            return redirect()->route('contacts.index')
+            return redirect()->back()
                 ->with('error', 'Ce contact a des factures impayées. Veuillez les marquer comme payées ou les annuler avant de supprimer le contact.');
         }
 
         // Delete the contact entirely
         $contact->delete();
 
-        return redirect()->route('contacts.index')
+        return redirect()->back()
             ->with('success', 'Le contact a été supprimé définitivement.');
     }
 
@@ -177,8 +201,8 @@ class ContactController extends Controller
     {
         $currentUser = auth()->user();
 
-        // Check if contact belongs to current user
-        if (!$currentUser->contacts()->where('contacts.id', $contact->id)->exists()) {
+        // Global admins can share any contact, otherwise check ownership
+        if (! $currentUser->is_global_admin && ! $currentUser->contacts()->where('contacts.id', $contact->id)->exists()) {
             return redirect()->route('contacts.index')
                 ->with('error', 'Vous n\'avez pas accès à ce contact.');
         }
@@ -190,26 +214,26 @@ class ContactController extends Controller
         // Find the user by email
         $userToShareWith = User::where('email', $validated['email'])->first();
 
-        if (!$userToShareWith) {
-            return redirect()->route('contacts.index')
+        if (! $userToShareWith) {
+            return redirect()->back()
                 ->with('error', 'Aucun utilisateur trouvé avec cet email.');
         }
 
-        if ($userToShareWith->id === $currentUser->id) {
-            return redirect()->route('contacts.index')
+        if ($userToShareWith->id === $currentUser->id && !$currentUser->is_global_admin) {
+            return redirect()->back()
                 ->with('error', 'Vous ne pouvez pas partager un contact avec vous-même.');
         }
 
         // Check if already shared
         if ($userToShareWith->contacts()->where('contacts.id', $contact->id)->exists()) {
-            return redirect()->route('contacts.index')
+            return redirect()->back()
                 ->with('error', 'Ce contact est déjà partagé avec cet utilisateur.');
         }
 
         // Share the contact
         $userToShareWith->contacts()->attach($contact->id);
 
-        return redirect()->route('contacts.index')
+        return redirect()->back()
             ->with('success', "Le contact a été partagé avec {$userToShareWith->name}.");
     }
 }

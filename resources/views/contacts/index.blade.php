@@ -7,7 +7,14 @@
     <div class="mb-8 flex justify-between items-center">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">Contacts</h1>
-            <p class="mt-2 text-sm text-gray-600">Liste de tous vos contacts</p>
+
+            @include('contacts._submenu', ['view' => $view, 'user' => $user])
+
+            @if($view === 'all')
+                <p class="mt-2 text-sm text-gray-600">Liste de tous les contacts du système</p>
+            @else
+                <p class="mt-2 text-sm text-gray-600">Liste de tous vos contacts</p>
+            @endif
         </div>
         <a href="{{ route('contacts.create') }}" class="btn btn-primary">
             Nouveau contact
@@ -112,7 +119,10 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-700">
                             @php
-                                $otherUsers = $contact->users->where('id', '!=', $user->id);
+                                $otherUsers = $view === 'all'
+                                    ? $contact->users
+                                    : $contact->users->where('id', '!=', $user->id);
+                                $userOwnsContact = $contact->users->contains('id', $user->id);
                             @endphp
                             @if($otherUsers->count() > 0)
                                 <div class="flex flex-wrap gap-1">
@@ -123,30 +133,41 @@
                                     @endforeach
                                 </div>
                             @else
-                                <span class="text-gray-400">Vous seul·e</span>
+                                @if($view === 'all')
+                                    <span class="text-gray-400">Aucun utilisateur</span>
+                                @else
+                                    <span class="text-gray-400">Vous seul·e</span>
+                                @endif
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            @php
+                                $canManage = $userOwnsContact || $user->is_global_admin;
+                            @endphp
                             <div class="flex gap-3">
-                                <a href="#" class="link-primary" onclick="event.preventDefault(); showShareModal({{ $contact->id }}, '{{ addslashes($contact->display_name()) }}')">
-                                    Partager
-                                </a>
+                                @if($canManage)
+                                    <a href="#" class="link-primary" onclick="event.preventDefault(); showShareModal({{ $contact->id }}, '{{ addslashes($contact->display_name()) }}')">
+                                        Partager
+                                    </a>
+                                @endif
                                 <a href="{{ route('contacts.edit', $contact) }}" class="link-primary">
                                     Modifier
                                 </a>
-                                <form method="POST" action="{{ route('contacts.destroy', $contact) }}" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    @if($otherUsers->count() > 0)
-                                        <button type="submit" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir retirer ce contact de votre liste ? D\'autres utilisateurs y ont également accès, il ne sera pas supprimé définitivement.')">
-                                            Retirer
-                                        </button>
-                                    @else
-                                        <button type="submit" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce contact ? Cette action est irréversible.')">
-                                            Supprimer
-                                        </button>
-                                    @endif
-                                </form>
+                                @if($canManage)
+                                    <form method="POST" action="{{ route('contacts.destroy', $contact) }}" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        @if($userOwnsContact && $contact->users->where('id', '!=', $user->id)->count() > 0)
+                                            <button type="submit" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir retirer ce contact de votre liste ? D\'autres utilisateurs y ont également accès, il ne sera pas supprimé définitivement.')">
+                                                Retirer
+                                            </button>
+                                        @else
+                                            <button type="submit" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce contact ? Cette action est irréversible.')">
+                                                Supprimer
+                                            </button>
+                                        @endif
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

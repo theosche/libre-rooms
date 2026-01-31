@@ -236,7 +236,7 @@ a {
     font-size: 0.95rem;
 }
 
-.styled-form button:not(.ignore-styled-form), .styled-form a.btn:not(.ignore-styled-form) {
+.styled-form button:not(.ignore-styled-form,.fc-button), .styled-form a.btn:not(.ignore-styled-form,.fc-button) {
     color: white;
     padding: 1rem 2rem;
     border: none;
