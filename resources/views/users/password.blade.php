@@ -4,11 +4,11 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">
+    <div class="form-header">
+        <h1 class="form-title">
             {{ $user->password ? 'Modifier le mot de passe' : 'Définir un mot de passe' }}
         </h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <p class="form-subtitle">
             @if($user->password)
                 Choisissez un nouveau mot de passe sécurisé pour votre compte.
             @else

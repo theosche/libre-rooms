@@ -42,7 +42,7 @@ class EnsureSetupComplete
      */
     protected function isDatabaseConfigured(): bool
     {
-        return filter_var(env('DB_CONFIGURED', false), FILTER_VALIDATE_BOOLEAN);
+        return \App\Http\Controllers\SetupController::isDatabaseConfigured();
     }
 
     /**

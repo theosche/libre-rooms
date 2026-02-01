@@ -11,8 +11,8 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">
+    <div class="form-header">
+        <h1 class="form-title">
             {{ isset($owner) ? 'Modifier le propriétaire' : 'Nouveau propriétaire' }}
         </h1>
     </div>

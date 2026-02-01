@@ -4,9 +4,11 @@
 
 @section('content')
 <div class="auth-container container-full-form" style="max-width: 600px;">
-    <div class="form-header">
-        <h1 class="form-title">Configuration de l'environnement</h1>
-        <p class="form-subtitle">Configurez les paramètres de base de l'application</p>
+
+    <div class="page-header">
+        <h1 class="page-header-title">Réglages système</h1>
+        @includeWhen(\App\Http\Controllers\SetupController::isDatabaseConfigured(), 'system-settings._submenu')
+        <p class="mt-2 text-sm text-gray-600">Configurez l'environnement de base de l'application</p>
     </div>
 
     @if($dbConnected === true)

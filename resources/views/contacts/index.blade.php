@@ -46,13 +46,9 @@
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-4 py-3">
                             @if($contact->type->value === 'individual')
-                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Privé·e">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
+                                <i class="fa-regular fa-user"></i>
                             @else
-                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Organisation">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                                </svg>
+                                <i class="fa-regular fa-building"></i>
                             @endif
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-900">
@@ -66,31 +62,22 @@
                             <div class="grid grid-cols-2 items-center gap-2">
                                 @if($contact->email)
                                     <a href="mailto:{{ $contact->email }}" class="text-blue-600 hover:text-blue-800" title="Email: {{ $contact->email }}">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                        </svg>
+                                        <i class="fa-regular fa-envelope"></i>
                                     </a>
                                 @endif
                                 @if($contact->invoice_email)
                                     <a href="mailto:{{ $contact->invoice_email }}" class="text-green-600 hover:text-green-800" title="Email facturation: {{ $contact->invoice_email }}">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                        </svg>
+                                        <i class="fa-regular fa-file-lines"></i>
                                     </a>
                                 @endif
                                 @if($contact->phone)
                                     <a href="tel:{{ $contact->phone }}" class="text-blue-600 hover:text-blue-800" title="Téléphone: {{ $contact->phone }}">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                                        </svg>
+                                        <x-icons.phone/>
                                     </a>
                                 @endif
                                 @if($contact->street || $contact->zip || $contact->city)
                                     <span class="tooltip-container">
-                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        </svg>
+                                        <x-icons.location-dot/>
                                         <span class="tooltip-content">
                                             @if($contact->street){!! nl2br(e($contact->street)) !!}<br>@endif
                                             {{ $contact->zip }} {{ $contact->city }}

@@ -4,9 +4,9 @@
 
 @section('content')
     <div class="max-w-4xl mx-auto py-6">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Mon profil</h1>
-            <p class="mt-2 text-sm text-gray-600">Gérez vos informations personnelles</p>
+        <div class="form-header">
+            <h1 class="form-title">Mon profil</h1>
+            <p class="form-subtitle">Gérez vos informations personnelles</p>
         </div>
 
         @if(!$user->email_verified_at)

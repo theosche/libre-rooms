@@ -4,11 +4,10 @@
 
 @section('content')
 <div class="auth-container container-full-form">
-    <h1>Mot de passe oublié ?</h1>
-
-    <p class="text-gray-600 text-center mb-6">
-        Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
-    </p>
+    <div class="form-header">
+        <h1 class="form-title">Mot de passe oublié ?</h1>
+        <p class="form-subtitle">Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+    </div>
 
     <form method="POST" action="{{ route('password.email') }}" class="styled-form">
         @csrf

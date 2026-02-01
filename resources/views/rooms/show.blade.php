@@ -5,8 +5,8 @@
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="text-3xl font-bold text-gray-900">{{ $room->name }}</h1>
-        <p class="mt-1 text-sm text-gray-600">
+        <h1 class="page-header-title">{{ $room->name }}</h1>
+        <p class="mt-2 text-sm text-gray-600">
             {{ $room->owner->contact->display_name() }}
         </p>
         <nav class="page-submenu">

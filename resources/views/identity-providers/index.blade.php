@@ -4,18 +4,10 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Réglages système</h1>
-                <p class="mt-2 text-sm text-gray-600">Gestion des fournisseurs d'identité (OIDC)</p>
-            </div>
-            <a href="{{ route('identity-providers.create') }}" class="btn btn-primary">
-                Nouveau fournisseur d'identité
-            </a>
-        </div>
-
+    <div class="page-header">
+        <h1 class="page-header-title">Réglages système</h1>
         @include('system-settings._submenu')
+        <p class="mt-2 text-sm text-gray-600">Gestion des fournisseurs d'identité (OIDC)</p>
     </div>
 
     <!-- Tableau des fournisseurs d'identité -->

@@ -4,19 +4,18 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
-    <div class="mb-8">
-            @if(request()->routeIs('profile'))
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-gray-900">Mon profil</h1>
-                    <p class="mt-2 text-sm text-gray-600">Gérez vos informations personnelles</p>
-                </div>
-            @else
-                <h1 class="text-3xl font-bold text-gray-900">
-                    {{ isset($user) ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur' }}
-                </h1>
-            @endif
-
-    </div>
+    @if(request()->routeIs('profile'))
+        <div class="form-header">
+            <h1 class="form-title">Mon profil</h1>
+            <p class="form-subtitle">Gérez vos informations personnelles</p>
+        </div>
+    @else
+        <div class="form-header">
+            <h1 class="form-title">
+                {{ isset($user) ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur' }}
+            </h1>
+        </div>
+    @endif
 
     <div class="bg-white rounded-lg shadow p-6">
         <form id="user-form" method="POST" action="{{ isset($user) ? route('users.update', $user) : route('users.store') }}" class="styled-form">

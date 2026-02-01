@@ -4,7 +4,9 @@
 
 @section('content')
 <div class="auth-container container-full-form">
-    <h1>Inscription</h1>
+    <div class="form-header">
+        <h1 class="form-title">Inscription</h1>
+    </div>
 
     @if($errors->any())
         <div class="error-messages">

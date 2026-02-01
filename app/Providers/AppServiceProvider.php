@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(SystemSettings::class, function () {
             // Don't query database if not yet configured
-            if (! filter_var(env('DB_CONFIGURED', false), FILTER_VALIDATE_BOOLEAN)) {
+            if (! \App\Http\Controllers\SetupController::isDatabaseConfigured()) {
                 return null;
             }
 

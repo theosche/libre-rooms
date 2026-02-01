@@ -11,11 +11,10 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Réglages système</h1>
-        <p class="mt-2 text-sm text-gray-600">Configuration globale de l'application</p>
-
+    <div class="page-header">
+        <h1 class="page-header-title">Réglages système</h1>
         @include('system-settings._submenu')
+        <p class="mt-2 text-sm text-gray-600">Configuration globale de l'application</p>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">

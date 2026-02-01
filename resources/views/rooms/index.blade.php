@@ -62,17 +62,22 @@
                             Statut
                         </th>
                     @endif
-                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                    </th>
+                    @if(auth()->user()?->canManageAnyOwner())
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    @endif
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($rooms as $room)
                     <tr class="hover:bg-gray-50 cursor-pointer transition" onclick="toggleDetails({{ $room->id }})">
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900" onclick="event.stopPropagation()">
-                            <a href="{{ route('rooms.show', $room) }}" class="text-blue-600 hover:text-blue-800 hover:underline">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
+                            <a href="{{ route('rooms.show', $room) }}" onclick="event.stopPropagation()" class="room-name-link">
                                 {{ $room->name }}
+                                <svg class="room-name-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
                             </a>
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-900">
@@ -95,39 +100,42 @@
                                 </div>
                             </td>
                         @endif
-                        <td class="px-4 py-3 text-sm font-medium" onclick="event.stopPropagation()">
-                            <div class="action-group">
-                                <a href="{{ route('rooms.show', $room) }}" class="link-primary">
-                                    Voir
-                                </a>
+                        @if(auth()->user()?->canManageAnyOwner())
+                            <td class="px-4 py-3 text-sm font-medium">
+                                <div class="action-group" onclick="event.stopPropagation()">
+                                    @can('manageUsers', $room)
+                                        <a href="{{ route('rooms.users.index', $room) }}" class="link-primary">
+                                            Utilisateurs
+                                        </a>
+                                    @endcan
 
-                                @can('manageUsers', $room)
-                                    <a href="{{ route('rooms.users.index', $room) }}" class="link-primary">
-                                        Utilisateurs
-                                    </a>
-                                @endcan
+                                    @can('update', $room)
+                                        <a href="{{ route('rooms.edit', $room) }}" class="link-primary">
+                                            Modifier
+                                        </a>
 
-                                @can('update', $room)
-                                    <a href="{{ route('rooms.edit', $room) }}" class="link-primary">
-                                        Modifier
-                                    </a>
-
-                                    <form action="{{ route('rooms.destroy', $room) }}" method="POST"
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ? Cette action est irréversible.');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="link-danger">
-                                            Supprimer
-                                        </button>
-                                    </form>
-                                @endcan
-                            </div>
-                        </td>
+                                        <form action="{{ route('rooms.destroy', $room) }}" method="POST"
+                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ? Cette action est irréversible.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="link-danger">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    @endcan
+                                </div>
+                            </td>
+                        @endif
                     </tr>
 
                     <!-- Détails dépliables -->
+                    @php
+                        $colspan = 3; // Nom, Propriétaire, Description
+                        if ($view === 'mine') $colspan++; // Statut
+                        if (auth()->user()?->canManageAnyOwner()) $colspan++; // Actions
+                    @endphp
                     <tr id="details-{{ $room->id }}" class="details-row hidden">
-                        <td colspan="{{ $view === 'mine' ? 5 : 4 }}" class="px-6 py-4 bg-slate-50 border-t border-slate-200 w-0">
+                        <td colspan="{{ $colspan }}" class="px-4 py-3 bg-slate-50 border-t border-slate-200 w-0">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                                 <!-- Adresse -->
                                 <div>
@@ -247,8 +255,13 @@
                         </td>
                     </tr>
                 @empty
+                    @php
+                        $emptyColspan = 3;
+                        if ($view === 'mine') $emptyColspan++;
+                        if (auth()->user()?->canManageAnyOwner()) $emptyColspan++;
+                    @endphp
                     <tr>
-                        <td colspan="{{ $view === 'mine' ? 5 : 4 }}" class="px-6 py-4 text-center text-gray-500">
+                        <td colspan="{{ $emptyColspan }}" class="px-4 py-3 text-center text-gray-500">
                             Aucune salle trouvée
                         </td>
                     </tr>

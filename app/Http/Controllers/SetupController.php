@@ -18,7 +18,7 @@ class SetupController extends Controller
     /**
      * Check if database is configured via .env flag.
      */
-    protected function isDatabaseConfigured(): bool
+    public static function isDatabaseConfigured(): bool
     {
         return filter_var(env('DB_CONFIGURED', false), FILTER_VALIDATE_BOOLEAN);
     }

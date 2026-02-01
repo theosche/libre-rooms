@@ -5,8 +5,10 @@
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
 <div class="auth-container container-full-form">
-    <h1>Confirmer votre identité</h1>
-    <p class="text-gray-600 mb-6 text-center">Pour des raisons de sécurité, veuillez confirmer votre identité avant de continuer.</p>
+    <div class="form-header">
+        <h1 class="form-title">Confirmer votre identité</h1>
+        <p class="form-subtitle">Pour des raisons de sécurité, veuillez confirmer votre identité avant de continuer.</p>
+    </div>
 
     @if(session('error'))
         <div class="error-messages">

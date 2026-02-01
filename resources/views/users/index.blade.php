@@ -11,7 +11,7 @@
                 + Nouvel utilisateur
             </a>
         </nav>
-        <p class="mt-2 text-sm text-gray-600">{{ $users->total() }} utilisateur(s) au total</p>
+        <p class="mt-2 text-sm text-gray-600">{{ $users->total() }} {{ $users->total() > 1 ? 'utilisateurs' : 'utilisateur' }} au total</p>
     </div>
 
     <!-- Filtres -->

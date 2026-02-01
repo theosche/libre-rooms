@@ -4,7 +4,9 @@
 
 @section('content')
 <div class="auth-container container-full-form">
-    <h1>Réinitialiser le mot de passe</h1>
+    <div class="form-header">
+        <h1 class="form-title">Réinitialiser le mot de passe</h1>
+    </div>
 
     @if($errors->any())
         <div class="error-messages">
