@@ -17,6 +17,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
+
+            $table->string('street');
+            $table->string('postal_code', 10);
+            $table->string('city');
+            $table->string('country', 100);
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 10, 8);
             $table->boolean('active')->default(true);
             $table->boolean('is_public')->default(true);
 
