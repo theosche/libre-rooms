@@ -62,7 +62,7 @@
                             Statut
                         </th>
                     @endif
-                    @if(auth()->user()?->canManageAnyOwner())
+                    @if($user?->canManageAnyOwner())
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Actions
                         </th>
@@ -81,7 +81,13 @@
                             </a>
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-900">
-                            {{ $room->owner->contact->display_name() }}
+                            @if($user?->isAdminOf($room->owner))
+                                <a href="{{ route('owners.edit', $room->owner) }}" onclick="event.stopPropagation()">
+                                    {{ $room->owner->contact->display_name() }}
+                                </a>
+                            @else
+                                {{ $room->owner->contact->display_name() }}
+                            @endif
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-700 hide-on-mobile">
                             {{ Str::limit($room->description, 100) }}
@@ -190,6 +196,9 @@
                                     @if($room->discounts->where('active', true)->count() > 0)
                                         <div class="mt-3 space-y-1">
                                             @foreach($room->discounts->where('active', true) as $discount)
+                                                @if($user?->isAdminOf($room->owner))
+                                                    <a href="{{ route('room-discounts.edit', $discount) }}">
+                                                @endif
                                                 <div class="flex items-center gap-2 text-sm">
                                                     <span class="text-green-600 font-medium">
                                                         @if($discount->type->value === 'fixed')
@@ -203,6 +212,9 @@
                                                         <span class="text-slate-400 text-xs">({{ $discount->limit_to_contact_type->value === 'individual' ? 'Privé' : 'Org.' }})</span>
                                                     @endif
                                                 </div>
+                                                @if($user?->isAdminOf($room->owner))
+                                                    </a>
+                                                @endif
                                             @endforeach
                                         </div>
                                     @endif
@@ -236,6 +248,9 @@
                                     @if($room->options->where('active', true)->count() > 0)
                                         <div class="space-y-2">
                                             @foreach($room->options->where('active', true) as $option)
+                                                @if($user?->isAdminOf($room->owner))
+                                                    <a href="{{ route('room-options.edit', $option) }}">
+                                                @endif
                                                 <div class="bg-white rounded-lg border border-slate-200 p-2">
                                                     <div class="flex justify-between items-start">
                                                         <span class="text-sm text-slate-700">{{ $option->name }}</span>
@@ -245,6 +260,9 @@
                                                         <p class="text-xs text-slate-500 mt-1">{{ $option->description }}</p>
                                                     @endif
                                                 </div>
+                                                @if($user?->isAdminOf($room->owner))
+                                                    </a>
+                                                @endif
                                             @endforeach
                                         </div>
                                     @else
@@ -258,7 +276,7 @@
                     @php
                         $emptyColspan = 3;
                         if ($view === 'mine') $emptyColspan++;
-                        if (auth()->user()?->canManageAnyOwner()) $emptyColspan++;
+                        if ($user?->canManageAnyOwner()) $emptyColspan++;
                     @endphp
                     <tr>
                         <td colspan="{{ $emptyColspan }}" class="px-4 py-3 text-center text-gray-500">

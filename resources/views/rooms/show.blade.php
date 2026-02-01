@@ -87,6 +87,21 @@
                 @endif
                 @include('rooms._calendar', ['room' => $room])
             </div>
+
+            <!-- Admin actions -->
+            @if($isAdmin)
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-yellow-800 mb-4">Administration</h3>
+                    <div class="space-y-2">
+                        <a href="{{ route('rooms.edit', $room) }}" class="block w-full btn btn-secondary text-center">
+                            Modifier la salle
+                        </a>
+                        <a href="{{ route('rooms.users.index', $room) }}" class="block w-full btn btn-secondary text-center">
+                            Gérer les utilisateurs
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
 
         <!-- Sidebar -->
@@ -142,7 +157,13 @@
                             @foreach($room->discounts->where('active', true) as $discount)
                                 <div class="flex items-center justify-between text-sm">
                                     <span class="text-gray-600">
-                                        {{ $discount->name }}
+                                        @if($isAdmin)
+                                            <a href="{{ route('room-discounts.edit', $discount) }}">
+                                                {{ $discount->name }}
+                                            </a>
+                                        @else
+                                            {{ $discount->name }}
+                                        @endif
                                         @if($discount->limit_to_contact_type)
                                             <span class="text-gray-400 text-xs">({{ $discount->limit_to_contact_type->value === 'individual' ? 'Privé' : 'Org.' }})</span>
                                         @endif
@@ -183,12 +204,54 @@
                 </div>
             @endif
 
+            <!-- Owner info -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Propriétaire</h3>
+                <div class="space-y-3">
+                    @if ($user?->isAdminOf($room->owner))
+                        <a href="{{ route('owners.edit', $room->owner) }}">
+                            <p class="text-sm font-medium mb-2 text-gray-900">{{ $room->owner->contact->display_name() }}</p>
+                        </a>
+                    @else
+                        <p class="text-sm font-medium mb-2 text-gray-900">{{ $room->owner->contact->display_name() }}</p>
+                    @endif
+
+                    @if($room->owner->contact->email)
+                        <a href="mailto:{{ $room->owner->contact->email }}" class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
+                            <i class='fa-regular fa-envelope'></i>
+                            {{ $room->owner->contact->email }}
+                        </a>
+                    @endif
+
+                    @if($room->owner->contact->phone)
+                        <a href="tel:{{ $room->owner->contact->phone }}" class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
+                            <x-icons.phone />
+                            {{ $room->owner->contact->phone }}
+                        </a>
+                    @endif
+
+                    @if($room->owner->website)
+                        <a
+                            href="{{ $room->owner->website }}"
+                            target="_blank"
+                            class="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm text-white font-medium transition"
+                        >
+                            <i class='fa-solid fa-link'></i>
+                            Visiter le site
+                        </a>
+                    @endif
+                </div>
+            </div>
+
             <!-- Options -->
             @if($room->options->where('active', true)->count() > 0)
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Options</h3>
                     <div class="space-y-3">
                         @foreach($room->options->where('active', true) as $option)
+                            @if($isAdmin)
+                                <a href="{{ route('room-options.edit', $option) }}">
+                            @endif
                             <div class="border border-gray-200 rounded-lg p-3">
                                 <div class="flex justify-between items-start">
                                     <span class="text-sm font-medium text-gray-900">{{ $option->name }}</span>
@@ -198,6 +261,9 @@
                                     <p class="text-xs text-gray-500 mt-1">{{ $option->description }}</p>
                                 @endif
                             </div>
+                            @if($isAdmin)
+                                </a>
+                            @endif
                         @endforeach
                     </div>
                 </div>
@@ -221,21 +287,6 @@
                             </div>
                         @endif
                     </dl>
-                </div>
-            @endif
-
-            <!-- Admin actions -->
-            @if($isAdmin)
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-yellow-800 mb-4">Administration</h3>
-                    <div class="space-y-2">
-                        <a href="{{ route('rooms.edit', $room) }}" class="block w-full btn btn-secondary text-center">
-                            Modifier la salle
-                        </a>
-                        <a href="{{ route('rooms.users.index', $room) }}" class="block w-full btn btn-secondary text-center">
-                            Gérer les utilisateurs
-                        </a>
-                    </div>
                 </div>
             @endif
         </div>

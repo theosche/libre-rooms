@@ -114,11 +114,19 @@
                             #{{ $reservation->id }}
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-900">
-                            {{ $reservation->room->name }}
+                            <a href="{{ route('rooms.show', $reservation->room) }}" onclick="event.stopPropagation()">
+                                {{ $reservation->room->name }}
+                            </a>
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-900">
                             <div class="contact-info">
-                                <span class="contact-info-name">{{ $reservation->tenant->display_name() }}</span>
+                                @if ($user->canAccessContact($reservation->tenant))
+                                    <a href="{{ route('contacts.edit', $reservation->tenant) }}" onclick="event.stopPropagation()">
+                                        <span class="contact-info-name">{{ $reservation->tenant->display_name() }}</span>
+                                    </a>
+                                @else
+                                    <span class="contact-info-name">{{ $reservation->tenant->display_name() }}</span>
+                                @endif
                                 <div class="contact-info-icons" onclick="event.stopPropagation()">
                                     @if($reservation->tenant->phone)
                                         <a href="tel:{{ $reservation->tenant->phone }}" title="{{ $reservation->tenant->phone }}">

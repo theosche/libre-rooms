@@ -2,12 +2,12 @@
 
 namespace App\Validation;
 
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
 use App\Enums\InvoiceDueModes;
 use App\Enums\LateInvoicesReminderFrequency;
-use App\Services\Settings\SettingsService;
 use App\Models\Owner;
+use App\Services\Settings\SettingsService;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class OwnerRules
 {
@@ -17,24 +17,24 @@ class OwnerRules
             $request->merge([
                 'mail_host' => null,
                 'mail_port' => null,
-                'mail'      => null,
+                'mail' => null,
                 'mail_pass' => null,
             ]);
         }
 
-        if (!$request->input('use_caldav') || $request->input('use_default_caldav')) {
+        if (! $request->input('use_caldav') || $request->input('use_default_caldav')) {
             $request->merge([
-                'dav_url'   => null,
-                'dav_user'  => null,
-                'dav_pass'  => null,
+                'dav_url' => null,
+                'dav_user' => null,
+                'dav_pass' => null,
             ]);
         }
 
-        if (!$request->input('use_webdav') || $request->input('use_default_webdav')) {
+        if (! $request->input('use_webdav') || $request->input('use_default_webdav')) {
             $request->merge([
-                'webdav_endpoint'  => null,
-                'webdav_user'      => null,
-                'webdav_pass'      => null,
+                'webdav_endpoint' => null,
+                'webdav_user' => null,
+                'webdav_pass' => null,
                 'webdav_save_path' => null,
             ]);
         }
@@ -71,7 +71,7 @@ class OwnerRules
         $request = request();
 
         // Check if using default configs
-        $mailFieldsRequired = !$request->input('use_default_mail');
+        $mailFieldsRequired = ! $request->input('use_default_mail');
 
         // Build contact_id validation rules
         $contactIdRules = ['required', 'integer'];
@@ -102,22 +102,23 @@ class OwnerRules
 
         $rules = [
             'contact_id' => $contactIdRules,
-            'slug'              => [
+            'slug' => [
                 'required',
                 'string',
                 'alpha_dash:ascii',
                 'max:255',
                 Rule::unique('owners', 'slug')->ignore($owner?->id),
             ],
+            'website' => ['nullable', 'url', 'max:255'],
 
             // Champs obligatoires de facturation
-            'invoice_due_mode'  => [
+            'invoice_due_mode' => [
                 'required',
                 Rule::in(array_map(fn ($case) => $case->value, InvoiceDueModes::cases())),
             ],
-            'invoice_due_days'  => ['required', 'integer', 'min:0'],
+            'invoice_due_days' => ['required', 'integer', 'min:0'],
             'invoice_due_days_after_reminder' => ['required', 'integer', 'min:0'],
-            'max_nb_reminders'  => ['required', 'integer', 'min:0'],
+            'max_nb_reminders' => ['required', 'integer', 'min:0'],
             'late_invoices_reminder' => [
                 'required',
                 Rule::in(array_map(fn ($case) => $case->value, LateInvoicesReminderFrequency::cases())),
@@ -126,18 +127,18 @@ class OwnerRules
             // Configuration email
             // If use_default_mail is checked: all fields should be nullable (using system defaults)
             // If use_default_mail is NOT checked: all fields are required
-            'mail_host'         => [
+            'mail_host' => [
                 $mailFieldsRequired ? 'required' : 'nullable',
                 'string',
                 'max:255',
             ],
-            'mail_port'         => [
+            'mail_port' => [
                 $mailFieldsRequired ? 'required' : 'nullable',
                 'integer',
                 'min:1',
                 'max:65535',
             ],
-            'mail'         => [
+            'mail' => [
                 $mailFieldsRequired ? 'required' : 'nullable',
                 'string',
                 'max:255',
@@ -146,8 +147,8 @@ class OwnerRules
 
         if ($mailFieldsRequired) {
             // Required if no password set yet (otherwise nullable to allow users to keep the same password)
-            if (!$owner?->mail_pass || !empty($request->input('mail_pass'))) {
-                $rules['webdav_pass']   = ['required', 'string', 'max:255'];
+            if (! $owner?->mail_pass || ! empty($request->input('mail_pass'))) {
+                $rules['webdav_pass'] = ['required', 'string', 'max:255'];
             }
             // Otherwise, keep password unchanged, don't include a new password in validated request
         } else {
@@ -156,13 +157,13 @@ class OwnerRules
 
         // Configuration CalDAV
         $rules['use_caldav'] = ['boolean'];
-        $caldavFieldsRequired = $request->input('use_caldav') && !$request->input('use_default_caldav');
-        $rules['dav_url']   = [$caldavFieldsRequired ? 'required' : 'nullable', 'url', 'max:255'];
-        $rules['dav_user']   = [$caldavFieldsRequired ? 'required' : 'nullable', 'string', 'max:255'];
+        $caldavFieldsRequired = $request->input('use_caldav') && ! $request->input('use_default_caldav');
+        $rules['dav_url'] = [$caldavFieldsRequired ? 'required' : 'nullable', 'url', 'max:255'];
+        $rules['dav_user'] = [$caldavFieldsRequired ? 'required' : 'nullable', 'string', 'max:255'];
         if ($caldavFieldsRequired) {
             // Required if no password set yet (otherwise nullable to allow users to keep the same password)
-            if (!$owner?->dav_pass || !empty($request->input('dav_pass'))) {
-                $rules['dav_pass']   = ['required', 'string', 'max:255'];
+            if (! $owner?->dav_pass || ! empty($request->input('dav_pass'))) {
+                $rules['dav_pass'] = ['required', 'string', 'max:255'];
             }
             // Otherwise, keep password unchanged, don't include a new password in validated request
         } else {
@@ -171,24 +172,24 @@ class OwnerRules
 
         // Configuration WebDAV
         $rules['use_webdav'] = ['boolean'];
-        $webdavFieldsRequired = $request->input('use_webdav') && !$request->input('use_default_webdav');
-        $rules['webdav_endpoint']   = [$webdavFieldsRequired ? 'required' : 'nullable', 'url', 'max:255'];
-        $rules['webdav_user']       = [$webdavFieldsRequired ? 'required' : 'nullable', 'string', 'max:255'];
+        $webdavFieldsRequired = $request->input('use_webdav') && ! $request->input('use_default_webdav');
+        $rules['webdav_endpoint'] = [$webdavFieldsRequired ? 'required' : 'nullable', 'url', 'max:255'];
+        $rules['webdav_user'] = [$webdavFieldsRequired ? 'required' : 'nullable', 'string', 'max:255'];
         if ($webdavFieldsRequired) {
             // Required if no password set yet (otherwise nullable to allow users to keep the same password)
-            if (!$owner?->webdav_pass || !empty($request->input('webdav_pass'))) {
-                $rules['webdav_pass']   = ['required', 'string', 'max:255'];
+            if (! $owner?->webdav_pass || ! empty($request->input('webdav_pass'))) {
+                $rules['webdav_pass'] = ['required', 'string', 'max:255'];
             }
             // Otherwise, keep password unchanged, don't include a new password in validated request
         } else {
             $rules['webdav_pass'] = ['nullable']; // Set to null in prepare()
         }
-        $rules['webdav_save_path']  = [$webdavFieldsRequired ? 'required' : 'nullable', 'string', 'max:255'];
+        $rules['webdav_save_path'] = [$webdavFieldsRequired ? 'required' : 'nullable', 'string', 'max:255'];
 
         // Champs optionnels - paramètres régionaux
         $rules['timezone'] = ['nullable', 'string', 'max:100'];
         $rules['currency'] = ['nullable', 'string', 'max:10'];
-        $rules['locale']   = ['nullable', 'string', 'max:10'];
+        $rules['locale'] = ['nullable', 'string', 'max:10'];
 
         // Payment instructions - validate the built array from prepare()
         $rules['payment_instructions'] = ['nullable', 'array'];

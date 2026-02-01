@@ -88,6 +88,22 @@
                         @enderror
                     </div>
                 </fieldset>
+
+                <fieldset class="form-element">
+                    <div class="form-field">
+                        <label for="website" class="form-element-title">Site internet (optionnel)</label>
+                        <input
+                            type="url"
+                            id="website"
+                            name="website"
+                            value="{{ old('website', $owner?->website) }}"
+                            placeholder="https://www.example.com"
+                        >
+                        @error('website')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </fieldset>
             </div>
 
             <!-- Paramètres de facturation -->

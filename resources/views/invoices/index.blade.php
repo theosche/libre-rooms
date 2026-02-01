@@ -103,7 +103,13 @@
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-900">
                             <div class="contact-info">
-                                <span class="contact-info-name">{{ $invoice->reservation->tenant->display_name() }}</span>
+                                @if($user->canAccessContact($invoice->reservation->tenant))
+                                    <a href="{{ route('contacts.edit', $invoice->reservation->tenant) }}" onclick="event.stopPropagation()">
+                                        <span class="contact-info-name">{{ $invoice->reservation->tenant->display_name() }}</span>
+                                    </a>
+                                @else
+                                    <span class="contact-info-name">{{ $invoice->reservation->tenant->display_name() }}</span>
+                                @endif
                                 <div class="contact-info-icons">
                                     @if($invoice->reservation->tenant->phone)
                                         <a href="tel:{{ $invoice->reservation->tenant->phone }}" onclick="event.stopPropagation()"

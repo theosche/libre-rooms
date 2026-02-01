@@ -23,6 +23,7 @@ class RoomUserController extends Controller
         return view('rooms.users.index', [
             'room' => $room,
             'roles' => RoomUserRoles::cases(),
+            'currentUser' => auth()->user(),
         ]);
     }
 

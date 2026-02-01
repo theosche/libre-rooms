@@ -84,7 +84,13 @@
                 @forelse($room->users as $user)
                     <tr>
                         <td class="px-4 py-3 text-sm font-medium text-gray-900">
-                            {{ $user->name }}
+                            @if($currentUser->canAccessUser($user))
+                                <a href="{{ route('users.edit', $user) }}" onclick="event.stopPropagation()">
+                                    {{ $user->name }}
+                                </a>
+                            @else
+                                {{ $user->name }}
+                            @endif
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-500">
                             {{ $user->email }}

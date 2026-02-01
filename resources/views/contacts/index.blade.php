@@ -99,9 +99,17 @@
                             @if($otherUsers->count() > 0)
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($otherUsers as $sharedUser)
-                                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                                            {{ $sharedUser->name }}
-                                        </span>
+                                        @if($user->canAccessUser($sharedUser))
+                                            <a href="{{ route('users.edit', $sharedUser) }}" onclick="event.stopPropagation()">
+                                                <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                                    {{ $sharedUser->name }}
+                                                </span>
+                                            </a>
+                                        @else
+                                            <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                                {{ $sharedUser->name }}
+                                            </span>
+                                        @endif
                                     @endforeach
                                 </div>
                             @else

@@ -148,15 +148,15 @@ Route::controller(OwnerController::class)->middleware(['auth', 'verified'])->gro
     Route::get('/owners', 'index')->name('owners.index');
     Route::get('/owners/create', 'create')->name('owners.create');
     Route::post('/owners', 'store')->name('owners.store');
-    Route::get('/owners/{owner}/edit', 'edit')->name('owners.edit');
-    Route::put('/owners/{owner}', 'update')->name('owners.update');
-    Route::delete('/owners/{owner}', 'destroy')->name('owners.destroy');
+    Route::get('/owners/{owner:slug}/edit', 'edit')->name('owners.edit');
+    Route::put('/owners/{owner:slug}', 'update')->name('owners.update');
+    Route::delete('/owners/{owner:slug}', 'destroy')->name('owners.destroy');
 });
 
 Route::controller(OwnerUserController::class)->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/owners/{owner}/users', 'index')->name('owners.users.index');
-    Route::post('/owners/{owner}/users', 'store')->name('owners.users.store');
-    Route::delete('/owners/{owner}/users/{user}', 'destroy')->name('owners.users.destroy');
+    Route::get('/owners/{owner:slug}/users', 'index')->name('owners.users.index');
+    Route::post('/owners/{owner:slug}/users', 'store')->name('owners.users.store');
+    Route::delete('/owners/{owner:slug}/users/{user}', 'destroy')->name('owners.users.destroy');
 });
 
 Route::controller(ContactController::class)->middleware(['auth', 'verified'])->group(function () {

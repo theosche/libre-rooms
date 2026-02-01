@@ -70,7 +70,9 @@
                 @forelse($customFields as $field)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-4 py-3 text-sm text-gray-900">
-                            {{ $field->room->name }}
+                            <a href="{{ route('rooms.show', $field->room) }}">
+                                {{ $field->room->name }}
+                            </a>
                         </td>
                         <td class="px-4 py-3 text-sm font-medium text-gray-900">
                             {{ $field->label }}

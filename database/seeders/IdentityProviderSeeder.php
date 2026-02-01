@@ -14,12 +14,12 @@ class IdentityProviderSeeder extends Seeder
     {
         IdentityProvider::create(
             [
-                'name' => env('FACTORY_NAME'),
-                'slug' => env('FACTORY_IDP_NAME'),
-                'driver' => env('FACTORY_IDP_DRIVER'),
-                'issuer_url' => env('FACTORY_IDP_ISSUER_URL'),
-                'client_id' => env('FACTORY_IDP_CLIENT_ID'),
-                'client_secret' => env('FACTORY_IDP_CLIENT_SECRET'),
+                'name' => config('seeding.idp_name'),
+                'slug' => config('seeding.idp_name'),
+                'driver' => config('seeding.idp_driver'),
+                'issuer_url' => config('seeding.idp_issuer_url'),
+                'client_id' => config('seeding.idp_client_id'),
+                'client_secret' => config('seeding.idp_client_secret'),
                 'enabled' => true,
             ]
         );

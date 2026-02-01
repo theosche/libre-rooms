@@ -12,22 +12,20 @@ class SystemSettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        SystemSettings::create(
-            [
-                'mail_host' => env('FACTORY_MAIL_HOST'),
-                'mail_port' => env('FACTORY_MAIL_PORT'),
-                'mail' => env('FACTORY_MAIL'),
-                'mail_pass' => env('FACTORY_MAIL_PASS'),
-                'dav_url' => env('FACTORY_DAV_URL'),
-                'dav_user' => env('FACTORY_DAV_USER'),
-                'dav_pass' => env('FACTORY_DAV_PASS'),
-                'webdav_user' => env('FACTORY_WEBDAV_USER'),
-                'webdav_pass' => env('FACTORY_WEBDAV_PASS'),
-                'webdav_endpoint' => env('FACTORY_WEBDAV_ENDPOINT'),
-                'webdav_save_path' => env('FACTORY_WEBDAV_SAVE_PATH'),
-                'currency' => 'CHF',
-                'locale' => 'fr-CH',
-            ]
-        );
+        SystemSettings::create([
+            'mail_host' => config('seeding.mail_host'),
+            'mail_port' => config('seeding.mail_port'),
+            'mail' => config('seeding.mail'),
+            'mail_pass' => config('seeding.mail_pass'),
+            'dav_url' => config('seeding.dav_url'),
+            'dav_user' => config('seeding.dav_user'),
+            'dav_pass' => config('seeding.dav_pass'),
+            'webdav_user' => config('seeding.webdav_user'),
+            'webdav_pass' => config('seeding.webdav_pass'),
+            'webdav_endpoint' => config('seeding.webdav_endpoint'),
+            'webdav_save_path' => config('seeding.webdav_save_path'),
+            'currency' => 'CHF',
+            'locale' => 'fr-CH',
+        ]);
     }
 }

@@ -98,7 +98,7 @@ class ContactController extends Controller
         $user = auth()->user();
 
         // Global admins can edit any contact, otherwise check ownership
-        if (! $user->is_global_admin && ! $user->contacts()->where('contacts.id', $contact->id)->exists()) {
+        if (! $user->canAccessContact($contact)) {
             abort(403, 'Vous n\'avez pas accès à ce contact.');
         }
 
@@ -115,7 +115,7 @@ class ContactController extends Controller
         $user = auth()->user();
 
         // Global admins can update any contact, otherwise check ownership
-        if (! $user->is_global_admin && ! $user->contacts()->where('contacts.id', $contact->id)->exists()) {
+        if (! $user->canAccessContact($contact)) {
             return redirect()->route('contacts.index')
                 ->with('error', 'Vous n\'avez pas accès à ce contact.');
         }
@@ -202,7 +202,7 @@ class ContactController extends Controller
         $currentUser = auth()->user();
 
         // Global admins can share any contact, otherwise check ownership
-        if (! $currentUser->is_global_admin && ! $currentUser->contacts()->where('contacts.id', $contact->id)->exists()) {
+        if (! $currentUser->canAccessContact($contact)) {
             return redirect()->route('contacts.index')
                 ->with('error', 'Vous n\'avez pas accès à ce contact.');
         }

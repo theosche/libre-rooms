@@ -25,6 +25,7 @@ class OwnerUserController extends Controller
             'owner' => $owner,
             'roles' => OwnerUserRoles::cases(),
             'isAdmin' => $currentUser->isAdminOf($owner),
+            'currentUser' => $currentUser,
         ]);
     }
 

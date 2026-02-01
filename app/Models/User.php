@@ -203,5 +203,15 @@ class User extends Authenticatable implements MustVerifyEmail
             ->get()
             ->contains(fn ($owner) => OwnerUserRoles::tryFrom($owner->pivot->role)?->hasAtLeast(OwnerUserRoles::MODERATOR));
     }
+
+    public function canAccessContact(Contact $contact): bool
+    {
+        return $this->is_global_admin || $this->contacts()->where('contacts.id', $contact->id)->exists();
+    }
+
+    public function canAccessUser(User $user): bool
+    {
+        return $this->is_global_admin;
+    }
 }
 

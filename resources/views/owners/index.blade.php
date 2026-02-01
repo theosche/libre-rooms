@@ -58,6 +58,11 @@
                                     <a href="mailto:{{ $owner->contact->email }}" class="text-blue-600 hover:text-blue-800" title="{{ $owner->contact->email }}">
                                         <i class="fa-regular fa-envelope"></i>
                                     </a>
+                                    @if($owner->website)
+                                        <a href="{{ $owner->website }}" class="text-blue-600 hover:text-blue-800" title="{{ $owner->website }}">
+                                            <i class='fa-solid fa-link'></i>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </td>
@@ -65,9 +70,9 @@
                             @if($owner->rooms->count() > 0)
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($owner->rooms as $room)
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                                        <a href="{{ route('rooms.show', $room) }}" onclick="event.stopPropagation()"><span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
                                             {{ $room->name }}
-                                        </span>
+                                        </span></a>
                                     @endforeach
                                 </div>
                             @else
@@ -87,9 +92,15 @@
                                             };
                                         @endphp
                                         <div>
-                                        <span class="px-2 py-1 {{ $badgeColor }} text-xs rounded">
-                                            {{ $adminMod->name }}
-                                        </span>
+                                        @if($user->canAccessUser($adminMod))
+                                            <a href="{{ route('users.edit', $adminMod) }}" onclick="event.stopPropagation()"><span class="px-2 py-1 {{ $badgeColor }} text-xs rounded">
+                                                {{ $adminMod->name }}
+                                            </span></a>
+                                        @else
+                                            <span class="px-2 py-1 {{ $badgeColor }} text-xs rounded">
+                                                {{ $adminMod->name }}
+                                            </span>
+                                        @endif
                                         {!! $role === \App\Enums\OwnerUserRoles::ADMIN ? '<i class="fas fa-user-lock text-sm mt-1 ml-1 mr-2"></i>' : '' !!}
                                         </div>
                                     @endforeach

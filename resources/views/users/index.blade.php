@@ -77,7 +77,9 @@
                             <div class="flex items-center">
                                 <div>
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ $user->name }}
+                                        <a href="{{ route('users.edit', $user) }}">
+                                            {{ $user->name }}
+                                        </a>
                                     </div>
                                     @if(!$user->email_verified_at)
                                         <div class="text-xs text-yellow-600">Email non vérifié</div>
@@ -109,7 +111,7 @@
                                                 };
                                             @endphp
                                             <div class="text-xs">
-                                                <span class="font-medium">{{ $owner->contact->display_name() }}</span>
+                                                <a href="{{ route('owners.edit', $owner) }}" onclick="event.stopPropagation()"><span class="font-medium">{{ $owner->contact->display_name() }}</span></a>
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $badgeColor }}">
                                                     {{ $ownerRole?->label_short() ?? $owner->pivot->role }}
                                                 </span>

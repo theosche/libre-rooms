@@ -861,13 +861,13 @@ div.container-full-form {
 
 /* Room name link with arrow */
 .room-name-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
+    display: inline;
     color: #2563eb;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s, gap 0.2s;
+    align-items: center;
+    width: 100%;
 }
 
 .room-name-link:hover {
@@ -876,9 +876,13 @@ div.container-full-form {
 }
 
 .room-name-arrow {
+    margin-right: -1.5rem;
     width: 1rem;
     height: 1rem;
     opacity: 0.7;
+    display: inline-block;
+    margin-left: 0.25rem;
+    vertical-align: middle;
     transition: opacity 0.2s, transform 0.2s;
 }
 

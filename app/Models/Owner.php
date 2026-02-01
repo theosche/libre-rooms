@@ -5,14 +5,14 @@ namespace App\Models;
 use App\DTO\CaldavSettingsDTO;
 use App\DTO\MailSettingsDTO;
 use App\DTO\WebdavSettingsDTO;
+use App\Enums\InvoiceDueModes;
+use App\Enums\LateInvoicesReminderFrequency;
 use App\Services\Settings\SettingsService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\InvoiceDueModes;
-use App\Enums\LateInvoicesReminderFrequency;
 
 class Owner extends Model
 {
@@ -21,6 +21,7 @@ class Owner extends Model
 
     protected $fillable = [
         'slug',
+        'website',
         'contact_id',
         'invoice_due_mode',
         'invoice_due_days',
@@ -65,25 +66,31 @@ class Owner extends Model
 
     public function getTimezone(): string
     {
-        return app(SettingsService::class)->timezone(org:$this);
+        return app(SettingsService::class)->timezone(org: $this);
     }
+
     public function getCurrency(): string
     {
-        return app(SettingsService::class)->currency(org:$this);
+        return app(SettingsService::class)->currency(org: $this);
     }
 
     public function getLocale(): string
     {
-        return app(SettingsService::class)->locale(org:$this);
+        return app(SettingsService::class)->locale(org: $this);
     }
-    public function mailSettings(): MailSettingsDTO {
+
+    public function mailSettings(): MailSettingsDTO
+    {
         return app(SettingsService::class)->mail($this);
     }
-    public function caldavSettings(): CaldavSettingsDTO {
+
+    public function caldavSettings(): CaldavSettingsDTO
+    {
         return app(SettingsService::class)->caldav($this);
     }
 
-    public function webdavSettings(): WebdavSettingsDTO {
+    public function webdavSettings(): WebdavSettingsDTO
+    {
         return app(SettingsService::class)->webdav($this);
     }
 
