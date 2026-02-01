@@ -47,7 +47,7 @@ class OwnerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         $this->authorize('create', Owner::class);
 
@@ -55,6 +55,10 @@ class OwnerController extends Controller
         $systemSettings = app(SystemSettings::class);
         $settingsService = app(SettingsService::class);
         $contacts = $user->is_global_admin ? Contact::all() : $user->contacts;
+
+        if ($contacts->isEmpty()) {
+            return redirect()->route('contacts.create')->with('error', 'Impossible de créer un propriétaire: les propriétaires sont associés à un contact. Vous devez d\'abord créer un contact');
+        }
 
         return view('owners.form', [
             'owner' => null,
