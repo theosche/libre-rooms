@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('owners', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique();
+            $table->string('website')->nullable();
             $table->foreignId('contact_id')->constrained()->ondelete('cascade');
 
             $table->string('invoice_due_mode');
