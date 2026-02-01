@@ -20,7 +20,7 @@ class SetupController extends Controller
      */
     public static function isDatabaseConfigured(): bool
     {
-        return filter_var(env('DB_CONFIGURED', false), FILTER_VALIDATE_BOOLEAN);
+        return (bool) config('app.db_configured');
     }
 
     /**
@@ -45,29 +45,11 @@ class SetupController extends Controller
     {
         $this->authorizeEnvironmentAccess();
 
-        // Read current values directly from .env file (not cached config)
-        $envValues = $this->parseEnvFile();
-
-        $config = [
-            'APP_URL' => $envValues['APP_URL'] ?? 'http://localhost',
-            'APP_LOCALE' => $envValues['APP_LOCALE'] ?? 'fr',
-            'DB_CONNECTION' => $envValues['DB_CONNECTION'] ?? 'sqlite',
-            'DB_HOST' => $envValues['DB_HOST'] ?? '127.0.0.1',
-            'DB_PORT' => $envValues['DB_PORT'] ?? '3306',
-            'DB_DATABASE' => $envValues['DB_DATABASE'] ?? '',
-            'DB_USERNAME' => $envValues['DB_USERNAME'] ?? '',
-            'DB_PASSWORD' => $envValues['DB_PASSWORD'] ?? '',
-        ];
-
-        // Check if database is currently connected (use actual running config)
-        $dbConnected = $this->hasDatabaseConnection();
-
         // Get error from query parameter (sessions might not work)
         $error = $request->query('error');
 
         return view('setup.environment', [
-            'config' => $config,
-            'dbConnected' => $dbConnected,
+            'db_configured' => $this->isDatabaseConfigured(),
             'locales' => $this->getAvailableLocales(),
             'dbDrivers' => $this->getAvailableDbDrivers(),
             'setupError' => $error,
@@ -165,18 +147,22 @@ class SetupController extends Controller
             return $this->redirectWithError('Erreur lors de l\'exécution des migrations : '.$e->getMessage());
         }
 
-        // Redirect to admin setup (sessions should work now)
-        return redirect()->route('setup.admin')
-            ->with('success', 'Configuration de l\'environnement enregistrée !');
+        // Redirect to admin setup (use query param because session may be disrupted by config changes)
+        return redirect()->route('setup.admin', ['setup_success' => 1]);
     }
 
     /**
      * Show the initial admin creation form.
      */
-    public function showAdminForm(): View|RedirectResponse
+    public function showAdminForm(Request $request): View|RedirectResponse
     {
+        // Convert query param back to session flash message
+        if ($request->query('setup_success')) {
+            session()->flash('success', 'Configuration de l\'environnement enregistrée !');
+        }
+
         // If a global admin already exists, redirect to home
-        if ($this->hasDatabaseConnection() && User::where('is_global_admin', true)->exists()) {
+        if ($this->isDatabaseConfigured() && User::where('is_global_admin', true)->exists()) {
             return redirect()->route('rooms.index');
         }
 
@@ -366,7 +352,8 @@ class SetupController extends Controller
         }
 
         file_put_contents($envPath, $content);
-        Artisan::call('config:clear');   // recharge .env
+        Artisan::call('config:clear');
+        Artisan::call('config:cache');
     }
 
     /**

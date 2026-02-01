@@ -7,11 +7,11 @@
 
     <div class="page-header">
         <h1 class="page-header-title">Réglages système</h1>
-        @includeWhen(\App\Http\Controllers\SetupController::isDatabaseConfigured(), 'system-settings._submenu')
+        @includeWhen( $db_configured, 'system-settings._submenu')
         <p class="mt-2 text-sm text-gray-600">Configurez l'environnement de base de l'application</p>
     </div>
 
-    @if($dbConnected === true)
+    @if( $db_configured )
         <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
             <div class="flex gap-3">
                 <svg class="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@
                         type="url"
                         id="APP_URL"
                         name="APP_URL"
-                        value="{{ old('APP_URL', !empty($config['APP_URL']) ? $config['APP_URL'] : ($protocol . "://" . $_SERVER['HTTP_HOST'])) }}"
+                        value="{{ old('APP_URL', !empty(config('app.url')) ? config('app.url') : ($protocol . "://" . $_SERVER['HTTP_HOST'])) }}"
                         required
                         placeholder="https://reservations.example.com"
                     >
@@ -70,7 +70,7 @@
                     <label for="APP_LOCALE" class="form-element-title">Langue</label>
                     <select id="APP_LOCALE" name="APP_LOCALE" required>
                         @foreach($locales as $code => $name)
-                            <option value="{{ $code }}" @selected(old('APP_LOCALE', $config['APP_LOCALE']) === $code)>
+                            <option value="{{ $code }}" @selected(old('APP_LOCALE', config('app.locale')) === $code)>
                                 {{ $name }}
                             </option>
                         @endforeach
@@ -87,7 +87,7 @@
                     <label for="DB_CONNECTION" class="form-element-title">Type de base de données</label>
                     <select id="DB_CONNECTION" name="DB_CONNECTION" required>
                         @foreach($dbDrivers as $driver => $name)
-                            <option value="{{ $driver }}" @selected(old('DB_CONNECTION', $config['DB_CONNECTION']) === $driver)>
+                            <option value="{{ $driver }}" @selected(old('DB_CONNECTION', config('database.default')) === $driver)>
                                 {{ $name }}
                             </option>
                         @endforeach
@@ -95,8 +95,10 @@
 
                 </div>
             </fieldset>
-
-            <div id="db-server-fields" class="{{ in_array(old('DB_CONNECTION', $config['DB_CONNECTION']), ['mysql', 'mariadb', 'pgsql']) ? '' : 'hidden' }}">
+            @php
+                $connection = old('DB_CONNECTION', config('database.default'));
+            @endphp
+            <div id="db-server-fields" class="{{ in_array($connection, ['mysql', 'mariadb', 'pgsql']) ? '' : 'hidden' }}">
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field" style="flex: 2;">
@@ -105,7 +107,7 @@
                                 type="text"
                                 id="DB_HOST"
                                 name="DB_HOST"
-                                value="{{ old('DB_HOST', $config['DB_HOST']) }}"
+                                value="{{ old('DB_HOST', config('database.connections')[$connection]['host']) }}"
                                 placeholder="127.0.0.1"
                             >
 
@@ -117,7 +119,7 @@
                                 type="number"
                                 id="DB_PORT"
                                 name="DB_PORT"
-                                value="{{ old('DB_PORT', $config['DB_PORT']) }}"
+                                value="{{ old('DB_PORT', config('database.connections')[$connection]['port']) }}"
                                 placeholder="3306"
                                 min="1"
                                 max="65535"
@@ -135,7 +137,7 @@
                                 type="text"
                                 id="DB_USERNAME"
                                 name="DB_USERNAME"
-                                value="{{ old('DB_USERNAME', $config['DB_USERNAME']) }}"
+                                value="{{ old('DB_USERNAME', config('database.connections')[$connection]['username']) }}"
                                 placeholder="librerooms"
                             >
 
@@ -148,7 +150,7 @@
                                 id="DB_PASSWORD"
                                 name="DB_PASSWORD"
                                 value="{{ old('DB_PASSWORD') }}"
-                                placeholder="{{ $config['DB_PASSWORD'] ? "**************" : "" }}"
+                                placeholder="{{ config('database.connections')[$connection]['password'] ? "**************" : "" }}"
                             >
 
                         </div>
@@ -165,12 +167,12 @@
                         type="text"
                         id="DB_DATABASE"
                         name="DB_DATABASE"
-                        value="{{ old('DB_DATABASE', $config['DB_DATABASE']) }}"
+                        value="{{ old('DB_DATABASE', config('database.connections')[$connection]['database']) }}"
                         required
                         placeholder="librerooms"
                     >
                     <small id="db-database-hint" class="text-gray-600">
-                        {{ in_array(old('DB_CONNECTION', $config['DB_CONNECTION']), ['mysql', 'mariadb', 'pgsql']) ? 'Le nom de la base de données existante' : 'Chemin vers le fichier SQLite (relatif à database/)' }}
+                        {{ in_array($connection, ['mysql', 'mariadb', 'pgsql']) ? 'Le nom de la base de données existante' : 'Chemin vers le fichier SQLite (relatif à database/)' }}
                     </small>
 
                 </div>
