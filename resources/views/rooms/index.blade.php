@@ -4,24 +4,14 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8">
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Salles</h1>
+    <div class="page-header">
+        <h1 class="page-header-title">Salles</h1>
 
-                @include('rooms._submenu', ['view' => $view])
+        @include('rooms._submenu', ['view' => $view])
 
-                @cannot('viewMine', App\Models\Room::class)
-                    <p class="mt-2 text-sm text-gray-600">Liste de toutes les salles disponibles à la réservation</p>
-                @endcannot
-            </div>
-
-            @can('create', App\Models\Room::class)
-                <a href="{{ route('rooms.create') }}" class="btn btn-primary">
-                    Nouvelle salle
-                </a>
-            @endcan
-        </div>
+        @cannot('viewMine', App\Models\Room::class)
+            <p class="mt-2 text-sm text-gray-600">Liste de toutes les salles disponibles à la réservation</p>
+        @endcannot
     </div>
 
     <!-- Filtres -->
@@ -58,21 +48,21 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Nom
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Propriétaire
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Description
                     </th>
                     @if($view === 'mine')
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Statut
                         </th>
                     @endif
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -80,19 +70,19 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($rooms as $room)
                     <tr class="hover:bg-gray-50 cursor-pointer transition" onclick="toggleDetails({{ $room->id }})">
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900" onclick="event.stopPropagation()">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900" onclick="event.stopPropagation()">
                             <a href="{{ route('rooms.show', $room) }}" class="text-blue-600 hover:text-blue-800 hover:underline">
                                 {{ $room->name }}
                             </a>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ $room->owner->contact->display_name() }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700 hide-on-mobile">
                             {{ Str::limit($room->description, 100) }}
                         </td>
                         @if($view === 'mine')
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3">
                                 <div class="flex gap-1 flex-wrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $room->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                         {{ $room->active ? 'Active' : 'Inactive' }}
@@ -105,8 +95,8 @@
                                 </div>
                             </td>
                         @endif
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" onclick="event.stopPropagation()">
-                            <div class="flex gap-3">
+                        <td class="px-4 py-3 text-sm font-medium" onclick="event.stopPropagation()">
+                            <div class="action-group">
                                 <a href="{{ route('rooms.show', $room) }}" class="link-primary">
                                     Voir
                                 </a>
@@ -122,7 +112,7 @@
                                         Modifier
                                     </a>
 
-                                    <form action="{{ route('rooms.destroy', $room) }}" method="POST" class="inline"
+                                    <form action="{{ route('rooms.destroy', $room) }}" method="POST"
                                           onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ? Cette action est irréversible.');">
                                         @csrf
                                         @method('DELETE')

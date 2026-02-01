@@ -4,20 +4,10 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8">
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Réductions</h1>
+    <div class="page-header">
+        <h1 class="page-header-title">Réductions</h1>
 
-                @include('rooms._submenu', ['view' => null, 'canViewMine' => $canViewMine])
-            </div>
-
-            @if($canViewMine)
-                <a href="{{ route('room-discounts.create') }}" class="btn btn-primary">
-                    Ajouter une réduction
-                </a>
-            @endif
-        </div>
+        @include('rooms._submenu', ['view' => null])
     </div>
 
     <!-- Filtres -->
@@ -53,25 +43,25 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Salle
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Nom
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Description
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Type de contact
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Type / Valeur
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Statut
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -79,16 +69,16 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($discounts as $discount)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ $discount->room->name }}
                         </td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
                             {{ $discount->name }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700 hide-on-mobile">
                             {{ Str::limit($discount->description, 50) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700">
                             <div class="flex items-center gap-2">
                                 @if($discount->limit_to_contact_type)
                                     @if($discount->limit_to_contact_type->value === 'individual')
@@ -110,20 +100,20 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             @if($discount->type->value === 'fixed')
                                 {{ currency(-$discount->value, $discount->room->owner) }}
                             @else
                                 -{{ $discount->value }}%
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $discount->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                 {{ $discount->active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-3">
+                        <td class="px-4 py-3 text-sm font-medium">
+                            <div class="action-group">
                                 <a href="{{ route('room-discounts.edit', $discount) }}" class="link-primary">
                                     Modifier
                                 </a>

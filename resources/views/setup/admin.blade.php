@@ -91,7 +91,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="btn-group justify-end mt-6">
             <button type="submit" class="btn btn-primary">
                 Créer le compte administrateur
             </button>

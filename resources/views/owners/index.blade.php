@@ -4,15 +4,15 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8 flex justify-between items-center">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">Propriétaires</h1>
-            <p class="mt-2 text-sm text-gray-600">Liste des propriétaires de salles</p>
-        </div>
+    <div class="page-header">
+        <h1 class="page-header-title">Propriétaires</h1>
+        <p class="mt-2 text-sm text-gray-600">Liste des propriétaires de salles</p>
         @can('create', App\Models\Owner::class)
-            <a href="{{ route('owners.create') }}" class="btn btn-primary">
-                Nouveau propriétaire
-            </a>
+            <nav class="page-submenu">
+                <a href="{{ route('owners.create') }}" class="page-submenu-item page-submenu-action">
+                    + Nouveau propriétaire
+                </a>
+            </nav>
         @endcan
     </div>
 
@@ -21,16 +21,16 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Nom
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Salles
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Admins et Modérateur·ice·s
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -46,24 +46,26 @@
                         $otherAdminsAndMods = $adminsAndModerators->where('id', '!=', $user->id);
                     @endphp
                     <tr class="hover:bg-gray-50 cursor-pointer transition" onclick="toggleDetails({{ $owner->id }})">
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                            <div class="flex items-center gap-2">
-                            <span>{{ $owner->contact->display_name() }}</span>
-                            @if($owner->contact->phone)
-                                <a href="tel:{{ $owner->contact->phone }}" class="text-blue-600 hover:text-blue-800" onclick="event.stopPropagation()">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                                    </svg>
-                                </a>
-                            @endif
-                            <a href="mailto:{{ $owner->contact->email }}" class="text-blue-600 hover:text-blue-800" onclick="event.stopPropagation()">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                            </a>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
+                            <div class="contact-info">
+                                <span class="contact-info-name">{{ $owner->contact->display_name() }}</span>
+                                <div class="contact-info-icons" onclick="event.stopPropagation()">
+                                    @if($owner->contact->phone)
+                                        <a href="tel:{{ $owner->contact->phone }}" class="text-blue-600 hover:text-blue-800" title="{{ $owner->contact->phone }}">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                    <a href="mailto:{{ $owner->contact->email }}" class="text-blue-600 hover:text-blue-800" title="{{ $owner->contact->email }}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700">
                             @if($owner->rooms->count() > 0)
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($owner->rooms as $room)
@@ -76,7 +78,7 @@
                                 <span class="text-gray-400">Aucune salle</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700">
                             @if($otherAdminsAndMods->count() > 0)
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($otherAdminsAndMods as $adminMod)
@@ -88,17 +90,20 @@
                                                 default => 'bg-gray-100 text-gray-700',
                                             };
                                         @endphp
+                                        <div>
                                         <span class="px-2 py-1 {{ $badgeColor }} text-xs rounded">
-                                            {{ $adminMod->name }} ({{ $role?->label() }})
+                                            {{ $adminMod->name }}
                                         </span>
+                                        {!! $role === \App\Enums\OwnerUserRoles::ADMIN ? '<i class="fas fa-user-lock text-sm mt-1 ml-1 mr-2"></i>' : '' !!}
+                                        </div>
                                     @endforeach
                                 </div>
                             @else
                                 <span class="text-gray-400">Vous seul·e</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" onclick="event.stopPropagation()">
-                            <div class="flex gap-3">
+                        <td class="px-4 py-3 text-sm font-medium" onclick="event.stopPropagation()">
+                            <div class="action-group">
                                 @can('manageUsers', $owner)
                                     <a href="{{ route('owners.users.index', $owner) }}" class="link-primary">
                                         Utilisateurs
@@ -133,8 +138,8 @@
 
                     <!-- Détails dépliables -->
                     <tr id="details-{{ $owner->id }}" class="details-row hidden">
-                        <td colspan="4" class="px-6 py-4 bg-slate-50 border-t border-slate-200 w-0">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <td colspan="4" class="px-4 py-3 bg-slate-50 border-t border-slate-200 w-0">
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                 <!-- Facturation -->
                                 <div>
                                     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Facturation</h4>
@@ -240,7 +245,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                        <td colspan="4" class="px-4 py-3 text-center text-gray-500">
                             Aucun propriétaire trouvé
                         </td>
                     </tr>

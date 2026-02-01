@@ -1,29 +1,54 @@
 @can('viewMine', App\Models\Room::class)
-    <div class="mt-4 flex gap-2 flex-wrap">
+    <nav class="page-submenu">
+        {{-- Navigation items --}}
         <a href="{{ route('rooms.index', ['view' => 'available']) }}"
-           class="px-4 py-2 rounded-md {{ request()->routeIs('rooms.index') && ($view ?? 'available') === 'available' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+           class="page-submenu-item page-submenu-nav {{ request()->routeIs('rooms.index') && ($view ?? 'available') === 'available' ? 'active' : '' }}">
             Salles disponibles
         </a>
         <a href="{{ route('rooms.index', ['view' => 'mine']) }}"
-           class="px-4 py-2 rounded-md {{ request()->routeIs('rooms.index') && ($view ?? '') === 'mine' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+           class="page-submenu-item page-submenu-nav {{ request()->routeIs('rooms.index') && ($view ?? '') === 'mine' ? 'active' : '' }}">
             Mes salles
         </a>
-        @can('create', App\Models\Room::class)
-            <!-- Separator -->
-            <span class="border-l border-gray-300 mx-2"></span>
 
+        @can('create', App\Models\Room::class)
+            {{-- Separator --}}
+            <span class="page-submenu-separator"></span>
+
+            {{-- Secondary navigation --}}
             <a href="{{ route('room-discounts.index') }}"
-               class="px-4 py-2 rounded-md {{ request()->routeIs('room-discounts.*') ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+               class="page-submenu-item page-submenu-secondary {{ request()->routeIs('room-discounts.*') ? 'active' : '' }}">
                 Réductions
             </a>
             <a href="{{ route('room-options.index') }}"
-               class="px-4 py-2 rounded-md {{ request()->routeIs('room-options.*') ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+               class="page-submenu-item page-submenu-secondary {{ request()->routeIs('room-options.*') ? 'active' : '' }}">
                 Options
             </a>
             <a href="{{ route('custom-fields.index') }}"
-               class="px-4 py-2 rounded-md {{ request()->routeIs('custom-fields.*') ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                Champs personnalisés
+               class="page-submenu-item page-submenu-secondary {{ request()->routeIs('custom-fields.*') ? 'active' : '' }}">
+                Champs perso.
             </a>
+
+            {{-- Separator --}}
+            <span class="page-submenu-separator"></span>
+
+            {{-- Action buttons --}}
+            @if(request()->routeIs('rooms.index'))
+                <a href="{{ route('rooms.create') }}" class="page-submenu-item page-submenu-action">
+                    + Nouvelle salle
+                </a>
+            @elseif(request()->routeIs('room-discounts.*'))
+                <a href="{{ route('room-discounts.create') }}" class="page-submenu-item page-submenu-action">
+                    + Ajouter réduction
+                </a>
+            @elseif(request()->routeIs('room-options.*'))
+                <a href="{{ route('room-options.create') }}" class="page-submenu-item page-submenu-action">
+                    + Ajouter option
+                </a>
+            @elseif(request()->routeIs('custom-fields.*'))
+                <a href="{{ route('custom-fields.create') }}" class="page-submenu-item page-submenu-action">
+                    + Ajouter champ
+                </a>
+            @endif
         @endcan
-    </div>
+    </nav>
 @endcan

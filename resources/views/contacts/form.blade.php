@@ -212,7 +212,7 @@
                 </fieldset>
             </div>
 
-            <div class="flex gap-3 justify-end mt-6">
+            <div class="btn-group justify-end mt-6">
                 <a href="{{ route('contacts.index') }}" class="btn btn-secondary">
                     Annuler
                 </a>

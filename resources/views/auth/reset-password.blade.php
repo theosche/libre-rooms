@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="btn-group">
             <button type="submit" class="btn btn-primary">Réinitialiser le mot de passe</button>
         </div>
     </form>

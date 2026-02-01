@@ -4,27 +4,23 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <!-- Header -->
-    <div class="mb-8">
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">{{ $room->name }}</h1>
-                <p class="mt-1 text-sm text-gray-600">
-                    {{ $room->owner->contact->display_name() }}
-                </p>
-            </div>
-
-            <div class="flex gap-3">
-                <a href="{{ route('rooms.index') }}" class="btn btn-secondary">
-                    Retour aux salles
+    <div class="page-header">
+        <h1 class="text-3xl font-bold text-gray-900">{{ $room->name }}</h1>
+        <p class="mt-1 text-sm text-gray-600">
+            {{ $room->owner->contact->display_name() }}
+        </p>
+        <nav class="page-submenu">
+            <a href="{{ route('rooms.index') }}"
+               class="page-submenu-item page-submenu-nav">
+                Retour aux salles
+            </a>
+            <span class="page-submenu-separator"></span>
+            @if($canReserve)
+                <a href="{{ route('reservations.create', $room) }}" class="page-submenu-item page-submenu-action">
+                    Réserver cette salle
                 </a>
-                @if($canReserve)
-                    <a href="{{ route('reservations.create', $room) }}" class="btn btn-primary">
-                        Réserver cette salle
-                    </a>
-                @endif
-            </div>
-        </div>
+            @endif
+        </nav>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

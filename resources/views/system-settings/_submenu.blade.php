@@ -1,14 +1,14 @@
-<div class="mt-4 flex gap-2 flex-wrap">
+<nav class="page-submenu">
     <a href="{{ route('system-settings.edit') }}"
-       class="px-4 py-2 rounded-md {{ request()->routeIs('system-settings.edit') ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+       class="page-submenu-item page-submenu-nav {{ request()->routeIs('system-settings.edit') ? 'active' : '' }}">
         Réglages généraux
     </a>
     <a href="{{ route('identity-providers.index') }}"
-       class="px-4 py-2 rounded-md {{ request()->routeIs('identity-providers.*') ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+       class="page-submenu-item page-submenu-nav {{ request()->routeIs('identity-providers.*') ? 'active' : '' }}">
         Fournisseurs d'identité
     </a>
     <a href="{{ route('setup.environment') }}"
-       class="px-4 py-2 rounded-md {{ request()->routeIs('setup.environment') ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+       class="page-submenu-item page-submenu-nav {{ request()->routeIs('setup.environment') ? 'active' : '' }}">
         Environnement (.env)
     </a>
-</div>
+</nav>

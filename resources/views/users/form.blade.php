@@ -111,7 +111,7 @@
                                             value="{{ $ownerRole->value }}"
                                             @checked($role === $ownerRole->value)
                                         >
-                                        <span class="text-sm">{{ $ownerRole->label() }}</span>
+                                        <span class="text-sm">{{ $ownerRole->label_short() }}</span>
                                     </label>
                                 @endforeach
                             </div>
@@ -120,7 +120,7 @@
                 </div>
             </div>
 
-            <div class="flex gap-3 justify-end mt-6">
+            <div class="btn-group justify-end mt-6">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">
                     Annuler
                 </a>

@@ -4,20 +4,10 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8">
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Options</h1>
+    <div class="page-header">
+        <h1 class="page-header-title">Options</h1>
 
-                @include('rooms._submenu', ['view' => null, 'canViewMine' => $canViewMine])
-            </div>
-
-            @if($canViewMine)
-                <a href="{{ route('room-options.create') }}" class="btn btn-primary">
-                    Ajouter une option
-                </a>
-            @endif
-        </div>
+        @include('rooms._submenu', ['view' => null])
     </div>
 
     <!-- Filtres -->
@@ -53,22 +43,22 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Salle
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Nom
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Description
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Prix
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Statut
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -76,25 +66,25 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($options as $option)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ $option->room->name }}
                         </td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
                             {{ $option->name }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700 hide-on-mobile">
                             {{ Str::limit($option->description, 50) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ currency($option->price, $option->room->owner) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $option->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                 {{ $option->active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-3">
+                        <td class="px-4 py-3 text-sm font-medium">
+                            <div class="action-group">
                                 <a href="{{ route('room-options.edit', $option) }}" class="link-primary">
                                     Modifier
                                 </a>

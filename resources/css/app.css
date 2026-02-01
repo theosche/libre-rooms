@@ -245,10 +245,6 @@ a {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s;
-    width: 100%;
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
 }
 .styled-form button.btn-inline, .styled-form a.btn.btn-inline {
     padding: 0.75rem 1.5rem;
@@ -258,8 +254,51 @@ a {
     transform: scale(0.98);
 }
 
+.btn-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+}
+.btn-group a, .btn-group button {
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.action-group {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    gap: 0.25rem;
+}
+@media (max-width: 1000px) {
+    .action-group {
+        grid-template-columns: 1fr;
+    }
+}
+.action-group a, .action-group button {
+    height: 100%;
+    width: 100%;
+    text-align: left;
+}
+
 .styled-form .hidden {
     display: none!important;
+}
+
+.fc-toolbar {
+    display: grid!important;
+    grid-template-columns:  repeat(3, 1fr);
+    gap: 0.75rem;
+}
+@media (max-width: 580px) {
+    .fc-toolbar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .fc-toolbar {
+        grid-template-columns: 1fr;
+    }
 }
 
 div.container-full-form {
@@ -501,6 +540,7 @@ div.container-full-form {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .nav-logo {
@@ -508,6 +548,23 @@ div.container-full-form {
     font-weight: 700;
     color: #1f2937;
     text-decoration: none;
+    z-index: 20;
+}
+
+/* Hamburger button - hidden on desktop */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 20;
+}
+
+.nav-toggle-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #374151;
 }
 
 .nav-menu {
@@ -552,11 +609,14 @@ div.container-full-form {
 /* Username */
 .nav-user {
     padding: 0.4rem 0.75rem;
-    background: #f3f4f6;
+    background: #e5e7eb;
     border-radius: 999px;
     color: #374151;
     font-size: 0.9rem;
     font-weight: 600;
+}
+.nav-user:hover {
+    background: #d1d5db;
 }
 
 /* Boutons d'action (login / register / logout) */
@@ -602,6 +662,306 @@ div.container-full-form {
 
 .nav-action.logout:hover {
     background: #fee2e2;
+}
+
+/* Mobile navigation - only for authenticated users */
+@media (max-width: 1000px) {
+    .nav {
+        padding: 1rem;
+    }
+
+    .nav-authenticated .nav-toggle {
+        display: block;
+    }
+
+    .nav-authenticated .nav-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        flex-direction: column;
+        gap: 0;
+        padding: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        z-index: 50;
+    }
+
+    .nav-authenticated .nav-menu.open {
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 0.5rem 0;
+    }
+
+    .nav-authenticated .nav-menu > * {
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem 1.5rem;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .nav-authenticated .nav-menu > *:last-child {
+        border-bottom: none;
+    }
+
+    .nav-authenticated .nav-link {
+        display: block;
+        padding: 0.75rem 1.5rem;
+        text-align: center;
+    }
+
+    .nav-authenticated .nav-menu .nav-link::after {
+        display: none;
+    }
+
+    .nav-authenticated .nav-user-link,
+    .nav-authenticated .nav-action {
+        width: 100%;
+        text-align: center;
+        display: block;
+    }
+}
+
+/* ================================
+   Page Submenu Component
+   ================================ */
+.page-submenu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    align-items: center;
+}
+
+.page-submenu-item {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+/* Navigation items (toggle between views) */
+.page-submenu-nav {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.page-submenu-nav:hover {
+    background: #d1d5db;
+}
+
+.page-submenu-nav.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* Secondary navigation items */
+.page-submenu-secondary {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.page-submenu-secondary:hover {
+    background: #d1d5db;
+}
+
+.page-submenu-secondary.active {
+    background: #059669;
+    color: white;
+}
+
+/* Action items (create buttons) */
+.page-submenu-action {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.page-submenu-action:hover {
+    background: #bfdbfe;
+}
+
+/* Separator between nav and actions */
+.page-submenu-separator {
+    width: 1px;
+    height: 1.5rem;
+    background: #d1d5db;
+    margin: 0 0.25rem;
+}
+
+/* Mobile: stack items */
+@media (max-width: 580px) {
+    .page-submenu {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-submenu-item {
+        text-align: center;
+        padding: 0.75rem 1rem;
+    }
+
+    .page-submenu-separator {
+        display: none;
+    }
+}
+
+/* ================================
+   Contact Info with Icons
+   ================================ */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.contact-info-name {
+    font-weight: 500;
+}
+
+.contact-info-icons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.contact-info-icons a {
+    color: #2563eb;
+    transition: color 0.2s;
+}
+
+.contact-info-icons a:hover {
+    color: #1d4ed8;
+}
+
+.contact-info-icons svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Tooltip for mobile-friendly address display */
+.tooltip-container {
+    position: relative;
+    display: inline-flex;
+    cursor: help;
+}
+
+.tooltip-container .tooltip-content {
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1f2937;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    min-width: 150px;
+    max-width: 250px;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 50;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-container .tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1f2937;
+}
+
+.tooltip-container:hover .tooltip-content,
+.tooltip-container:focus .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* On mobile, show tooltip on tap */
+@media (max-width: 768px) {
+    .tooltip-container:active .tooltip-content {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* ================================
+   Responsive Tables
+   ================================ */
+/* Reduce padding on mobile */
+@media (max-width: 1000px) {
+    table th,
+    table td {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    /* Even tighter on very small screens */
+    @media (max-width: 680px) {
+        table th,
+        table td {
+            padding-left: 0.35rem !important;
+            padding-right: 0.35rem !important;
+            font-size: 0.75rem;
+        }
+        table th .text-xs, table th.text-xs,
+        table td .text-xs, table td.text-xs,
+        table th .text-sm, table th.text-sm,
+        table td .text-sm, table td.text-sm {
+            font-size: 0.75rem;
+        }
+    }
+}
+
+/* Hide columns on mobile - utility classes */
+.hide-on-mobile {
+    display: table-cell;
+}
+
+@media (max-width: 768px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+}
+
+/* Page header with title and actions */
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.page-header-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+@media (max-width: 640px) {
+    .page-header-top {
+        flex-direction: column;
+    }
+
+    .page-header-title {
+        font-size: 1.5rem;
+    }
 }
 
 /* Authentication Pages */
@@ -740,6 +1100,7 @@ div.container-full-form {
     padding: 0;
     font-size: inherit;
     font-family: inherit;
+    text-align: left;
 }
 
 .link-danger:hover {

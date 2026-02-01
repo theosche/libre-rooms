@@ -4,27 +4,24 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
-    <div class="mb-8">
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Utilisateurs</h1>
-                <p class="mt-2 text-sm text-gray-600">
-                    Gérer les utilisateurs ayant accès à la salle <strong>{{ $room->name }}</strong>
-                </p>
-                <p class="mt-1 text-xs text-gray-500">
-                    Propriétaire : {{ $room->owner->contact->display_name() }}
-                </p>
-            </div>
-
-            <div class="flex gap-2">
-                <a href="{{ route('rooms.edit', $room) }}" class="btn btn-secondary">
-                    Modifier la salle
-                </a>
-                <button type="button" onclick="openAddUserModal()" class="btn btn-primary">
-                    Ajouter un utilisateur
-                </button>
-            </div>
-        </div>
+    <div class="page-header">
+        <h1 class="page-header-title">Utilisateurs</h1>
+        <p class="mt-2 text-sm text-gray-600">
+            Gérer les utilisateurs ayant accès à la salle <strong>{{ $room->name }}</strong>
+        </p>
+        <p class="mt-1 text-xs text-gray-500">
+            Propriétaire : {{ $room->owner->contact->display_name() }}
+        </p>
+         <nav class="page-submenu">
+             <a href="{{ route('rooms.index', ['view' => 'mine']) }}"
+                class="page-submenu-item page-submenu-nav">
+                 Retour aux salles
+             </a>
+             <span class="page-submenu-separator"></span>
+             <button type="button" onclick="openAddUserModal()" class="page-submenu-item page-submenu-action cursor-pointer">
+                + Ajouter un utilisateur
+             </button>
+        </nav>
     </div>
 
     @if(!$room->is_public)
@@ -66,19 +63,19 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Nom
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Email
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Rôle
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Ajouté le
                     </th>
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -86,29 +83,31 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($room->users as $user)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
                             {{ $user->name }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 text-sm text-gray-500">
                             {{ $user->email }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                {{ \App\Enums\RoomUserRoles::tryFrom($user->pivot->role)?->label() ?? $user->pivot->role }}
+                                {{ \App\Enums\RoomUserRoles::tryFrom($user->pivot->role)?->label_short() }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 text-sm text-gray-500 hide-on-mobile">
                             {{ $user->pivot->created_at?->format('d/m/Y H:i') ?? '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <form action="{{ route('rooms.users.destroy', [$room, $user]) }}" method="POST" class="inline"
-                                  onsubmit="return confirm('Êtes-vous sûr de vouloir retirer cet utilisateur ?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="link-danger">
-                                    Retirer
-                                </button>
-                            </form>
+                        <td class="px-4 py-3 text-right text-sm font-medium">
+                            <div class="action-group">
+                                <form action="{{ route('rooms.users.destroy', [$room, $user]) }}" method="POST" class="inline"
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir retirer cet utilisateur ?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="link-danger">
+                                        Retirer
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -120,12 +119,6 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-
-    <div class="mt-6">
-        <a href="{{ route('rooms.index', ['view' => 'mine']) }}" class="btn btn-secondary">
-            Retour aux salles
-        </a>
     </div>
 </div>
 

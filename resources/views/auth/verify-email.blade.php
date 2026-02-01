@@ -17,7 +17,7 @@
             <p class="mt-4">Si vous n'avez pas reçu l'email, nous pouvons vous en envoyer un nouveau.</p>
         </div>
 
-        <div class="flex flex-col gap-3">
+        <div class="btn-group">
             <form method="POST" action="{{ route('verification.resend') }}">
                 @csrf
                 <button type="submit" class="btn btn-primary w-full">

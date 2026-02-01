@@ -4,18 +4,14 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Gestion des utilisateurs</h1>
-                <p class="mt-2 text-sm text-gray-600">
-                    {{ $users->total() }} utilisateur(s) au total
-                </p>
-            </div>
-            <a href="{{ route('users.create') }}" class="btn btn-primary">
-                Créer un utilisateur
+    <div class="page-header">
+        <h1 class="page-header-title">Gestion des utilisateurs</h1>
+        <nav class="page-submenu">
+            <a href="{{ route('users.create') }}" class="page-submenu-item page-submenu-action">
+                + Nouvel utilisateur
             </a>
-        </div>
+        </nav>
+        <p class="mt-2 text-sm text-gray-600">{{ $users->total() }} utilisateur(s) au total</p>
     </div>
 
     <!-- Filtres -->
@@ -60,19 +56,16 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Utilisateur
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Email
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Contacts
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Rôles
                     </th>
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -80,7 +73,7 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($users as $user)
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3">
                             <div class="flex items-center">
                                 <div>
                                     <div class="text-sm font-medium text-gray-900">
@@ -92,15 +85,10 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3">
                             <div class="text-sm text-gray-900">{{ $user->email }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">
-                                {{ $user->contacts->count() }} contact(s)
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
+                        <td class="px-4 py-3">
                             <div class="text-sm text-gray-900">
                                 @if($user->is_global_admin)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
@@ -123,7 +111,7 @@
                                             <div class="text-xs">
                                                 <span class="font-medium">{{ $owner->contact->display_name() }}</span>
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $badgeColor }}">
-                                                    {{ $ownerRole?->label() ?? $owner->pivot->role }}
+                                                    {{ $ownerRole?->label_short() ?? $owner->pivot->role }}
                                                 </span>
                                             </div>
                                         @endforeach
@@ -135,8 +123,8 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div class="flex justify-end gap-2">
+                        <td class="px-4 py-3 text-right text-sm font-medium">
+                            <div class="action-group">
                                 <a href="{{ route('users.edit', $user) }}" class="link-primary">
                                     Modifier
                                 </a>

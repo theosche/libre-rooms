@@ -4,21 +4,16 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8 flex justify-between items-center">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">Contacts</h1>
+    <div class="page-header">
+        <h1 class="page-header-title">Contacts</h1>
 
-            @include('contacts._submenu', ['view' => $view, 'user' => $user])
+        @include('contacts._submenu', ['view' => $view, 'user' => $user])
 
-            @if($view === 'all')
-                <p class="mt-2 text-sm text-gray-600">Liste de tous les contacts du système</p>
-            @else
-                <p class="mt-2 text-sm text-gray-600">Liste de tous vos contacts</p>
-            @endif
-        </div>
-        <a href="{{ route('contacts.create') }}" class="btn btn-primary">
-            Nouveau contact
-        </a>
+        @if($view === 'all')
+            <p class="mt-2 text-sm text-gray-600">Liste de tous les contacts du système</p>
+        @else
+            <p class="mt-2 text-sm text-gray-600">Liste de tous vos contacts</p>
+        @endif
     </div>
 
     <!-- Tableau des contacts -->
@@ -26,28 +21,22 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Type
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Entité
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Prénom
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Prénom et nom
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Contact
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Adresse
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Partagé avec
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -55,7 +44,7 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($contacts as $contact)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3">
                             @if($contact->type->value === 'individual')
                                 <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Privé·e">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -66,17 +55,15 @@
                                 </svg>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ $contact->entity_name ?: '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ $contact->first_name ?: '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
+                            {{ $contact->first_name ?: '-' }}<br>
                             {{ $contact->last_name ?: '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div class="flex items-center gap-2">
+                        <td class="px-4 py-3 text-sm text-gray-900">
+                            <div class="grid grid-cols-2 items-center gap-2">
                                 @if($contact->email)
                                     <a href="mailto:{{ $contact->email }}" class="text-blue-600 hover:text-blue-800" title="Email: {{ $contact->email }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,26 +85,24 @@
                                         </svg>
                                     </a>
                                 @endif
-                                @if(!$contact->email && !$contact->invoice_email && !$contact->phone)
+                                @if($contact->street || $contact->zip || $contact->city)
+                                    <span class="tooltip-container">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                        <span class="tooltip-content">
+                                            @if($contact->street){!! nl2br(e($contact->street)) !!}<br>@endif
+                                            {{ $contact->zip }} {{ $contact->city }}
+                                        </span>
+                                    </span>
+                                @endif
+                                @if(!$contact->email && !$contact->invoice_email && !$contact->phone && !$contact->street && !$contact->zip && !$contact->city)
                                     <span class="text-gray-400">-</span>
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
-                            @if($contact->street || $contact->zip || $contact->city)
-                                <div>
-                                    @if($contact->street)
-                                        <div>{!! nl2br($contact->street) !!}</div>
-                                    @endif
-                                    @if($contact->zip || $contact->city)
-                                        <div>{{ $contact->zip }} {{ $contact->city }}</div>
-                                    @endif
-                                </div>
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700">
                             @php
                                 $otherUsers = $view === 'all'
                                     ? $contact->users
@@ -140,11 +125,11 @@
                                 @endif
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <td class="px-4 py-3 text-sm font-medium">
                             @php
                                 $canManage = $userOwnsContact || $user->is_global_admin;
                             @endphp
-                            <div class="flex gap-3">
+                            <div class="action-group">
                                 @if($canManage)
                                     <a href="#" class="link-primary" onclick="event.preventDefault(); showShareModal({{ $contact->id }}, '{{ addslashes($contact->display_name()) }}')">
                                         Partager
@@ -173,7 +158,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                        <td colspan="7" class="px-4 py-3 text-center text-gray-500">
                             Aucun contact trouvé
                         </td>
                     </tr>

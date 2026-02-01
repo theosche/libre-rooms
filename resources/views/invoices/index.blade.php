@@ -4,21 +4,12 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Factures</h1>
+    <div class="page-header">
+        <h1 class="page-header-title">Factures</h1>
 
-        @if($canViewAdmin)
-            <div class="mt-4 flex gap-2">
-                <a href="{{ route('invoices.index', ['view' => 'mine']) }}"
-                   class="px-4 py-2 rounded-md {{ $view === 'mine' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                    Mes factures
-                </a>
-                <a href="{{ route('invoices.index', ['view' => 'admin']) }}"
-                   class="px-4 py-2 rounded-md {{ $view === 'admin' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                    Factures à gérer
-                </a>
-            </div>
-        @else
+        @include('invoices._submenu', ['view' => $view, 'canViewAdmin' => $canViewAdmin])
+
+        @if(!$canViewAdmin)
             <p class="mt-2 text-sm text-gray-600">Liste de toutes vos factures</p>
         @endif
     </div>
@@ -69,28 +60,28 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Numéro
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Débiteur
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Montant
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Date d'émission
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Rappels
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Échéance courante
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
+                        Échéance
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Statut
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -100,52 +91,54 @@
                     @php
                         $computedStatus = $invoice->computed_status;
                     @endphp
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tr class="hover:bg-gray-50 cursor-pointer" onclick="toggleInvoiceDetails({{ $invoice->id }})">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
                             <a href="{{ route($invoice->reminder_count ? 'reservations.reminder.pdf' : 'reservations.invoice.pdf',
                                                 $invoice->reservation->hash) }}"
                                target="_blank"
-                               class="link-primary">
+                               class="link-primary"
+                               onclick="event.stopPropagation()">
                                 {{ $invoice->number }}
                             </a>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div class="flex items-center gap-2">
-                                <span>{{ $invoice->reservation->tenant->display_name() }}</span>
-                                @if($invoice->reservation->tenant->phone)
-                                    <a href="tel:{{ $invoice->reservation->tenant->phone }}" class="text-blue-600 hover:text-blue-800" onclick="event.stopPropagation()">
+                        <td class="px-4 py-3 text-sm text-gray-900">
+                            <div class="contact-info">
+                                <span class="contact-info-name">{{ $invoice->reservation->tenant->display_name() }}</span>
+                                <div class="contact-info-icons" onclick="event.stopPropagation()">
+                                    @if($invoice->reservation->tenant->phone)
+                                        <a href="tel:{{ $invoice->reservation->tenant->phone }}" class="text-blue-600 hover:text-blue-800" title="{{ $invoice->reservation->tenant->phone }}">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                    <a href="mailto:{{ $invoice->reservation->tenant->email }}" class="text-blue-600 hover:text-blue-800" title="{{ $invoice->reservation->tenant->email }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                         </svg>
                                     </a>
-                                @endif
-                                <a href="mailto:{{ $invoice->reservation->tenant->email }}" class="text-blue-600 hover:text-blue-800">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                    </svg>
-                                </a>
-
+                                </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ currency($invoice->amount, $invoice->owner) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 text-sm text-gray-500 hide-on-mobile">
                             {{ $invoice->first_issued_at?->format('d.m.Y') ?? '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 text-sm text-gray-500 hide-on-mobile">
                             {{ $invoice->reminder_count }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 text-sm text-gray-500 hide-on-mobile">
                             {{ $invoice->due_at?->format('d.m.Y') ?? '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $computedStatus->color() }}">
+                        <td class="px-4 py-3">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full whitespace-nowrap {{ $computedStatus->color() }}">
                                 {{ $computedStatus->label() }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-3">
+                        <td class="px-4 py-3 text-sm font-medium">
+                            <div class="action-group" onclick="event.stopPropagation()">
                                 @if($view === 'admin')
                                     {{-- Actions for admin view --}}
                                     @if(in_array($computedStatus, [\App\Enums\InvoiceStatus::LATE, \App\Enums\InvoiceStatus::TOO_LATE]))
@@ -198,9 +191,40 @@
                             </div>
                         </td>
                     </tr>
+                    {{-- Expandable details row --}}
+                    <tr id="invoice-details-{{ $invoice->id }}" class="hidden bg-gray-50">
+                        <td colspan="8" class="px-4 py-3">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                <div>
+                                    <span class="text-gray-500">Date d'émission:</span>
+                                    <span class="ml-1 text-gray-900">{{ $invoice->first_issued_at?->format('d.m.Y') ?? '-' }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500">Échéance:</span>
+                                    <span class="ml-1 text-gray-900">{{ $invoice->due_at?->format('d.m.Y') ?? '-' }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500">Rappels:</span>
+                                    <span class="ml-1 text-gray-900">{{ $invoice->reminder_count }}</span>
+                                </div>
+                                @if($invoice->paid_at)
+                                    <div>
+                                        <span class="text-gray-500">Payée le:</span>
+                                        <span class="ml-1 text-gray-900">{{ $invoice->paid_at->format('d.m.Y') }}</span>
+                                    </div>
+                                @endif
+                                @if($invoice->cancelled_at)
+                                    <div>
+                                        <span class="text-gray-500">Annulée le:</span>
+                                        <span class="ml-1 text-gray-900">{{ $invoice->cancelled_at->format('d.m.Y') }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                        <td colspan="8" class="px-4 py-3 text-center text-gray-500">
                             Aucune facture trouvée
                         </td>
                     </tr>
@@ -214,6 +238,15 @@
         {{ $invoices->links() }}
     </div>
 </div>
+
+<script>
+    function toggleInvoiceDetails(invoiceId) {
+        const detailsRow = document.getElementById('invoice-details-' + invoiceId);
+        if (detailsRow) {
+            detailsRow.classList.toggle('hidden');
+        }
+    }
+</script>
 
 @if($view === 'admin')
     <!-- Modal d'annulation de facture -->

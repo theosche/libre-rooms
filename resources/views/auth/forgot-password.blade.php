@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="btn-group">
             <button type="submit" class="btn btn-primary">Envoyer le lien de réinitialisation</button>
         </div>
     </form>

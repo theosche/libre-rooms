@@ -1,12 +1,24 @@
 @if($user->is_global_admin)
-    <div class="mt-4 flex gap-2 flex-wrap">
+    <nav class="page-submenu">
         <a href="{{ route('contacts.index', ['view' => 'mine']) }}"
-           class="px-4 py-2 rounded-md {{ ($view ?? 'mine') === 'mine' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+           class="page-submenu-item page-submenu-nav {{ ($view ?? 'mine') === 'mine' ? 'active' : '' }}">
             Mes contacts
         </a>
         <a href="{{ route('contacts.index', ['view' => 'all']) }}"
-           class="px-4 py-2 rounded-md {{ ($view ?? '') === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+           class="page-submenu-item page-submenu-nav {{ ($view ?? '') === 'all' ? 'active' : '' }}">
             Tous les contacts
         </a>
-    </div>
+
+        <span class="page-submenu-separator"></span>
+
+        <a href="{{ route('contacts.create') }}" class="page-submenu-item page-submenu-action">
+            + Nouveau contact
+        </a>
+    </nav>
+@else
+    <nav class="page-submenu">
+        <a href="{{ route('contacts.create') }}" class="page-submenu-item page-submenu-action">
+            + Nouveau contact
+        </a>
+    </nav>
 @endif

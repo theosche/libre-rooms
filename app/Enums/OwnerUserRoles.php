@@ -16,6 +16,14 @@ enum OwnerUserRoles: string
             self::ADMIN => 'Administrateur·ice',
         };
     }
+    public function label_short(): string
+    {
+        return match ($this) {
+            self::VIEWER => 'Lect.',
+            self::MODERATOR => 'Mod.',
+            self::ADMIN => 'Admin',
+        };
+    }
 
     /**
      * Check if this role has at least the given permission level.

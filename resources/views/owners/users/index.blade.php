@@ -4,26 +4,21 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
-    <div class="mb-8">
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Utilisateurs</h1>
-                <p class="mt-2 text-sm text-gray-600">
-                    Gérer les utilisateurs ayant accès au propriétaire <strong>{{ $owner->contact->display_name() }}</strong>
-                </p>
-            </div>
-
-            <div class="flex gap-2">
-                @can('update', $owner)
-                    <a href="{{ route('owners.edit', $owner) }}" class="btn btn-secondary">
-                        Modifier le propriétaire
-                    </a>
-                @endcan
-                <button type="button" onclick="openAddUserModal()" class="btn btn-primary">
-                    Ajouter un utilisateur
-                </button>
-            </div>
-        </div>
+    <div class="page-header">
+        <h1 class="page-header-title">Utilisateurs</h1>
+        <p class="mt-2 text-sm text-gray-600">
+            Gérer les utilisateurs ayant accès au propriétaire <strong>{{ $owner->contact->display_name() }}</strong>
+        </p>
+        <nav class="page-submenu">
+            <a href="{{ route('owners.index') }}"
+               class="page-submenu-item page-submenu-nav">
+                Retour aux propriétaires
+            </a>
+            <span class="page-submenu-separator"></span>
+            <button type="button" onclick="openAddUserModal()" class="page-submenu-item page-submenu-action cursor-pointer">
+                + Ajouter un utilisateur
+            </button>
+        </nav>
     </div>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -49,16 +44,16 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Nom
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Email
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Rôle
                     </th>
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -70,16 +65,16 @@
                         $canRemove = auth()->user()->can('removeOwnerUser', [$owner, $user]);
                     @endphp
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
                             {{ $user->name }}
                             @if($user->id === auth()->id())
                                 <span class="text-xs text-gray-500">(vous)</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                             {{ $user->email }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3 whitespace-nowrap">
                             @php
                                 $badgeColor = match($userRole) {
                                     \App\Enums\OwnerUserRoles::ADMIN => 'bg-red-100 text-red-800',
@@ -89,10 +84,11 @@
                                 };
                             @endphp
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $badgeColor }}">
-                                {{ $userRole?->label() ?? $user->pivot->role }}
+                                {{ $userRole?->label_short() }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="action-group">
                             @if($canRemove)
                                 <form action="{{ route('owners.users.destroy', [$owner, $user]) }}" method="POST" class="inline"
                                       onsubmit="return confirm('Êtes-vous sûr de vouloir retirer cet utilisateur ?');">
@@ -105,6 +101,7 @@
                             @else
                                 <span class="text-gray-400 text-xs">-</span>
                             @endif
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -116,12 +113,6 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-
-    <div class="mt-6">
-        <a href="{{ route('owners.index') }}" class="btn btn-secondary">
-            Retour aux propriétaires
-        </a>
     </div>
 </div>
 

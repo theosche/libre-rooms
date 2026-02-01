@@ -141,6 +141,7 @@
             @include('reservations.partials.custom-message', ['customMessage' => $reservation?->custom_message])
         @endif
 
+        <div class="btn-group">
             <a class="btn btn-secondary" href="{{ url()->previous() }}">Annuler</a>
         @if ($isCreate)
             <button type="submit" class="btn btn-primary" name="action" value="prepare">Envoyer la demande</button>
@@ -157,6 +158,7 @@
                 Annuler la demande
             </button>
         @endif
+        </div>
     </form>
     </div>
 

@@ -12,4 +12,10 @@ enum RoomUserRoles: string
             self::VIEWER => 'Lecteur',
         };
     }
+    public function label_short(): string
+    {
+        return match ($this) {
+            self::VIEWER => 'Lect.',
+        };
+    }
 }

@@ -4,20 +4,10 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8">
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Champs personnalisés</h1>
+    <div class="page-header">
+        <h1 class="page-header-title">Champs personnalisés</h1>
 
-                @include('rooms._submenu', ['view' => null, 'canViewMine' => $canViewMine])
-            </div>
-
-            @if($canViewMine)
-                <a href="{{ route('custom-fields.create') }}" class="btn btn-primary">
-                    Ajouter un champ personnalisé
-                </a>
-            @endif
-        </div>
+        @include('rooms._submenu', ['view' => null])
     </div>
 
     <!-- Filtres -->
@@ -53,25 +43,25 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Salle
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Label
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Type
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Options
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Requis
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Statut
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -79,18 +69,18 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($customFields as $field)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ $field->room->name }}
                         </td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
                             {{ $field->label }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700">
                             <span class="px-2 py-1 text-xs font-medium rounded-md bg-gray-100 text-gray-800">
                                 {{ ucfirst($field->type->value) }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-700">
+                        <td class="px-4 py-3 text-sm text-gray-700">
                             @if($field->options && in_array($field->type->value, ['select', 'radio', 'checkbox']))
                                 <span class="text-xs text-gray-600">
                                     {{ implode(', ', array_slice($field->options, 0, 3)) }}
@@ -102,18 +92,18 @@
                                 <span class="text-gray-400 text-xs">-</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                        <td class="px-4 py-3 text-center hide-on-mobile">
                             @if($field->required)
                                 <svg class="w-4 h-4" viewBox="0 0 448 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M434.8 70.1c14.3 10.4 17.5 30.4 7.1 44.7l-256 352c-5.5 7.6-14 12.3-23.4 13.1s-18.5-2.7-25.1-9.3l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l101.5 101.5 234-321.7c10.4-14.3 30.4-17.5 44.7-7.1z"/></svg>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $field->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                 {{ $field->active ? 'Actif' : 'Inactif' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex gap-3">
+                        <td class="px-4 py-3 text-sm font-medium">
+                            <div class="action-group">
                                 <a href="{{ route('custom-fields.edit', $field) }}" class="link-primary">
                                     Modifier
                                 </a>

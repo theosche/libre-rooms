@@ -4,21 +4,12 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Réservations</h1>
+    <div class="page-header">
+        <h1 class="page-header-title">Réservations</h1>
 
-        @if($canViewAdmin)
-            <div class="mt-4 flex gap-2">
-                <a href="{{ route('reservations.index', ['view' => 'mine']) }}"
-                   class="px-4 py-2 rounded-md {{ $view === 'mine' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                    Mes réservations
-                </a>
-                <a href="{{ route('reservations.index', ['view' => 'admin']) }}"
-                   class="px-4 py-2 rounded-md {{ $view === 'admin' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                    Réservations à gérer
-                </a>
-            </div>
-        @else
+        @include('reservations._submenu', ['view' => $view, 'canViewAdmin' => $canViewAdmin])
+
+        @if(!$canViewAdmin)
             <p class="mt-2 text-sm text-gray-600">Liste de toutes vos réservations</p>
         @endif
     </div>
@@ -81,28 +72,28 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         N°
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Salle
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Locataire
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Titre
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Prix
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         État
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Créée le
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
@@ -119,37 +110,39 @@
                         $canCancel = $isPending || ($isConfirmed && $canManage);
                     @endphp
                     <tr class="hover:bg-gray-50 cursor-pointer transition" onclick="toggleDetails({{ $reservation->id }})">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">
                             #{{ $reservation->id }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ $reservation->room->name }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div class="flex items-center gap-2">
-                                <span>{{ $reservation->tenant->display_name() }}</span>
-                                @if($reservation->tenant->phone)
-                                    <a href="tel:{{ $reservation->tenant->phone }}" class="text-blue-600 hover:text-blue-800" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        <td class="px-4 py-3 text-sm text-gray-900">
+                            <div class="contact-info">
+                                <span class="contact-info-name">{{ $reservation->tenant->display_name() }}</span>
+                                <div class="contact-info-icons" onclick="event.stopPropagation()">
+                                    @if($reservation->tenant->phone)
+                                        <a href="tel:{{ $reservation->tenant->phone }}" title="{{ $reservation->tenant->phone }}">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                    <a href="mailto:{{ $reservation->tenant->email }}" title="{{ $reservation->tenant->email }}">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                         </svg>
                                     </a>
-                                @endif
-                                <a href="mailto:{{ $reservation->tenant->email }}" class="text-blue-600 hover:text-blue-800" onclick="event.stopPropagation()">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                    </svg>
-                                </a>
+                                </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900">
                             {{ $reservation->title }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td class="px-4 py-3 text-sm text-gray-900 hide-on-mobile">
                             {{ currency($reservation->finalPrice(), $reservation->room->owner) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ match($reservation->status) {
+                        <td class="px-4 py-3">
+                            <span class="px-2 whitespace-nowrap inline-flex text-xs leading-5 font-semibold rounded-full {{ match($reservation->status) {
                                 \App\Enums\ReservationStatus::PENDING => 'bg-yellow-100 text-yellow-800',
                                 \App\Enums\ReservationStatus::CONFIRMED => 'bg-green-100 text-green-800',
                                 \App\Enums\ReservationStatus::FINISHED => 'bg-blue-100 text-blue-800',
@@ -158,11 +151,11 @@
                                 {{ $reservation->status->label() }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 text-sm text-gray-500 hide-on-mobile">
                             {{ $reservation->created_at->format('d.m.Y') }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" onclick="event.stopPropagation()">
-                            <div class="flex gap-3">
+                        <td class="px-4 py-3 text-sm font-medium" onclick="event.stopPropagation()">
+                            <div class="action-group">
                                 @if($canEdit)
                                     @if($isPending && $canManage)
                                         <a href="{{ route('reservations.edit', $reservation) }}" class="link-success">Contrôler</a>
@@ -184,15 +177,16 @@
 
                     <!-- Détails dépliables -->
                     <tr id="details-{{ $reservation->id }}" class="details-row hidden">
-                        <td colspan="8" class="px-6 py-4 bg-slate-50 border-t border-slate-200 w-0">
+                        <td colspan="8" class="px-4 py-3 bg-slate-50 border-t border-slate-200 w-0">
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 <!-- Colonne 1: Description & Événements -->
                                 <div class="space-y-4">
+                                    @if($reservation->description)
                                     <div>
                                         <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Description</h4>
                                         <p class="text-sm text-slate-700">{{ $reservation->description ?: '—' }}</p>
                                     </div>
-
+                                    @endif
                                     <div>
                                         <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Événements</h4>
                                         <div class="space-y-1">
@@ -292,7 +286,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                        <td colspan="8" class="px-4 py-3 text-center text-gray-500">
                             Aucune réservation trouvée
                         </td>
                     </tr>
