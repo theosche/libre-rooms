@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-@section('title', $user->password ? 'Modifier le mot de passe' : 'Définir un mot de passe')
+@section('title', $user->password ? __('Change password') : __('Set a password'))
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     <div class="form-header">
         <h1 class="form-title">
-            {{ $user->password ? 'Modifier le mot de passe' : 'Définir un mot de passe' }}
+            {{ $user->password ? __('Change password') : __('Set a password') }}
         </h1>
         <p class="form-subtitle">
             @if($user->password)
-                Choisissez un nouveau mot de passe sécurisé pour votre compte.
+                {{ __('Choose a new secure password for your account.') }}
             @else
-                Définissez un mot de passe pour pouvoir vous connecter avec votre email.
+                {{ __('Set a password to be able to log in with your email.') }}
             @endif
         </p>
     </div>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="ml-3">
                             <p class="text-sm text-amber-700">
-                                Après avoir changé votre mot de passe, vous serez déconnecté de toutes vos autres sessions actives.
+                                {{ __('After changing your password, you will be logged out of all your other active sessions.') }}
                             </p>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="password" class="form-element-title">Nouveau mot de passe</label>
+                        <label for="password" class="form-element-title">{{ __('New password') }}</label>
                         <input
                             type="password"
                             id="password"
@@ -48,7 +48,7 @@
                             required
                             autofocus
                         >
-                        <small class="text-gray-600">Minimum 12 caractères</small>
+                        <small class="text-gray-600">{{ __('Minimum 12 characters') }}</small>
                         @error('password')
                         <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -57,7 +57,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="password_confirmation" class="form-element-title">Confirmer le mot de passe</label>
+                        <label for="password_confirmation" class="form-element-title">{{ __('Confirm password') }}</label>
                         <input
                             type="password"
                             id="password_confirmation"
@@ -70,10 +70,10 @@
 
             <div class="btn-group justify-end mt-6">
                 <a href="{{ route('profile') }}" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {{ $user->password ? 'Modifier le mot de passe' : 'Définir le mot de passe' }}
+                    {{ $user->password ? __('Change password') : __('Set password') }}
                 </button>
             </div>
         </form>

@@ -32,7 +32,7 @@ class SetupController extends Controller
         if ($this->isDatabaseConfigured()) {
             // Post-setup: require global admin
             if (! auth()->check() || ! auth()->user()->is_global_admin) {
-                abort(403, 'Accès réservé aux administrateurs.');
+                abort(403, __('Access restricted to administrators.'));
             }
         }
         // Initial setup: allow anyone
@@ -81,10 +81,10 @@ class SetupController extends Controller
 
         // Basic validation
         if (empty($data['APP_URL']) || ! filter_var($data['APP_URL'], FILTER_VALIDATE_URL)) {
-            return $this->redirectWithError('URL de l\'application invalide');
+            return $this->redirectWithError(__('Invalid application URL'));
         }
         if (empty($data['DB_DATABASE'])) {
-            return $this->redirectWithError('Le nom de la base de données est requis');
+            return $this->redirectWithError(__('Database name is required'));
         }
 
         $envValues = $this->parseEnvFile();
@@ -104,7 +104,7 @@ class SetupController extends Controller
         );
 
         if ($connectionResult !== true) {
-            return $this->redirectWithError('Impossible de se connecter à la base de données : '.$connectionResult);
+            return $this->redirectWithError(__('Unable to connect to database:').' '.$connectionResult);
         }
 
         // Save to .env file (DB_CONFIGURED=true marks successful setup)
@@ -144,7 +144,7 @@ class SetupController extends Controller
         try {
             \Artisan::call('migrate', ['--force' => true]);
         } catch (\Exception $e) {
-            return $this->redirectWithError('Erreur lors de l\'exécution des migrations : '.$e->getMessage());
+            return $this->redirectWithError(__('Error running migrations:').' '.$e->getMessage());
         }
 
         // Redirect to admin setup (use query param because session may be disrupted by config changes)
@@ -158,7 +158,7 @@ class SetupController extends Controller
     {
         // Convert query param back to session flash message
         if ($request->query('setup_success')) {
-            session()->flash('success', 'Configuration de l\'environnement enregistrée !');
+            session()->flash('success', __('Environment configuration saved!'));
         }
 
         // If a global admin already exists, redirect to home
@@ -177,7 +177,7 @@ class SetupController extends Controller
         // Security: prevent creating admin if one already exists
         if (User::where('is_global_admin', true)->exists()) {
             return redirect()->route('rooms.index')
-                ->with('error', 'Un administrateur existe déjà.');
+                ->with('error', __('An administrator already exists.'));
         }
 
         $validated = $request->validate([
@@ -202,11 +202,11 @@ class SetupController extends Controller
         // Check if system settings need configuration
         if ($this->needsSystemSettings()) {
             return redirect()->route('system-settings.edit')
-                ->with('success', 'Compte administrateur créé ! Veuillez maintenant configurer les paramètres système.');
+                ->with('success', __('Administrator account created! Please configure the system settings.'));
         }
 
         return redirect()->route('rooms.index')
-            ->with('success', 'Configuration initiale terminée !');
+            ->with('success', __('Initial setup completed!'));
     }
 
     /**
@@ -291,7 +291,7 @@ class SetupController extends Controller
                 if (! file_exists($dbPath)) {
                     $dir = dirname($dbPath);
                     if (! is_dir($dir)) {
-                        return "Le dossier {$dir} n'existe pas";
+                        return __('The directory :dir does not exist', ['dir' => $dir]);
                     }
                     touch($dbPath);
                 }
@@ -383,7 +383,6 @@ class SetupController extends Controller
         return [
             'fr' => 'Français',
             'en' => 'English',
-            'de' => 'Deutsch',
         ];
     }
 

@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 // Initialisé côté PHP dans create.blade.php
 let nextEventId = window.ResEvents.length;
 let eventsSlots = [];
+const t = window.translations || {};
 const Status = Object.freeze({
     UNSET: "unset",
     FREE: "free",
@@ -16,21 +17,21 @@ const Status = Object.freeze({
     label(type) {
         switch (type) {
             case this.UNSET:
-                return 'Vide';
+                return t.empty || 'Empty';
             case this.FREE:
-                return 'Disponible';
+                return t.available || 'Available';
             case this.BUSY:
-                return 'Occupé';
+                return t.occupied || 'Occupied';
             case this.PAST:
-                return 'Passé';
+                return t.past || 'Past';
             case this.TOO_CLOSE:
-                return 'Trop proche';
+                return t.too_close || 'Too close';
             case this.TOO_FAR:
-                return 'Trop loin';
+                return t.too_far || 'Too far';
             case this.INVALID:
-                return 'Invalide';
+                return t.invalid || 'Invalid';
             case this.OVERLAP:
-                return 'Chevauchement';
+                return t.overlap || 'Overlap';
             default:
                 return null;
         }
@@ -191,7 +192,7 @@ async function initAvailabilityCheck() {
             uid: slot.uid
         }));
     } catch (error) {
-        console.error('Erreur lors du chargement du calendrier :', error);
+        console.error('Error loading calendar:', error);
     }
 }
 
@@ -271,21 +272,23 @@ function getEventPrice(start,end) {
             nb_full++;
         }
     })
+    const shortLabel = t.short_booking || 'short booking';
+    const fullLabel = t.full_day_booking || 'full day booking';
     if (segments.length > 1) {
-        label += segments[0].date + " au " + segments[segments.length-1].date + " (";
+        label += segments[0].date + " " + (t.to || 'to') + " " + segments[segments.length-1].date + " (";
         if (nb_short) {
-            label += nb_short + "x réservation courte, ";
+            label += nb_short + "x " + shortLabel + ", ";
         }
         if (nb_full) {
-            label += nb_full + "x réservation journée, ";
+            label += nb_full + "x " + fullLabel + ", ";
         }
         label = label.substring(0, label.length - 2) + ")"
     } else {
         label = segments[0].date + " (";
         if (nb_short) {
-            label += "réservation courte";
+            label += shortLabel;
         } else if (nb_full) {
-            label += "réservation journée"
+            label += fullLabel;
         }
         label += ")";
     }
@@ -540,7 +543,7 @@ function initDataShowWhen() {
 function validateEventsBeforeSubmit(event) {
     if (window.ResEvents.length === 0) {
         event.preventDefault();
-        alert('Erreur : Vous devez ajouter au moins une date de réservation.');
+        alert(t.error_no_dates || 'Error: You must add at least one reservation date.');
         return false;
     }
 
@@ -548,12 +551,12 @@ function validateEventsBeforeSubmit(event) {
     if (invalidEvents.length > 0) {
         event.preventDefault();
 
-        let errorMessage = 'Erreur : Certaines dates de réservation ne sont pas valides :\n\n';
+        let errorMessage = (t.error_invalid_dates || 'Error: Some reservation dates are not valid:') + '\n\n';
         invalidEvents.forEach(ev => {
             const statusLabel = Status.label(ev.status);
             errorMessage += `- ${statusLabel}\n`;
         });
-        errorMessage += '\nVeuillez corriger ces dates avant de soumettre le formulaire.';
+        errorMessage += '\n' + (t.error_fix_dates || 'Please fix these dates before submitting the form.');
 
         alert(errorMessage);
         return false;

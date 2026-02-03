@@ -34,7 +34,7 @@ class ConfigTestController extends Controller
         if (! $host || ! $port || ! $user || ! $pass) {
             return response()->json([
                 'success' => false,
-                'message' => 'Configuration incomplète',
+                'message' => __('Incomplete configuration'),
             ]);
         }
 
@@ -48,12 +48,12 @@ class ConfigTestController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Connexion SMTP réussie',
+                'message' => __('SMTP connection successful'),
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Échec de connexion : '.$this->sanitizeErrorMessage($e->getMessage()),
+                'message' => __('Connection failed').' : '.$this->sanitizeErrorMessage($e->getMessage()),
             ]);
         }
     }
@@ -79,7 +79,7 @@ class ConfigTestController extends Controller
         if (! $url || ! $user || ! $pass) {
             return response()->json([
                 'success' => false,
-                'message' => 'Configuration incomplète',
+                'message' => __('Incomplete configuration'),
             ]);
         }
 
@@ -94,12 +94,12 @@ class ConfigTestController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Connexion CalDAV réussie',
+                'message' => __('CalDAV connection successful'),
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Échec de connexion : '.$this->sanitizeErrorMessage($e->getMessage()),
+                'message' => __('Connection failed').' : '.$this->sanitizeErrorMessage($e->getMessage()),
             ]);
         }
     }
@@ -126,7 +126,7 @@ class ConfigTestController extends Controller
         if (! $endpoint || ! $user || ! $pass) {
             return response()->json([
                 'success' => false,
-                'message' => 'Configuration incomplète',
+                'message' => __('Incomplete configuration'),
             ]);
         }
 
@@ -158,24 +158,24 @@ class ConfigTestController extends Controller
             if ($error) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Erreur de connexion : '.$error,
+                    'message' => __('Connection failed') . ' : '.$error,
                 ]);
             }
 
             if ($statusCode === 207 || $statusCode === 200) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Connexion WebDAV réussie',
+                    'message' => __('WebDAV connection successful'),
                 ]);
             }
 
             $errorMessages = [
-                401 => 'Authentification échouée',
-                403 => 'Accès refusé',
-                404 => 'Chemin non trouvé',
+                401 => __('Authentication failed'),
+                403 => __('Access denied'),
+                404 => __('Path not found'),
             ];
 
-            $message = $errorMessages[$statusCode] ?? "Erreur HTTP {$statusCode}";
+            $message = $errorMessages[$statusCode] ?? __('HTTP error :code', ['code' => $statusCode]);
 
             return response()->json([
                 'success' => false,
@@ -184,7 +184,7 @@ class ConfigTestController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Échec de connexion : '.$this->sanitizeErrorMessage($e->getMessage()),
+                'message' => __('Connection failed').' : '.$this->sanitizeErrorMessage($e->getMessage()),
             ]);
         }
     }

@@ -10,8 +10,8 @@ enum ContactTypes: string
     public function label(): string
     {
         return match ($this) {
-            self::INDIVIDUAL => "Privé·e",
-            self::ORGANIZATION => "Organisation",
+            self::INDIVIDUAL => __('Private'),
+            self::ORGANIZATION => __('Organization'),
         };
     }
 }

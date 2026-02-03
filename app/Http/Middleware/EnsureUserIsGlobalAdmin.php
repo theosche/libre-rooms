@@ -16,7 +16,7 @@ class EnsureUserIsGlobalAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->check() || !auth()->user()->is_global_admin) {
-            return redirect()->route('rooms.index')->with('error', 'Accès réservé aux administrateurs globaux.');
+            return redirect()->route('rooms.index')->with('error', __('Access restricted to global administrators.'));
         }
 
         return $next($request);

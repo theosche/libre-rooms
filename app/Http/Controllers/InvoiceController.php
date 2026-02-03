@@ -122,12 +122,12 @@ class InvoiceController extends Controller
         // Check permission
         $user = auth()->user();
         if (!$user->canManageReservationsFor($invoice->reservation->room)) {
-            return back()->with('error', 'Vous n\'avez pas la permission d\'envoyer un rappel.');
+            return back()->with('error', __('You do not have permission to send a reminder.'));
         }
 
         // Check status - must be LATE or TOO_LATE
         if (!in_array($invoice->computed_status, [InvoiceStatus::LATE, InvoiceStatus::TOO_LATE])) {
-            return back()->with('error', 'Impossible d\'envoyer un rappel pour cette facture (statut: ' . $invoice->computed_status->label() . ').');
+            return back()->with('error', __('Cannot send reminder for this invoice (status: :status).', ['status' => $invoice->computed_status->label()]));
         }
 
         $owner = $invoice->owner;
@@ -156,7 +156,7 @@ class InvoiceController extends Controller
             });
         }
 
-        return back()->with('success', 'Rappel n°'.$invoice->reminder_count.' envoyé.');
+        return back()->with('success', __('Reminder #:count sent.', ['count' => $invoice->reminder_count]));
     }
 
     /**
@@ -167,19 +167,19 @@ class InvoiceController extends Controller
         // Check permission
         $user = auth()->user();
         if (! $user->canManageReservationsFor($invoice->reservation->room)) {
-            return back()->with('error', 'Vous n\'avez pas la permission de modifier cette facture.');
+            return back()->with('error', __('You do not have permission to edit this invoice.'));
         }
 
         // Check status - cannot mark paid or cancelled invoices
         if ($invoice->isFinal()) {
-            return back()->with('error', 'Cette facture ne peut pas être marquée comme payée.');
+            return back()->with('error', __('This invoice cannot be marked as paid.'));
         }
 
         $invoice->update([
             'paid_at' => now(),
         ]);
 
-        return back()->with('success', 'Facture marquée comme payée.');
+        return back()->with('success', __('Invoice marked as paid.'));
     }
 
     /**
@@ -190,12 +190,12 @@ class InvoiceController extends Controller
         // Check permission
         $user = auth()->user();
         if (! $user->canManageReservationsFor($invoice->reservation->room)) {
-            return back()->with('error', 'Vous n\'avez pas la permission d\'annuler cette facture.');
+            return back()->with('error', __('You do not have permission to cancel this invoice.'));
         }
 
         // Cannot cancel paid invoices
         if ($invoice->paid_at !== null) {
-            return back()->with('error', 'Impossible d\'annuler une facture payée.');
+            return back()->with('error', __('Cannot cancel a paid invoice.'));
         }
 
         $invoice->update([
@@ -218,7 +218,7 @@ class InvoiceController extends Controller
             });
         }
 
-        return back()->with('success', 'Facture annulée.');
+        return back()->with('success', __('Invoice cancelled.'));
     }
 
     /**
@@ -229,12 +229,12 @@ class InvoiceController extends Controller
         // Check permission
         $user = auth()->user();
         if (! $user->canManageReservationsFor($invoice->reservation->room)) {
-            return back()->with('error', 'Vous n\'avez pas la permission de recréer cette facture.');
+            return back()->with('error', __('You do not have permission to recreate this invoice.'));
         }
 
         // Can only recreate cancelled invoices
         if (! $invoice->canRecreate()) {
-            return back()->with('error', 'Seule une facture annulée liée à une réservation confirmée peut être recréée.');
+            return back()->with('error', __('Only a cancelled invoice linked to a confirmed reservation can be recreated.'));
         }
 
         $firstDueAt = Invoice::calculateFirstDueAt($invoice->reservation, isRecreate: true);
@@ -269,6 +269,6 @@ class InvoiceController extends Controller
             });
         }
 
-        return back()->with('success', 'Facture recréée avec nouvelle échéance au '.$firstDueAt->format('d/m/Y').'.');
+        return back()->with('success', __('Invoice recreated with new due date: :date.', ['date' => $firstDueAt->format('d/m/Y')]));
     }
 }

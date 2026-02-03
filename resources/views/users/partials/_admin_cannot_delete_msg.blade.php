@@ -7,7 +7,7 @@
         </div>
         <div class="ml-3">
             <p class="text-sm text-blue-700">
-                En tant qu'administrateur global, vous ne pouvez pas supprimer votre propre compte. Contactez un autre administrateur si nécessaire.
+                {{ __('As a global administrator, you cannot delete your own account. Contact another administrator if necessary.') }}
             </p>
         </div>
     </div>

@@ -6,11 +6,27 @@
     $isAdmin = auth()->user()?->can('manageReservations', $room);
 @endphp
 
-@section('title', ($isCreate ? 'Nouvelle réservation' : 'Modifier la réservation') . ' - ' . $room->name)
+@section('title', ($isCreate ? __('New reservation') : __('Edit reservation')) . ' - ' . $room->name)
 
 @section('page-script')
     @vite(['resources/js/reservations/reservation-form.js'])
     <script>
+        window.translations = {
+            empty: @json(__('Empty')),
+            available: @json(__('Available')),
+            occupied: @json(__('Occupied')),
+            past: @json(__('Past')),
+            too_close: @json(__('Too close')),
+            too_far: @json(__('Too far')),
+            invalid: @json(__('Invalid')),
+            overlap: @json(__('Overlap')),
+            short_booking: @json(__('short booking')),
+            full_day_booking: @json(__('full day booking')),
+            to: @json(__('to')),
+            error_no_dates: @json(__('Error: You must add at least one reservation date.')),
+            error_invalid_dates: @json(__('Error: Some reservation dates are not valid:')),
+            error_fix_dates: @json(__('Please fix these dates before submitting the form.')),
+        };
         window.RoomConfig = @json($roomConfig);
         window.EnabledDiscounts = @json($enabledDiscounts);
         window.ResEvents = @json($events);
@@ -36,7 +52,7 @@
 @section('content')
         <div class="container-full-form">
             <div class="form-header">
-                <h1 class="form-title">{{ $isCreate ? 'Nouvelle réservation' : 'Modifier la réservation' }}</h1>
+                <h1 class="form-title">{{ $isCreate ? __('New reservation') : __('Edit reservation') }}</h1>
                 <p class="form-subtitle">{{ $room->name }}</p>
             </div>
             <form method="POST" class="reservation-form styled-form"
@@ -79,7 +95,7 @@
         @if($room->embed_calendar_mode === App\Enums\EmbedCalendarModes::ADMIN_ONLY && $isAdmin ||
             $room->embed_calendar_mode === App\Enums\EmbedCalendarModes::ENABLED)
             <div class="form-group">
-                <h3 class="form-group-title">Calendrier des disponibilités</h3>
+                <h3 class="form-group-title">{{ __('Availability calendar') }}</h3>
                 <div class="form-element">
                     <div class="form-field">
                         @include('rooms._calendar', ['room' => $room])
@@ -142,20 +158,20 @@
         @endif
 
         <div class="btn-group">
-            <a class="btn btn-secondary" href="{{ url()->previous() }}">Annuler</a>
+            <a class="btn btn-secondary" href="{{ url()->previous() }}">{{ __('Cancel') }}</a>
         @if ($isCreate)
-            <button type="submit" class="btn btn-primary" name="action" value="prepare">Envoyer la demande</button>
+            <button type="submit" class="btn btn-primary" name="action" value="prepare">{{ __('Send request') }}</button>
         @elseif ($isEdit)
-            <button type="submit" class="btn btn-primary" name="action" value="prepare">Modifier la demande</button>
+            <button type="submit" class="btn btn-primary" name="action" value="prepare">{{ __('Update request') }}</button>
         @endif
         @if ($isAdmin && $isCreate)
-            <button type="submit" class="btn btn-confirm" name="action" value="confirm">Valider directement la demande</button>
+            <button type="submit" class="btn btn-confirm" name="action" value="confirm">{{ __('Confirm request directly') }}</button>
         @elseif ($isAdmin && $isEdit)
-            <button type="submit" class="btn btn-confirm" name="action" value="confirm">Valider la demande</button>
+            <button type="submit" class="btn btn-confirm" name="action" value="confirm">{{ __('Confirm request') }}</button>
         @endif
         @if($isEdit && $reservation->status !== App\Enums\ReservationStatus::CANCELLED)
             <button type="button" onclick="openCancelModal()" class="btn btn-delete">
-                Annuler la demande
+                {{ __('Cancel request') }}
             </button>
         @endif
         </div>
@@ -166,7 +182,7 @@
     <div id="loader-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-8 shadow-xl flex flex-col items-center gap-4">
             <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
-            <p class="text-gray-700 font-medium">Traitement en cours...</p>
+            <p class="text-gray-700 font-medium">{{ __('Processing...') }}</p>
         </div>
     </div>
 
@@ -174,7 +190,7 @@
         <!-- Modal d'annulation -->
         <div id="cancel-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Annuler la réservation</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">{{ __('Cancel reservation') }}</h3>
                 <form id="cancel-form" method="POST" action="{{ route('reservations.cancel', $reservation) }}">
                     @csrf
                     <div class="mb-4">
@@ -182,28 +198,28 @@
                             <input type="checkbox" name="send_email" value="1" checked
                                    id="cancel-send-email"
                                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm text-gray-700">Envoyer un email d'annulation</span>
+                            <span class="text-sm text-gray-700">{{ __('Send cancellation email') }}</span>
                         </label>
                     </div>
                     <div class="mb-4">
                         <label for="cancel-reason" class="block text-sm font-medium text-gray-700 mb-1">
-                            Raison de l'annulation (facultatif)
+                            {{ __('Cancellation reason (optional)') }}
                         </label>
                         <textarea name="cancellation_reason"
                                   id="cancel-reason"
                                   class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                                   rows="3"
-                                  placeholder="Expliquez la raison de l'annulation..."></textarea>
-                        <p class="mt-1 text-xs text-gray-500">Cette raison sera incluse dans l'email d'annulation si la case ci-dessus est cochée.</p>
+                                  placeholder="{{ __('Explain the reason for the cancellation...') }}"></textarea>
+                        <p class="mt-1 text-xs text-gray-500">{{ __('This reason will be included in the cancellation email if the box above is checked.') }}</p>
                     </div>
                     <div class="flex justify-end gap-3">
                         <button type="button"
                                 onclick="closeCancelModal()"
                                 class="btn btn-secondary">
-                            Retour
+                            {{ __('Back') }}
                         </button>
                         <button type="submit" class="btn btn-delete">
-                            Confirmer l'annulation
+                            {{ __('Confirm cancellation') }}
                         </button>
                     </div>
                 </form>

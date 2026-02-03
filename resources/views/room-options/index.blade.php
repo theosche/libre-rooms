@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Options')
+@section('title', __('Options'))
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Options</h1>
+        <h1 class="page-header-title">{{ __('Options') }}</h1>
 
         @include('rooms._submenu', ['view' => null])
     </div>
@@ -14,9 +14,9 @@
     <div class="bg-white p-6 rounded-lg shadow mb-6">
         <form method="GET" action="{{ route('room-options.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-                <label for="room_id" class="block text-sm font-medium text-gray-700 mb-1">Salle</label>
+                <label for="room_id" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Room') }}</label>
                 <select name="room_id" id="room_id" class="form-select">
-                    <option value="">Toutes les salles</option>
+                    <option value="">{{ __('All rooms') }}</option>
                     @foreach($rooms as $room)
                         <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>
                             {{ $room->name }} ({{ $room->owner->contact->display_name() }})
@@ -27,11 +27,11 @@
 
             <div class="flex items-end gap-2 col-span-2">
                 <button type="submit" class="btn btn-primary">
-                    Filtrer
+                    {{ __('Filter') }}
                 </button>
                 @if(request()->has('room_id'))
                     <a href="{{ route('room-options.index') }}" class="btn btn-secondary">
-                        Réinitialiser
+                        {{ __('Reset') }}
                     </a>
                 @endif
             </div>
@@ -44,22 +44,22 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Salle
+                        {{ __('Room') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
+                        {{ __('Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
                         Description
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Prix
+                        {{ __('Price') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Statut
+                        {{ __('Status') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -82,21 +82,21 @@
                         </td>
                         <td class="px-4 py-3">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $option->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                {{ $option->active ? 'Active' : 'Inactive' }}
+                                {{ $option->active ? __('Active') : __('Inactive') }}
                             </span>
                         </td>
                         <td class="px-4 py-3 text-sm font-medium">
                             <div class="action-group">
                                 <a href="{{ route('room-options.edit', $option) }}" class="link-primary">
-                                    Modifier
+                                    {{ __('Edit') }}
                                 </a>
 
                                 <form action="{{ route('room-options.destroy', $option) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette option ?');">
+                                      onsubmit="return confirm('{{ __('Are you sure you want to delete this option?') }}');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="link-danger">
-                                        Supprimer
+                                        {{ __('Delete') }}
                                     </button>
                                 </form>
                             </div>
@@ -105,7 +105,7 @@
                 @empty
                     <tr>
                         <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                            Aucune option trouvée
+                            {{ __('No options found') }}
                         </td>
                     </tr>
                 @endforelse

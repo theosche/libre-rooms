@@ -1,6 +1,6 @@
 @if($charter_mode != App\Enums\CharterModes::NONE)
     <div class="form-group" id="donation-form-group">
-        <h3 class="form-group-title">Charte</h3>
+        <h3 class="form-group-title">{{ __('Charter') }}</h3>
         <div class="form-element">
             @if($charter_mode == App\Enums\CharterModes::TEXT)
                 <div class="form-field">
@@ -18,9 +18,9 @@
                     >
                     <label for="charter_checkbox">
                         @if($charter_mode == App\Enums\CharterModes::TEXT)
-                            J'ai pris connaissance de la charte et j'y adhère.
+                            {{ __('I have read the charter and agree to it.') }}
                         @elseif($charter_mode == App\Enums\CharterModes::LINK)
-                            J'ai pris connaissance de <a href="{{ $charter_str }}">la charte</a> et j'y adhère.
+                            {!! __('I have read <a href=":url">the charter</a> and agree to it.', ['url' => $charter_str]) !!}
                         @endif
                     </label>
                     @error('charter')

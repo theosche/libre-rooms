@@ -39,8 +39,8 @@ class PasswordResetController extends Controller
         );
 
         return $status === Password::RESET_LINK_SENT
-            ? back()->with('success', 'Mail de réinitialisation envoyé')
-            : back()->with('error', 'Email inexistant ou erreur');
+            ? back()->with('success', __('Password reset email sent'))
+            : back()->with('error', __('Email not found or error'));
     }
 
     /**
@@ -83,7 +83,7 @@ class PasswordResetController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET ?
-            redirect()->route('rooms.index')->with('success', 'Mot de passe mis à jour avec succès. Vous êtes maintenant connecté.')
-            : back()->with('error', 'Impossible de mettre à jour le mot de passe');
+            redirect()->route('rooms.index')->with('success', __('Password updated successfully. You are now logged in.'))
+            : back()->with('error', __('Unable to update password'));
     }
 }

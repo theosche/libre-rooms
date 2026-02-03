@@ -1,6 +1,6 @@
 @if ($customFields->isNotEmpty())
     <div class="form-group" id="custom-fields-form-group">
-    <h3 class="form-group-title">Questions supplémentaires</h3>
+    <h3 class="form-group-title">{{ __('Additional questions') }}</h3>
     @foreach($customFields as $field)
         @php
             $value = old($field->key) ?? ($customFieldValues ? \App\Models\CustomFieldValue::getMatchingValue($customFieldValues, $field) : "");

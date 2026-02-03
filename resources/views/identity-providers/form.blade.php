@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', isset($provider) ? 'Modifier le fournisseur d\'identité' : 'Nouveau fournisseur d\'identité')
+@section('title', isset($provider) ? __('Edit identity provider') : __('New identity provider'))
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     <div class="form-header">
         <h1 class="form-title">
-            {{ isset($provider) ? 'Modifier le fournisseur d\'identité' : 'Nouveau fournisseur d\'identité' }}
+            {{ isset($provider) ? __('Edit identity provider') : __('New identity provider') }}
         </h1>
     </div>
 
@@ -19,12 +19,12 @@
 
             <!-- Informations de base -->
             <div class="form-group">
-                <h3 class="form-group-title">Informations de base</h3>
+                <h3 class="form-group-title">{{ __('Basic information') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="name" class="form-element-title">Nom</label>
+                            <label for="name" class="form-element-title">{{ __('Name') }}</label>
                             <input
                                 type="text"
                                 id="name"
@@ -39,9 +39,9 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="driver" class="form-element-title">Driver</label>
+                            <label for="driver" class="form-element-title">{{ __('Driver') }}</label>
                             <select name="driver" id="driver" required>
-                                <option value="">Sélectionnez un driver</option>
+                                <option value="">{{ __('Select a driver') }}</option>
                                 @foreach(App\Enums\IdentityProviderDrivers::cases() as $driver)
                                     <option value="{{ $driver->value }}" @selected(old('driver', $provider?->driver) == $driver->value)>
                                         {{ $driver->value }}
@@ -66,20 +66,20 @@
                                 value="1"
                                 @checked(old('enabled', $provider?->enabled ?? true))
                             >
-                            <span class="font-medium">Actif</span>
+                            <span class="font-medium">{{ __('Enabled') }}</span>
                         </label>
-                        <small class="text-gray-600">Les utilisateurs pourront se connecter via ce fournisseur</small>
+                        <small class="text-gray-600">{{ __('Users will be able to log in via this provider') }}</small>
                     </div>
                 </fieldset>
             </div>
 
             <!-- Configuration OIDC -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration OIDC</h3>
+                <h3 class="form-group-title">{{ __('OIDC configuration') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="issuer_url" class="form-element-title">URL de l'issuer</label>
+                        <label for="issuer_url" class="form-element-title">{{ __('Issuer URL') }}</label>
                         <input
                             type="url"
                             id="issuer_url"
@@ -88,7 +88,7 @@
                             required
                             placeholder="https://cloud.example.com"
                         >
-                        <small class="text-gray-600">URL de base du fournisseur d'identité</small>
+                        <small class="text-gray-600">{{ __('Base URL of the identity provider') }}</small>
                         @error('issuer_url')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -97,7 +97,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="client_id" class="form-element-title">Client ID</label>
+                        <label for="client_id" class="form-element-title">{{ __('Client ID') }}</label>
                         <input
                             type="text"
                             id="client_id"
@@ -114,9 +114,9 @@
                 <fieldset class="form-element">
                     <div class="form-field">
                         <label for="client_secret" class="form-element-title">
-                            Client Secret
+                            {{ __('Client Secret') }}
                             @if(isset($provider) && $provider->client_secret)
-                                <span class="text-xs text-gray-500">(laisser vide pour garder inchangé)</span>
+                                <span class="text-xs text-gray-500">({{ __('leave blank to keep unchanged') }})</span>
                             @endif
                         </label>
                         <input
@@ -135,14 +135,14 @@
 
             <div class="btn-group justify-end mt-6">
                 <a href="{{ route('identity-providers.index') }}" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {{ isset($provider) ? 'Mettre à jour' : 'Créer' }}
+                    {{ isset($provider) ? __('Update') : __('Create') }}
                 </button>
                 @if(isset($provider))
                     <button type="button" onclick="confirmDeleteProvider()" class="btn btn-delete">
-                        Supprimer
+                        {{ __('Delete') }}
                     </button>
                 @endif
             </div>
@@ -158,7 +158,7 @@
 @if(isset($provider))
 <script>
     function confirmDeleteProvider() {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur d\'identité ? Les utilisateurs liés ne pourront plus se connecter via ce fournisseur.')) {
+        if (confirm(@json(__('Are you sure you want to delete this identity provider? Linked users will no longer be able to log in via this provider.')))) {
             document.getElementById('delete-provider-form').submit();
         }
     }

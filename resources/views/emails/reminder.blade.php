@@ -1,47 +1,45 @@
 @extends('emails.layout')
 
 @section('content')
-    <h1>Rappel de paiement{{ $invoice->reminder_count == $owner->max_nb_reminders ? " (Dernier rappel)" : "" }}</h1>
+    <h1>{{ __('Payment reminder') }}{{ $invoice->reminder_count == $owner->max_nb_reminders ? " (" . __('Final reminder') . ")" : "" }}</h1>
 
-    <p>Bonjour,</p>
+    <p>{{ __('Hello') }},</p>
 
     <div class="warning-box">
-        <strong>{{ $invoice->formatedReminderCount() }}</strong> - Facture n° {{ $invoice->number }}
+        <strong>{{ $invoice->formattedReminderCount() }}</strong> - {{ __('Invoice no.') }} {{ $invoice->number }}
     </div>
 
     <p>
-        Vous avez loué la salle <em>{{ $room->name }}</em> pour l'événement/activité
-        <em>{{ $reservation->title }}</em>.
+        {{ __('You rented the room :room for the event/activity :title.', ['room' => $room->name, 'title' => $reservation->title]) }}
     </p>
 
-    <h2>{{ $reservation->events->count() > 1 ? 'Dates réservées' : 'Date réservée' }}</h2>
+    <h2>{{ $reservation->events->count() > 1 ? __('Reserved dates') : __('Reserved date') }}</h2>
     <ul>
         @foreach ($reservation->events as $event)
             <li>
-                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} au {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
+                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} {{ __('to') }} {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
             </li>
         @endforeach
     </ul>
 
     <p>
-        Sauf erreur de notre part, nous n'avons pas encore reçu votre paiement pour la facture n°
-        {{ $invoice->number }} du {{ $invoice->first_issued_at->format('d.m.Y') }}.
+        {{ __('Unless we are mistaken, we have not yet received your payment for invoice no. :number dated :date.', ['number' => $invoice->number, 'date' => $invoice->first_issued_at->format('d.m.Y')]) }}
     </p>
 
     <div class="highlight-box">
         <p style="margin: 0;">
-            <strong>Montant dû :</strong> {{ currency($invoice->amount, $room->owner) }}<br>
-            <strong>Nouvelle échéance :</strong> {{ $invoice->due_at->format('d.m.Y') }}
+            <strong>{{ __('Amount due:') }}</strong> {{ currency($invoice->amount, $room->owner) }}<br>
+            <strong>{{ __('New due date:') }}</strong> {{ $invoice->due_at->format('d.m.Y') }}
         </p>
     </div>
 
     <p>
-        <a href="{{ route('reservations.reminder.pdf', $reservation->hash) }}" class="btn">Télécharger le rappel</a>
+        <a href="{{ route('reservations.reminder.pdf', $reservation->hash) }}" class="btn">{{ __('Download the reminder') }}</a>
     </p>
 
     <p>
-        Nous vous remercions d'avance pour votre paiement. Pour toute question, n'hésitez pas à nous contacter en réponse à cet email.
+        {{ __('Thank you in advance for your payment. For any questions, feel free to contact us by replying to this email.') }}
     </p>
 
-    <p>Avec nos meilleures salutations,</p>
+    <p>{{ __('Best regards,') }}</p>
 @endsection

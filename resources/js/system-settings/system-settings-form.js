@@ -8,6 +8,8 @@ import {
     getFieldValue,
 } from '../config-test.js';
 
+const t = window.translations || {};
+
 /**
  * Get mail configuration data from the form.
  */
@@ -77,27 +79,27 @@ async function runTests() {
     const tests = [];
 
     // Mail is always required for system settings
-    showConfigStatus('mail', 'testing', 'Test en cours...');
+    showConfigStatus('mail', 'testing', t.testing || 'Testing...');
     tests.push(
         testMailConfig(getMailFormData()).then(result => {
             results.mail = result;
             showConfigStatus('mail', result.success ? 'success' : 'error', result.message);
         }).catch(err => {
-            results.mail = { success: false, message: 'Erreur réseau' };
-            showConfigStatus('mail', 'error', 'Erreur réseau');
+            results.mail = { success: false, message: t.network_error || 'Network error' };
+            showConfigStatus('mail', 'error', t.network_error || 'Network error');
         })
     );
 
     // CalDAV only if at least one field is filled
     if (shouldTestCaldav()) {
-        showConfigStatus('caldav', 'testing', 'Test en cours...');
+        showConfigStatus('caldav', 'testing', t.testing || 'Testing...');
         tests.push(
             testCaldavConfig(getCaldavFormData()).then(result => {
                 results.caldav = result;
                 showConfigStatus('caldav', result.success ? 'success' : 'error', result.message);
             }).catch(err => {
-                results.caldav = { success: false, message: 'Erreur réseau' };
-                showConfigStatus('caldav', 'error', 'Erreur réseau');
+                results.caldav = { success: false, message: t.network_error || 'Network error' };
+                showConfigStatus('caldav', 'error', t.network_error || 'Network error');
             })
         );
     } else {
@@ -106,14 +108,14 @@ async function runTests() {
 
     // WebDAV only if at least one field is filled
     if (shouldTestWebdav()) {
-        showConfigStatus('webdav', 'testing', 'Test en cours...');
+        showConfigStatus('webdav', 'testing', t.testing || 'Testing...');
         tests.push(
             testWebdavConfig(getWebdavFormData()).then(result => {
                 results.webdav = result;
                 showConfigStatus('webdav', result.success ? 'success' : 'error', result.message);
             }).catch(err => {
-                results.webdav = { success: false, message: 'Erreur réseau' };
-                showConfigStatus('webdav', 'error', 'Erreur réseau');
+                results.webdav = { success: false, message: t.network_error || 'Network error' };
+                showConfigStatus('webdav', 'error', t.network_error || 'Network error');
             })
         );
     } else {
@@ -156,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Disable submit button and show loading state
         if (submitButton) {
             submitButton.disabled = true;
-            submitButton.textContent = 'Vérification...';
+            submitButton.textContent = t.verifying || 'Verifying...';
         }
 
         try {

@@ -1,8 +1,8 @@
  <div class="form-group" id="special_discount-form-group">
-    <h3 class="form-group-title">Accorder une réduction spéciale (admin)</h3>
+    <h3 class="form-group-title">{{ __('Grant a special discount (admin)') }}</h3>
     <fieldset class="form-element">
         <div class="form-field">
-            <label for="special_discount" class="form-element-title">Réduction en {{$currency}}</label>
+            <label for="special_discount" class="form-element-title">{{ __('Discount in :currency', ['currency' => $currency]) }}</label>
             <input
                 type="number"
                 min="0"

@@ -1,25 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Utilisateurs - ' . $room->name)
+@section('title', __('Users') . ' - ' . $room->name)
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Utilisateurs</h1>
+        <h1 class="page-header-title">{{ __('Users') }}</h1>
         <p class="mt-2 text-sm text-gray-600">
-            Gérer les utilisateurs ayant accès à la salle <strong>{{ $room->name }}</strong>
+            {{ __('Manage users with access to room') }} <strong>{{ $room->name }}</strong>
         </p>
         <p class="mt-1 text-xs text-gray-500">
-            Propriétaire : {{ $room->owner->contact->display_name() }}
+            {{ __('Owner') }}: {{ $room->owner->contact->display_name() }}
         </p>
          <nav class="page-submenu">
              <a href="{{ route('rooms.index', ['view' => 'mine']) }}"
                 class="page-submenu-item page-submenu-nav">
-                 Retour aux salles
+                 {{ __('Back to rooms') }}
              </a>
              <span class="page-submenu-separator"></span>
              <button type="button" onclick="openAddUserModal()" class="page-submenu-item page-submenu-action cursor-pointer">
-                + Ajouter un utilisateur
+                + {{ __('Add user') }}
              </button>
         </nav>
     </div>
@@ -33,9 +33,9 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <h3 class="text-sm font-medium text-yellow-800">Salle privée</h3>
+                    <h3 class="text-sm font-medium text-yellow-800">{{ __('Private room') }}</h3>
                     <p class="mt-1 text-sm text-yellow-700">
-                        Cette salle est privée. Seuls les utilisateurs listés ci-dessous et les utilisateurs ayant un rôle sur le propriétaire peuvent la voir et la réserver.
+                        {{ __('This room is private. Only the users listed below and users with a role on the owner can view and book it.') }}
                     </p>
                 </div>
             </div>
@@ -49,9 +49,9 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <h3 class="text-sm font-medium text-blue-800">Salle publique</h3>
+                    <h3 class="text-sm font-medium text-blue-800">{{ __('Public room') }}</h3>
                     <p class="mt-1 text-sm text-blue-700">
-                        Cette salle est publique et accessible à tous. Les utilisateurs ci-dessous ont un accès explicite (utile si la salle devient privée).
+                        {{ __('This room is public and accessible to everyone. The users below have explicit access (useful if the room becomes private).') }}
                     </p>
                 </div>
             </div>
@@ -64,19 +64,19 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
+                        {{ __('Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Email
+                        {{ __('Email') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Rôle
+                        {{ __('Role') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
-                        Ajouté le
+                        {{ __('Added on') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -106,11 +106,11 @@
                         <td class="px-4 py-3 text-right text-sm font-medium">
                             <div class="action-group">
                                 <form action="{{ route('rooms.users.destroy', [$room, $user]) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Êtes-vous sûr de vouloir retirer cet utilisateur ?');">
+                                      onsubmit="return confirm('{{ __('Are you sure you want to remove this user?') }}');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="link-danger">
-                                        Retirer
+                                        {{ __('Remove') }}
                                     </button>
                                 </form>
                             </div>
@@ -119,7 +119,7 @@
                 @empty
                     <tr>
                         <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                            Aucun utilisateur n'a d'accès direct à cette salle.
+                            {{ __('No user has direct access to this room.') }}
                         </td>
                     </tr>
                 @endforelse
@@ -131,28 +131,28 @@
 <!-- Modal Ajouter un utilisateur -->
 <div id="add-user-modal" class="fixed inset-0 bg-gray-600/50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Ajouter un utilisateur</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Add user') }}</h3>
         <p class="text-sm text-gray-600 mb-4">
-            Ajouter un utilisateur à la salle "<strong>{{ $room->name }}</strong>"
+            {{ __('Add a user to room') }} "<strong>{{ $room->name }}</strong>"
         </p>
         <form action="{{ route('rooms.users.store', $room) }}" method="POST">
             @csrf
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                    Email de l'utilisateur
+                    {{ __('User email') }}
                 </label>
                 <input type="email" name="email" id="email" required
                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                        value="{{ old('email') }}"
-                       placeholder="utilisateur@exemple.com">
-                <p class="text-xs text-gray-500 mt-1">L'utilisateur doit avoir un compte existant</p>
+                       placeholder="{{ __('user@example.com') }}">
+                <p class="text-xs text-gray-500 mt-1">{{ __('User must have an existing account') }}</p>
                 @error('email')
                     <span class="text-red-600 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div class="mb-4">
                 <label for="role" class="block text-sm font-medium text-gray-700 mb-1">
-                    Rôle
+                    {{ __('Role') }}
                 </label>
                 <select name="role" id="role" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -168,10 +168,10 @@
             </div>
             <div class="flex gap-3 justify-end">
                 <button type="button" onclick="closeAddUserModal()" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </button>
                 <button type="submit" class="btn btn-primary">
-                    Ajouter
+                    {{ __('Add') }}
                 </button>
             </div>
         </form>

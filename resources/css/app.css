@@ -1238,3 +1238,8 @@ table tr {
 .config-status .animate-spin {
     animation: spin 1s linear infinite;
 }
+
+/* Room form: hide images fieldset when no images */
+fieldset.fieldset-images:not(:has(div.image-item)) {
+    display: none;
+}

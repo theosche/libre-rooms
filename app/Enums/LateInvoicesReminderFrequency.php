@@ -12,10 +12,10 @@ enum LateInvoicesReminderFrequency: string
     public function label(): string
     {
         return match ($this) {
-            self::NEVER => 'Jamais',
-            self::DAILY => 'Chaque jour',
-            self::WEEKLY => 'Chaque semaine',
-            self::MONTHLY => 'Chaque mois',
+            self::NEVER => __('Never'),
+            self::DAILY => __('Daily'),
+            self::WEEKLY => __('Weekly'),
+            self::MONTHLY => __('Monthly'),
         };
     }
 

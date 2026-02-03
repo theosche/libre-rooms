@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', isset($option) ? 'Modifier l\'option' : 'Nouvelle option')
+@section('title', isset($option) ? __('Edit option') : __('New option'))
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     <div class="form-header">
         <h1 class="form-title">
-            {{ isset($option) ? 'Modifier l\'option' : 'Nouvelle option' }}
+            {{ isset($option) ? __('Edit option') : __('New option') }}
         </h1>
     </div>
 
@@ -19,13 +19,13 @@
 
             <!-- Informations de base -->
             <div class="form-group">
-                <h3 class="form-group-title">Informations de base</h3>
+                <h3 class="form-group-title">{{ __('Basic information') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="room_id" class="form-element-title">Salle</label>
+                        <label for="room_id" class="form-element-title">{{ __('Room') }}</label>
                         <select name="room_id" id="room_id" required>
-                            <option value="">Sélectionner une salle</option>
+                            <option value="">{{ __('Select a room') }}</option>
                             @foreach($rooms as $room)
                                 <option value="{{ $room->id }}" @selected(old('room_id', $option?->room_id) == $room->id)>
                                     {{ $room->name }} ({{ $room->owner->contact->display_name() }})
@@ -40,7 +40,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="name" class="form-element-title">Nom de l'option</label>
+                        <label for="name" class="form-element-title">{{ __('Option name') }}</label>
                         <input
                             type="text"
                             id="name"
@@ -70,7 +70,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="price" class="form-element-title">Prix</label>
+                        <label for="price" class="form-element-title">{{ __('Price') }}</label>
                         <input
                             type="number"
                             id="price"
@@ -100,7 +100,7 @@
                                 value="1"
                                 @checked(old('active', $option?->active ?? true))
                             >
-                            <span>Option active</span>
+                            <span>{{ __('Active option') }}</span>
                         </label>
                     </div>
                 </fieldset>
@@ -108,14 +108,14 @@
 
             <div class="btn-group justify-end mt-6">
                 <a href="{{ route('room-options.index') }}" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {{ isset($option) ? 'Mettre à jour' : 'Créer' }}
+                    {{ isset($option) ? __('Update') : __('Create') }}
                 </button>
                 @if(isset($option))
                     <button type="button" onclick="confirmDeleteOption()" class="btn btn-delete">
-                        Supprimer
+                        {{ __('Delete') }}
                     </button>
                 @endif
             </div>
@@ -130,7 +130,7 @@
 </div>
 <script>
     function confirmDeleteOption() {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cette option ?')) {
+        if (confirm('{{ __('Are you sure you want to delete this option?') }}')) {
             document.getElementById('delete-option-form').submit();
         }
     }

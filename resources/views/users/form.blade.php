@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-@section('title', isset($user) ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur')
+@section('title', isset($user) ? __('Edit user') : __('New user'))
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     @if(request()->routeIs('profile'))
         <div class="form-header">
-            <h1 class="form-title">Mon profil</h1>
-            <p class="form-subtitle">Gérez vos informations personnelles</p>
+            <h1 class="form-title">{{ __('My profile') }}</h1>
+            <p class="form-subtitle">{{ __('Manage your personal information') }}</p>
         </div>
     @else
         <div class="form-header">
             <h1 class="form-title">
-                {{ isset($user) ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur' }}
+                {{ isset($user) ? __('Edit user') : __('New user') }}
             </h1>
         </div>
     @endif
@@ -31,7 +31,7 @@
 
             <!-- Permissions -->
             <div class="form-group">
-                <h3 class="form-group-title">Permissions</h3>
+                <h3 class="form-group-title">{{ __('Permissions') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
@@ -48,12 +48,12 @@
                                 @checked(old('is_global_admin', $user?->is_global_admin))
                                 @disabled($user?->id === auth()->id())
                             >
-                            <span class="font-medium">Administrateur global</span>
+                            <span class="font-medium">{{ __('Global administrator') }}</span>
                         </label>
                         @if($user?->id === auth()->id())
-                            <small class="text-amber-600">Vous ne pouvez pas retirer votre propre statut d'administrateur global</small>
+                            <small class="text-amber-600">{{ __('You cannot remove your own global administrator status') }}</small>
                         @else
-                            <small class="text-gray-600">L'administrateur global a accès à toutes les fonctionnalités de l'application</small>
+                            <small class="text-gray-600">{{ __('The global administrator has access to all application features') }}</small>
                         @endif
                     </div>
                 </fieldset>
@@ -61,8 +61,8 @@
 
             <!-- Assignation aux propriétaires -->
             <div class="form-group">
-                <h3 class="form-group-title">Assignation aux propriétaires</h3>
-                <p class="text-sm text-gray-600 mb-4">Sélectionnez les propriétaires et le rôle de l'utilisateur pour chacun</p>
+                <h3 class="form-group-title">{{ __('Owner assignment') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('Select the owners and the role of the user for each') }}</p>
 
                 <div id="owner-assignments" class="space-y-3">
                     @php
@@ -121,14 +121,14 @@
 
             <div class="btn-group justify-end mt-6">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {{ isset($user) ? 'Mettre à jour' : 'Créer' }}
+                    {{ isset($user) ? __('Update') : __('Create') }}
                 </button>
                 @if(isset($user) && $user->id !== auth()->id())
                     <button type="button" onclick="confirmDeleteAccount()" class="btn btn-delete">
-                        Supprimer le compte
+                        {{ __('Delete account') }}
                     </button>
                 @endif
             </div>
@@ -148,7 +148,7 @@
 
 <script>
     function confirmDeleteAccount() {
-        if (confirm('Êtes-vous absolument sûr de vouloir supprimer le compte ? Cette action est irréversible et toutes les données liées seront perdues.')) {
+        if (confirm('{{ __('Are you absolutely sure you want to delete this account? This action cannot be undone and all related data will be lost.') }}')) {
             document.getElementById('delete-account-form').submit();
         }
     }

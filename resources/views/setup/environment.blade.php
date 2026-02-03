@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Configuration de l\'environnement')
+@section('title', __('Environment configuration'))
 
 @section('content')
 <div class="auth-container container-full-form" style="max-width: 600px;">
 
     <div class="page-header">
-        <h1 class="page-header-title">Réglages système</h1>
+        <h1 class="page-header-title">{{ __('System settings') }}</h1>
         @includeWhen( $db_configured, 'system-settings._submenu')
-        <p class="mt-2 text-sm text-gray-600">Configurez l'environnement de base de l'application</p>
+        <p class="mt-2 text-sm text-gray-600">{{ __('Configure the basic environment of the application') }}</p>
     </div>
 
     @if( $db_configured )
@@ -18,7 +18,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <div class="text-sm text-green-800">
-                    <p class="font-medium">Base de données connectée</p>
+                    <p class="font-medium">{{ __('Database connected') }}</p>
                 </div>
             </div>
         </div>
@@ -29,8 +29,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
                 <div class="text-sm text-yellow-800">
-                    <p class="font-medium mb-1">Base de données non configurée</p>
-                    <p>Veuillez configurer la connexion à la base de données pour continuer.</p>
+                    <p class="font-medium mb-1">{{ __('Database not configured') }}</p>
+                    <p>{{ __('Please configure the database connection to continue.') }}</p>
                 </div>
             </div>
         </div>
@@ -47,11 +47,11 @@
     <form method="POST" action="{{ route('setup.environment.store') }}" class="styled-form">
         @csrf
         <div class="form-group">
-            <h3 class="form-group-title">Application</h3>
+            <h3 class="form-group-title">{{ __('Application') }}</h3>
 
             <fieldset class="form-element">
                 <div class="form-field">
-                    <label for="APP_URL" class="form-element-title">URL de l'application</label>
+                    <label for="APP_URL" class="form-element-title">{{ __('Application URL') }}</label>
                     <input
                         type="url"
                         id="APP_URL"
@@ -60,14 +60,14 @@
                         required
                         placeholder="https://reservations.example.com"
                     >
-                    <small class="text-gray-600">L'URL publique de votre application (sans slash final)</small>
+                    <small class="text-gray-600">{{ __('The public URL of your application (without trailing slash)') }}</small>
 
                 </div>
             </fieldset>
 
             <fieldset class="form-element">
                 <div class="form-field">
-                    <label for="APP_LOCALE" class="form-element-title">Langue</label>
+                    <label for="APP_LOCALE" class="form-element-title">{{ __('Language') }}</label>
                     <select id="APP_LOCALE" name="APP_LOCALE" required>
                         @foreach($locales as $code => $name)
                             <option value="{{ $code }}" @selected(old('APP_LOCALE', config('app.locale')) === $code)>
@@ -81,10 +81,10 @@
         </div>
 
         <div class="form-group">
-            <h3 class="form-group-title">Base de données</h3>
+            <h3 class="form-group-title">{{ __('Database') }}</h3>
             <fieldset class="form-element">
                 <div class="form-field">
-                    <label for="DB_CONNECTION" class="form-element-title">Type de base de données</label>
+                    <label for="DB_CONNECTION" class="form-element-title">{{ __('Database type') }}</label>
                     <select id="DB_CONNECTION" name="DB_CONNECTION" required>
                         @foreach($dbDrivers as $driver => $name)
                             <option value="{{ $driver }}" @selected(old('DB_CONNECTION', config('database.default')) === $driver)>
@@ -102,7 +102,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field" style="flex: 2;">
-                            <label for="DB_HOST" class="form-element-title">Hôte</label>
+                            <label for="DB_HOST" class="form-element-title">{{ __('Host') }}</label>
                             <input
                                 type="text"
                                 id="DB_HOST"
@@ -132,7 +132,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="DB_USERNAME" class="form-element-title">Utilisateur</label>
+                            <label for="DB_USERNAME" class="form-element-title">{{ __('User') }}</label>
                             <input
                                 type="text"
                                 id="DB_USERNAME"
@@ -144,7 +144,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="DB_PASSWORD" class="form-element-title">Mot de passe</label>
+                            <label for="DB_PASSWORD" class="form-element-title">{{ __('Password') }}</label>
                             <input
                                 type="password"
                                 id="DB_PASSWORD"
@@ -161,7 +161,7 @@
             <fieldset class="form-element">
                 <div class="form-field">
                     <label for="DB_DATABASE" class="form-element-title">
-                        <span id="db-database-label">Nom de la base de données</span>
+                        <span id="db-database-label">{{ __('Database name') }}</span>
                     </label>
                     <input
                         type="text"
@@ -172,7 +172,7 @@
                         placeholder="librerooms"
                     >
                     <small id="db-database-hint" class="text-gray-600">
-                        {{ in_array($connection, ['mysql', 'mariadb', 'pgsql']) ? 'Le nom de la base de données existante' : 'Chemin vers le fichier SQLite (relatif à database/)' }}
+                        {{ in_array($connection, ['mysql', 'mariadb', 'pgsql']) ? __('The name of the existing database') : __('Path to SQLite file (relative to database/)') }}
                     </small>
 
                 </div>
@@ -181,7 +181,7 @@
 
         <div class="btn-group justify-end mt-6">
             <button type="submit" class="btn btn-primary">
-                Enregistrer et continuer
+                {{ __('Save and continue') }}
             </button>
         </div>
     </form>
@@ -194,13 +194,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const dbDatabaseHint = document.getElementById('db-database-hint');
     const dbPort = document.getElementById('DB_PORT');
 
+    const translations = {
+        serverHint: @json(__('The name of the existing database')),
+        sqliteHint: @json(__('Path to SQLite file (relative to database/)'))
+    };
+
     function updateDbFields() {
         const driver = dbConnection.value;
         const isServer = ['mysql', 'mariadb', 'pgsql'].includes(driver);
 
         if (isServer) {
             serverFields.classList.remove('hidden');
-            dbDatabaseHint.textContent = 'Le nom de la base de données existante';
+            dbDatabaseHint.textContent = translations.serverHint;
             // Update default port based on driver
             if (driver === 'pgsql' && (!dbPort.value || dbPort.value === '3306')) {
                 dbPort.value = '5432';
@@ -209,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } else {
             serverFields.classList.add('hidden');
-            dbDatabaseHint.textContent = 'Chemin vers le fichier SQLite (relatif à database/)';
+            dbDatabaseHint.textContent = translations.sqliteHint;
         }
     }
 

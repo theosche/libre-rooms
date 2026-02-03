@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Propriétaires')
+@section('title', __('Owners'))
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Propriétaires</h1>
-        <p class="mt-2 text-sm text-gray-600">Liste des propriétaires de salles</p>
+        <h1 class="page-header-title">{{ __('Owners') }}</h1>
+        <p class="mt-2 text-sm text-gray-600">{{ __('List of room owners') }}</p>
         @can('create', App\Models\Owner::class)
             <nav class="page-submenu">
                 <a href="{{ route('owners.create') }}" class="page-submenu-item page-submenu-action">
-                    + Nouveau propriétaire
+                    + {{ __('New owner') }}
                 </a>
             </nav>
         @endcan
@@ -22,16 +22,16 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
+                        {{ __('Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Salles
+                        {{ __('Rooms') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Admins et Modérateur·ice·s
+                        {{ __('Admins and Moderators') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -76,7 +76,7 @@
                                     @endforeach
                                 </div>
                             @else
-                                <span class="text-gray-400">Aucune salle</span>
+                                <span class="text-gray-400">{{ __('No room') }}</span>
                             @endif
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-700">
@@ -106,19 +106,19 @@
                                     @endforeach
                                 </div>
                             @else
-                                <span class="text-gray-400">Vous seul·e</span>
+                                <span class="text-gray-400">{{ __('Only you') }}</span>
                             @endif
                         </td>
                         <td class="px-4 py-3 text-sm font-medium" onclick="event.stopPropagation()">
                             <div class="action-group">
                                 @can('manageUsers', $owner)
                                     <a href="{{ route('owners.users.index', $owner) }}" class="link-primary">
-                                        Utilisateurs
+                                        {{ __('Users') }}
                                     </a>
                                 @endcan
                                 @can('update', $owner)
                                     <a href="{{ route('owners.edit', $owner) }}" class="link-primary">
-                                        Modifier
+                                        {{ __('Edit') }}
                                     </a>
                                 @endcan
                                 @can('delete', $owner)
@@ -129,12 +129,12 @@
                                             $otherUsers = $owner->users->where('id', '!=', $user->id);
                                         @endphp
                                         @if($otherUsers->count() > 0 && !$user->is_global_admin)
-                                            <button type="submit" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir retirer ce propriétaire de votre liste ? D\'autres utilisateurs y ont également accès, il ne sera pas supprimé définitivement.')">
-                                                Retirer
+                                            <button type="submit" class="link-danger" onclick="return confirm('{{ __('Are you sure you want to remove this owner from your list? Other users also have access to it, it will not be permanently deleted.') }}')">
+                                                {{ __('Remove') }}
                                             </button>
                                         @else
-                                            <button type="submit" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce propriétaire ? Cette action est irréversible et supprimera également toutes les salles associées.')">
-                                                Supprimer
+                                            <button type="submit" class="link-danger" onclick="return confirm('{{ __('Are you sure you want to permanently delete this owner? This action cannot be undone and will also delete all associated rooms.') }}')">
+                                                {{ __('Delete') }}
                                             </button>
                                         @endif
                                     </form>
@@ -149,22 +149,22 @@
                             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                 <!-- Facturation -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Facturation</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Billing') }}</h4>
                                     <dl class="space-y-2 text-sm">
                                         <div class="flex">
-                                            <dt class="text-slate-500 mr-4">Slug</dt>
+                                            <dt class="text-slate-500 mr-4">{{ __('Slug') }}</dt>
                                             <dd class="text-slate-900">{{ $owner->slug }}</dd>
                                         </div>
                                         <div class="flex">
-                                            <dt class="text-slate-500 mr-4">Échéance</dt>
+                                            <dt class="text-slate-500 mr-4">{{ __('Due date') }}</dt>
                                             <dd class="text-slate-900">{{ $owner->invoice_due_mode->shortLabel($owner->invoice_due_days) }}</dd>
                                         </div>
                                         <div class="flex">
-                                            <dt class="text-slate-500 mr-4">Après rappel</dt>
-                                            <dd class="text-slate-900">{{ $owner->invoice_due_days_after_reminder }}j</dd>
+                                            <dt class="text-slate-500 mr-4">{{ __('After reminder') }}</dt>
+                                            <dd class="text-slate-900">{{ $owner->invoice_due_days_after_reminder }}{{ __('d') }}</dd>
                                         </div>
                                         <div class="flex">
-                                            <dt class="text-slate-500 mr-4">Max rappels</dt>
+                                            <dt class="text-slate-500 mr-4">{{ __('Max reminders') }}</dt>
                                             <dd class="text-slate-900">{{ $owner->max_nb_reminders }}</dd>
                                         </div>
                                     </dl>
@@ -172,43 +172,43 @@
 
                                 <!-- Paramètres régionaux -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Régional</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Regional') }}</h4>
                                     <dl class="space-y-2 text-sm">
                                         <div class="flex">
-                                            <dt class="text-slate-500 mr-4">Fuseau</dt>
-                                            <dd class="text-slate-900">{{ $owner->timezone ?: 'Défaut' }}</dd>
+                                            <dt class="text-slate-500 mr-4">{{ __('Timezone') }}</dt>
+                                            <dd class="text-slate-900">{{ $owner->timezone ?: __('Default') }}</dd>
                                         </div>
                                         <div class="flex">
-                                            <dt class="text-slate-500 mr-4">Devise</dt>
-                                            <dd class="text-slate-900">{{ $owner->currency ?: 'Défaut' }}</dd>
+                                            <dt class="text-slate-500 mr-4">{{ __('Currency') }}</dt>
+                                            <dd class="text-slate-900">{{ $owner->currency ?: __('Default') }}</dd>
                                         </div>
                                         <div class="flex">
-                                            <dt class="text-slate-500 mr-4">Langue</dt>
-                                            <dd class="text-slate-900">{{ $owner->locale ?: 'Défaut' }}</dd>
+                                            <dt class="text-slate-500 mr-4">{{ __('Language') }}</dt>
+                                            <dd class="text-slate-900">{{ $owner->locale ?: __('Default') }}</dd>
                                         </div>
                                     </dl>
                                 </div>
 
                                 <!-- Intégrations -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Intégrations</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Integrations') }}</h4>
                                     <div class="space-y-2">
                                         <div class="flex items-center gap-2 text-sm">
                                             @if($owner->use_caldav)
                                                 <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                                                <span class="text-slate-700">CalDAV activé</span>
+                                                <span class="text-slate-700">{{ __('CalDAV enabled') }}</span>
                                             @else
                                                 <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
-                                                <span class="text-slate-400">CalDAV désactivé</span>
+                                                <span class="text-slate-400">{{ __('CalDAV disabled') }}</span>
                                             @endif
                                         </div>
                                         <div class="flex items-center gap-2 text-sm">
                                             @if($owner->usesWebdav())
                                                 <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                                                <span class="text-slate-700">WebDAV activé</span>
+                                                <span class="text-slate-700">{{ __('WebDAV enabled') }}</span>
                                             @else
                                                 <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
-                                                <span class="text-slate-400">WebDAV désactivé</span>
+                                                <span class="text-slate-400">{{ __('WebDAV disabled') }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -216,7 +216,7 @@
 
                                 <!-- Paiement -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Instructions de paiement</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Payment instructions') }}</h4>
                                     @php
                                         $paymentInstructions = $owner->payment_instructions;
                                         $paymentType = $paymentInstructions['type'] ?? null;
@@ -225,26 +225,26 @@
                                         <div class="bg-white rounded-lg border border-slate-200 p-3">
                                             <div class="flex items-center gap-2 mb-2">
                                                 @if($paymentType === 'swiss')
-                                                    <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded">QR Suisse</span>
+                                                    <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded">{{ __('Swiss QR') }}</span>
                                                 @elseif($paymentType === 'sepa')
                                                     <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">SEPA</span>
                                                 @else
-                                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-medium rounded">International</span>
+                                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-medium rounded">{{ __('International') }}</span>
                                                 @endif
                                             </div>
                                             <dl class="space-y-1 text-xs">
                                                 <div>
-                                                    <dt class="text-slate-400">Titulaire</dt>
+                                                    <dt class="text-slate-400">{{ __('Account holder') }}</dt>
                                                     <dd class="text-slate-700 truncate">{{ $paymentInstructions['account_holder'] ?? '—' }}</dd>
                                                 </div>
                                                 <div>
-                                                    <dt class="text-slate-400">IBAN</dt>
+                                                    <dt class="text-slate-400">{{ __('IBAN') }}</dt>
                                                     <dd class="text-slate-700 font-mono truncate">{{ $paymentInstructions['iban'] ?? '—' }}</dd>
                                                 </div>
                                             </dl>
                                         </div>
                                     @else
-                                        <p class="text-sm text-slate-400">Non configuré</p>
+                                        <p class="text-sm text-slate-400">{{ __('Not configured') }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -253,7 +253,7 @@
                 @empty
                     <tr>
                         <td colspan="4" class="px-4 py-3 text-center text-gray-500">
-                            Aucun propriétaire trouvé
+                            {{ __('No owner found') }}
                         </td>
                     </tr>
                 @endforelse

@@ -38,7 +38,7 @@ class RoomUserController extends Controller
             'email' => ['required', 'email', 'exists:users,email'],
             'role' => ['required', 'string', 'in:' . implode(',', array_column(RoomUserRoles::cases(), 'value'))],
         ], [
-            'email.exists' => 'Aucun utilisateur trouvé avec cette adresse email.',
+            'email.exists' => __('No user found with this email address.'),
         ]);
 
         // Check if user can add this role
@@ -49,14 +49,14 @@ class RoomUserController extends Controller
         // Check if user already has access
         if ($room->users()->where('users.id', $user->id)->exists()) {
             return redirect()->route('rooms.users.index', $room)
-                ->with('error', 'Cet utilisateur a déjà accès à cette salle.');
+                ->with('error', __('This user already has access to this room.'));
         }
 
         // Attach user to room
         $room->users()->attach($user->id, ['role' => $validated['role']]);
 
         return redirect()->route('rooms.users.index', $room)
-            ->with('success', 'L\'utilisateur a été ajouté avec succès.');
+            ->with('success', __('User added successfully.'));
     }
 
     /**
@@ -69,13 +69,13 @@ class RoomUserController extends Controller
         // Check if user has access to this room
         if (! $room->users()->where('users.id', $user->id)->exists()) {
             return redirect()->route('rooms.users.index', $room)
-                ->with('error', 'Cet utilisateur n\'a pas d\'accès direct à cette salle.');
+                ->with('error', __('This user does not have direct access to this room.'));
         }
 
         // Detach user from room
         $room->users()->detach($user->id);
 
         return redirect()->route('rooms.users.index', $room)
-            ->with('success', 'L\'utilisateur a été retiré avec succès.');
+            ->with('success', __('User removed successfully.'));
     }
 }

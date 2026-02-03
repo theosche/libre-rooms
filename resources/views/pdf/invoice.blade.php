@@ -1,11 +1,11 @@
 @extends('pdf.layouts.base')
 
-@section('title', 'Facture ' . $invoice->number)
+@section('title', __('Invoice') . ' ' . $invoice->number)
 
 @section('content')
     @include('pdf.partials.header', ['owner' => $owner])
 
-    <h1>FACTURE</h1>
+    <h1>{{ __('INVOICE') }}</h1>
 
     <div class="separator"></div>
 
@@ -20,18 +20,18 @@
     <div class="invoice-info">
         <div class="invoice-info-row">
             <div class="invoice-info-labels">
-                <p>Facture n°:</p>
-                <p>Date:</p>
-                <p>Payable au:</p>
-                <p>Montant dû:</p>
-                <p>Numéro TVA:</p>
+                <p>{{ __('Invoice no.:') }}</p>
+                <p>{{ __('Date:') }}</p>
+                <p>{{ __('Payable by:') }}</p>
+                <p>{{ __('Amount due:') }}</p>
+                <p>{{ __('VAT number:') }}</p>
             </div>
             <div class="invoice-info-values">
                 <p>{{ $invoice->number }}</p>
                 <p>{{ $invoiceDate->format('d/m/Y') }}</p>
                 <p>{{ $dueDate->format('d/m/Y') }}</p>
                 <p>{{ currency($finalTotal, $owner) }}</p>
-                <p>{{ $vatNumber ?? 'Pas enregistré à la TVA' }}</p>
+                <p>{{ $vatNumber ?? __('Not VAT registered') }}</p>
             </div>
             <div class="invoice-info-tenant">
                 @include('pdf.partials.tenant-address', ['tenant' => $tenant])
@@ -42,9 +42,9 @@
     <div class="separator"></div>
 
     <div style="margin: 5mm 0;">
-        <h2>Réservation de {{ $room->name }} - {{ html_entity_decode($reservation->title) }}</h2>
+        <h2>{{ __('Reservation of :room - :title', ['room' => $room->name, 'title' => html_entity_decode($reservation->title)]) }}</h2>
         @if($reservation->description)
-            <p>Description de l'événement: {{ html_entity_decode($reservation->description) }}</p>
+            <p>{{ __('Event description:') }} {{ html_entity_decode($reservation->description) }}</p>
         @endif
     </div>
 
@@ -54,9 +54,9 @@
 
     <div class="message">
         <p>
-            Merci pour votre réservation.
-            Cette facture doit être réglée au plus tard le {{ $dueDate->format('d/m/Y') }}.
-            Pour toute question, n'hésitez pas à nous contacter.
+            {{ __('Thank you for your reservation.') }}
+            {{ __('This invoice must be paid by :date.', ['date' => $dueDate->format('d/m/Y')]) }}
+            {{ __('For any questions, feel free to contact us.') }}
         </p>
     </div>
 

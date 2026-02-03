@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', isset($discount) ? 'Modifier la réduction' : 'Nouvelle réduction')
+@section('title', isset($discount) ? __('Edit discount') : __('New discount'))
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     <div class="form-header">
         <h1 class="form-title">
-            {{ isset($discount) ? 'Modifier la réduction' : 'Nouvelle réduction' }}
+            {{ isset($discount) ? __('Edit discount') : __('New discount') }}
         </h1>
     </div>
 
@@ -19,13 +19,13 @@
 
             <!-- Informations de base -->
             <div class="form-group">
-                <h3 class="form-group-title">Informations de base</h3>
+                <h3 class="form-group-title">{{ __('Basic information') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="room_id" class="form-element-title">Salle</label>
+                        <label for="room_id" class="form-element-title">{{ __('Room') }}</label>
                         <select name="room_id" id="room_id" required>
-                            <option value="">Sélectionner une salle</option>
+                            <option value="">{{ __('Select a room') }}</option>
                             @foreach($rooms as $room)
                                 <option value="{{ $room->id }}" @selected(old('room_id', $discount?->room_id) == $room->id)>
                                     {{ $room->name }} ({{ $room->owner->contact->display_name() }})
@@ -40,7 +40,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="name" class="form-element-title">Nom de la réduction</label>
+                        <label for="name" class="form-element-title">{{ __('Discount name') }}</label>
                         <input
                             type="text"
                             id="name"
@@ -56,7 +56,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="description" class="form-element-title">Description</label>
+                        <label for="description" class="form-element-title">{{ __('Description') }}</label>
                         <input
                             type="text"
                             id="description"
@@ -83,7 +83,7 @@
                                 value="1"
                                 @checked(old('active', $discount?->active ?? true))
                             >
-                            <span>Réduction active</span>
+                            <span>{{ __('Active discount') }}</span>
                         </label>
                     </div>
                 </fieldset>
@@ -91,14 +91,14 @@
 
             <!-- Configuration de la réduction -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration de la réduction</h3>
+                <h3 class="form-group-title">{{ __('Discount configuration') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="type" class="form-element-title">Type de réduction</label>
+                        <label for="type" class="form-element-title">{{ __('Discount type') }}</label>
                         <select name="type" id="type" required>
-                            <option value="fixed" @selected(old('type', $discount?->type?->value ?? 'fixed') == 'fixed')>Montant fixe</option>
-                            <option value="percent" @selected(old('type', $discount?->type?->value) == 'percent')>Pourcentage</option>
+                            <option value="fixed" @selected(old('type', $discount?->type?->value ?? 'fixed') == 'fixed')>{{ __('Fixed amount') }}</option>
+                            <option value="percent" @selected(old('type', $discount?->type?->value) == 'percent')>{{ __('Percentage') }}</option>
                         </select>
                         @error('type')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -108,7 +108,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="value" class="form-element-title">Valeur</label>
+                        <label for="value" class="form-element-title">{{ __('Value') }}</label>
                         <input
                             type="number"
                             id="value"
@@ -118,7 +118,7 @@
                             value="{{ old('value', $discount?->value ?? '') }}"
                             required
                         >
-                        <small class="text-gray-600">Montant fixe ou pourcentage selon sélection</small>
+                        <small class="text-gray-600">{{ __('Fixed amount or percentage depending on selection') }}</small>
                         @error('value')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -127,13 +127,13 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="limit_to_contact_type" class="form-element-title">Limiter au type de contact</label>
+                        <label for="limit_to_contact_type" class="form-element-title">{{ __('Limit to contact type') }}</label>
                         <select name="limit_to_contact_type" id="limit_to_contact_type">
-                            <option value="">Tous les types</option>
-                            <option value="individual" @selected(old('limit_to_contact_type', $discount?->limit_to_contact_type?->value) == 'individual')>Privé·e uniquement</option>
-                            <option value="organization" @selected(old('limit_to_contact_type', $discount?->limit_to_contact_type?->value) == 'organization')>Organisation uniquement</option>
+                            <option value="">{{ __('All types') }}</option>
+                            <option value="individual" @selected(old('limit_to_contact_type', $discount?->limit_to_contact_type?->value) == 'individual')>{{ __('Individual only') }}</option>
+                            <option value="organization" @selected(old('limit_to_contact_type', $discount?->limit_to_contact_type?->value) == 'organization')>{{ __('Organization only') }}</option>
                         </select>
-                        <small class="text-gray-600">Optionnel : restreindre la réduction à un type de contact spécifique</small>
+                        <small class="text-gray-600">{{ __('Optional: restrict the discount to a specific contact type') }}</small>
                         @error('limit_to_contact_type')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -143,14 +143,14 @@
 
             <div class="btn-group justify-end mt-6">
                 <a href="{{ route('room-discounts.index') }}" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {{ isset($discount) ? 'Mettre à jour' : 'Créer' }}
+                    {{ isset($discount) ? __('Update') : __('Create') }}
                 </button>
                 @if(isset($discount))
                     <button type="button" onclick="confirmDeleteDiscount()" class="btn btn-delete">
-                        Supprimer
+                        {{ __('Delete') }}
                     </button>
                 @endif
             </div>
@@ -167,7 +167,7 @@
 
 <script>
     function confirmDeleteDiscount() {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cette réduction ?')) {
+        if (confirm('{{ __('Are you sure you want to delete this discount?') }}')) {
             document.getElementById('delete-discount-form').submit();
         }
     }

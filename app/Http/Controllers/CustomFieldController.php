@@ -24,7 +24,7 @@ class CustomFieldController extends Controller
         $canViewMine = $user && ($user->is_global_admin || $user->owners()->wherePivot('role', 'admin')->exists());
 
         if (!$canViewMine) {
-            abort(403, 'Vous devez être administrateur d\'au moins un propriétaire pour accéder à cette page.');
+            abort(403, __('You must be an administrator of at least one owner to access this page.'));
         }
 
         // Get room IDs where user has admin rights
@@ -71,7 +71,7 @@ class CustomFieldController extends Controller
 
         // Check if user has admin rights for at least one owner
         if (!$user->is_global_admin && !$user->owners()->wherePivot('role', 'admin')->exists()) {
-            abort(403, 'Vous devez être administrateur d\'au moins un propriétaire pour créer un champ personnalisé.');
+            abort(403, __('You must be an administrator of at least one owner to create a custom field.'));
         }
 
         // Get rooms where user has admin rights
@@ -102,7 +102,7 @@ class CustomFieldController extends Controller
         $room = Room::with('owner')->findOrFail($validated['room_id']);
         if (!$user->is_global_admin && !$user->isAdminOf($room->owner)) {
             return redirect()->route('custom-fields.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour ce propriétaire.');
+                ->with('error', __('You do not have administration rights for this owner.'));
         }
 
         // Generate key from label
@@ -136,7 +136,7 @@ class CustomFieldController extends Controller
         $field = CustomField::create($validated);
 
         return redirect()->route('custom-fields.index')
-            ->with('success', 'Le champ personnalisé a été créé avec succès.');
+            ->with('success', __('Custom field created successfully.'));
     }
 
     /**
@@ -148,7 +148,7 @@ class CustomFieldController extends Controller
 
         // Check if user has admin rights for this field's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($customField->room->owner)) {
-            abort(403, 'Vous n\'avez pas les droits d\'administration pour ce champ personnalisé.');
+            abort(403, __('You do not have administration rights for this custom field.'));
         }
 
         // Get rooms where user has admin rights
@@ -175,7 +175,7 @@ class CustomFieldController extends Controller
         // Check if user has admin rights for this field's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($customField->room->owner)) {
             return redirect()->route('custom-fields.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour ce champ personnalisé.');
+                ->with('error', __('You do not have administration rights for this custom field.'));
         }
 
         // Validate
@@ -185,7 +185,7 @@ class CustomFieldController extends Controller
         $room = Room::with('owner')->findOrFail($validated['room_id']);
         if (!$user->is_global_admin && !$user->isAdminOf($room->owner)) {
             return redirect()->route('custom-fields.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour le nouveau propriétaire.');
+                ->with('error', __('You do not have administration rights for the new owner.'));
         }
 
         // Regenerate key from label if label changed
@@ -224,7 +224,7 @@ class CustomFieldController extends Controller
         $customField->update($validated);
 
         return redirect()->route('custom-fields.index')
-            ->with('success', 'Le champ personnalisé a été mis à jour avec succès.');
+            ->with('success', __('Custom field updated successfully.'));
     }
 
     /**
@@ -237,12 +237,12 @@ class CustomFieldController extends Controller
         // Check if user has admin rights for this field's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($customField->room->owner)) {
             return redirect()->route('custom-fields.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour ce champ personnalisé.');
+                ->with('error', __('You do not have administration rights for this custom field.'));
         }
 
         $customField->delete();
 
         return redirect()->route('custom-fields.index')
-            ->with('success', 'Le champ personnalisé a été supprimé avec succès.');
+            ->with('success', __('Custom field deleted successfully.'));
     }
 }

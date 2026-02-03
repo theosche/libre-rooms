@@ -8,6 +8,8 @@ import {
     isChecked,
 } from '../config-test.js';
 
+const t = window.translations || {};
+
 // Toggle configuration sections based on switch state
 function toggleConfigSection(switchElement, sectionId) {
     const isChecked = switchElement.checked;
@@ -255,7 +257,7 @@ async function runTests() {
 
     // Mail test
     if (shouldTestMail()) {
-        showConfigStatus('mail', 'testing', 'Test en cours...');
+        showConfigStatus('mail', 'testing', t.testing || 'Testing...');
         tests.push(
             testMailConfig(getMailFormData()).then(result => {
                 results.mail = result;
@@ -268,7 +270,7 @@ async function runTests() {
 
     // CalDAV test
     if (shouldTestCaldav()) {
-        showConfigStatus('caldav', 'testing', 'Test en cours...');
+        showConfigStatus('caldav', 'testing', t.testing || 'Testing...');
         tests.push(
             testCaldavConfig(getCaldavFormData()).then(result => {
                 results.caldav = result;
@@ -281,7 +283,7 @@ async function runTests() {
 
     // WebDAV test
     if (shouldTestWebdav()) {
-        showConfigStatus('webdav', 'testing', 'Test en cours...');
+        showConfigStatus('webdav', 'testing', t.testing || 'Testing...');
         tests.push(
             testWebdavConfig(getWebdavFormData()).then(result => {
                 results.webdav = result;
@@ -330,7 +332,7 @@ function setupConfigTesting() {
         // Disable submit button and show loading state
         if (submitButton) {
             submitButton.disabled = true;
-            submitButton.textContent = 'Vérification...';
+            submitButton.textContent = t.verifying || 'Verifying...';
         }
 
         try {

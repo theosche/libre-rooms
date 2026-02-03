@@ -1,10 +1,10 @@
 @extends('pdf.layouts.base')
 
-@section('title', 'Rappel - Facture ' . $invoice->number)
+@section('title', __('Reminder - Invoice :number', ['number' => $invoice->number]))
 
 @section('content')
     @include('pdf.partials.header', ['owner' => $owner])
-    <h1>FACTURE - {{ $invoice->formatedReminderCount() }}</h1>
+    <h1>{{ __('INVOICE') }} - {{ $invoice->formattedReminderCount() }}</h1>
 
     <div class="separator"></div>
 
@@ -19,12 +19,12 @@
     <div class="invoice-info">
         <div class="invoice-info-row">
             <div class="invoice-info-labels">
-                <p>Facture n°:</p>
-                <p>Date de la facture:</p>
-                <p>Date du rappel:</p>
-                <p>Nouvelle échéance:</p>
-                <p>Montant dû:</p>
-                <p>Numéro TVA:</p>
+                <p>{{ __('Invoice no.') }}</p>
+                <p>{{ __('Invoice date:') }}</p>
+                <p>{{ __('Reminder date:') }}</p>
+                <p>{{ __('New due date:') }}</p>
+                <p>{{ __('Amount due:') }}</p>
+                <p>{{ __('VAT number:') }}</p>
             </div>
             <div class="invoice-info-values">
                 <p>{{ $invoice->number }}</p>
@@ -32,7 +32,7 @@
                 <p>{{ $invoice->issued_at->format('d/m/Y') }}</p>
                 <p>{{ $dueDate->format('d/m/Y') }}</p>
                 <p>{{ currency($finalTotal, $owner) }}</p>
-                <p>{{ $vatNumber ?? 'Pas enregistré à la TVA' }}</p>
+                <p>{{ $vatNumber ?? __('Not registered for VAT') }}</p>
             </div>
             <div class="invoice-info-tenant">
                 @include('pdf.partials.tenant-address', ['tenant' => $tenant])
@@ -43,9 +43,9 @@
     <div class="separator"></div>
 
     <div style="margin: 5mm 0;">
-        <h2>Réservation de {{ $room->name }} - {{ html_entity_decode($reservation->title) }}</h2>
+        <h2>{{ __('Reservation of :room', ['room' => $room->name]) }} - {{ html_entity_decode($reservation->title) }}</h2>
         @if($reservation->description)
-            <p>Description de l'événement: {{ html_entity_decode($reservation->description) }}</p>
+            <p>{{ __('Event description:') }} {{ html_entity_decode($reservation->description) }}</p>
         @endif
     </div>
 
@@ -55,10 +55,10 @@
 
     <div class="message">
         <p>
-            Ce rappel fait suite à notre facture du {{ $invoice->first_issued_at->format('d/m/Y') }} qui reste impayée à ce jour.
-            Nous vous prions de bien vouloir procéder au règlement avant le {{ $dueDate->format('d/m/Y') }}.
-            Si vous avez déjà effectué le paiement, veuillez ne pas tenir compte de ce rappel.
-            Pour toute question, n'hésitez pas à nous contacter.
+            {{ __('This reminder follows our invoice dated :date which remains unpaid to date.', ['date' => $invoice->first_issued_at->format('d/m/Y')]) }}
+            {{ __('Please proceed with payment before :date.', ['date' => $dueDate->format('d/m/Y')]) }}
+            {{ __('If you have already made the payment, please disregard this reminder.') }}
+            {{ __('For any questions, feel free to contact us.') }}
         </p>
     </div>
 

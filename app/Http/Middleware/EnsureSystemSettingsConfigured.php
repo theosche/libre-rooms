@@ -46,7 +46,7 @@ class EnsureSystemSettingsConfigured
         // Check if system settings are configured
         if (! $this->isConfigured()) {
             return redirect()->route('system-settings.edit')
-                ->with('error', 'Veuillez d\'abord configurer les paramètres système essentiels (mail, timezone, devise, langue).');
+                ->with('error', __('First, please configure the essential system settings (email, time zone, currency, language).'));
         }
 
         return $next($request);

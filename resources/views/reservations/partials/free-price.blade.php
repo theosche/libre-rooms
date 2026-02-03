@@ -1,8 +1,8 @@
  <div class="form-group" id="free-price-form-group">
-    <h3 class="form-group-title">Prix libre</h3>
+    <h3 class="form-group-title">{{ __('Free pricing') }}</h3>
     <fieldset class="form-element">
         <div class="form-field">
-            <label for="free-price" class="form-element-title">Fixez vous-même le prix de la réservation en {{ $currency }} *</label>
+            <label for="free-price" class="form-element-title">{{ __('Set your own price for the reservation in :currency', ['currency' => $currency]) }} *</label>
             <input
                 type="number"
                 min="0"

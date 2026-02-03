@@ -39,7 +39,7 @@ class MailService
         ], function ($message) use ($room, $owner) {
             $message->from($owner->mailSettings()->user, $owner->contact->display_name())
                 ->to($this->redirectIfDebug($owner->contact->email), $owner->contact->display_name())
-                ->subject(ucfirst($room->name).' - Nouvelle demande de réservation à contrôler');
+                ->subject(ucfirst($room->name).' - '.__('New reservation request to review'));
         });
         Mail::send('emails.new-reservation', [
             'reservation' => $reservation,
@@ -49,7 +49,7 @@ class MailService
             $message->from($owner->mailSettings()->user, $owner->contact->display_name())
                 ->to($this->redirectIfDebug($tenant->email), $tenant->display_name())
                 ->replyTo($owner->contact->email, $owner->contact->display_name())
-                ->subject(ucfirst($room->name).' - Votre demande de réservation');
+                ->subject(ucfirst($room->name).' - '.__('Your reservation request'));
         });
     }
 
@@ -72,7 +72,7 @@ class MailService
                 ->to($this->redirectIfDebug($tenant->bothEmailsUnique()))
                 ->cc($this->redirectIfDebug($owner->contact->email), $owner->contact->display_name())
                 ->replyTo($owner->contact->email, $owner->contact->display_name())
-                ->subject(ucfirst($room->name).' - Confirmation de réservation et facture (mail automatique)');
+                ->subject(ucfirst($room->name).' - '.__('Reservation confirmation and invoice (automatic email)'));
         });
     }
 
@@ -98,7 +98,7 @@ class MailService
                 ->to($this->redirectIfDebug($tenant->invoiceEmail()), $tenant->display_name())
                 ->cc($this->redirectIfDebug([$tenant->email, $owner->contact->email]))
                 ->replyTo($owner->contact->email, $owner->contact->display_name())
-                ->subject(ucfirst($room->name).' - Nouvelle facture (mail automatique)');
+                ->subject(ucfirst($room->name).' - '.__('New invoice (automatic email)'));
         });
     }
 
@@ -121,7 +121,7 @@ class MailService
                 ->to($this->redirectIfDebug($tenant->invoiceEmail()), $tenant->display_name())
                 ->cc($this->redirectIfDebug([$tenant->email, $owner->contact->email]))
                 ->replyTo($owner->contact->email, $owner->contact->display_name())
-                ->subject('Annulation de la facture '.$reservation->invoice->number.' (mail automatique)');
+                ->subject(__('Invoice cancellation').' '.$reservation->invoice->number.' '.__('(automatic email)'));
         });
     }
 
@@ -144,7 +144,7 @@ class MailService
                 ->to($this->redirectIfDebug($tenant->bothEmailsUnique()))
                 ->cc($this->redirectIfDebug($owner->contact->email), $owner->contact->display_name())
                 ->replyTo($owner->contact->email, $owner->contact->display_name())
-                ->subject(ucfirst($room->name).' - Annulation de votre réservation (mail automatique)');
+                ->subject(ucfirst($room->name).' - '.__('Your reservation cancellation (automatic email)'));
         });
     }
 
@@ -168,7 +168,7 @@ class MailService
                 ->to($this->redirectIfDebug($tenant->invoiceEmail()), $tenant->display_name())
                 ->cc($this->redirectIfDebug([$tenant->email, $owner->contact->email]))
                 ->replyTo($owner->contact->email, $owner->contact->display_name())
-                ->subject("Location de {$room->name} - Facture à payer - {$invoice->formatedReminderCount()}");
+                ->subject(__('Rental of :room - Invoice to pay - :reminder', ['room' => $room->name, 'reminder' => $invoice->formatedReminderCount()]));
         });
     }
 
@@ -182,7 +182,7 @@ class MailService
         ], function ($message) use ($owner, $lateCount) {
             $message->from($owner->mailSettings()->user, $owner->contact->display_name())
                 ->to($this->redirectIfDebug($owner->contact->email), $owner->contact->display_name())
-                ->subject("Rappel : {$lateCount} facture".($lateCount > 1 ? 's' : '').' en retard');
+                ->subject(__('Reminder: :count late invoice(s)', ['count' => $lateCount]));
         });
     }
 

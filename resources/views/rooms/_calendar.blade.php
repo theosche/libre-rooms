@@ -68,7 +68,7 @@
     <div id='calendar-{{ $room->id }}'></div>
     <div id="calendar-loader-{{ $room->id }}" class="calendar-loader">
         <div class="calendar-loader-spinner"></div>
-        <div class="calendar-loader-text">Chargement du calendrier...</div>
+        <div class="calendar-loader-text">{{ __('Loading calendar...') }}</div>
     </div>
 </div>
 
@@ -100,7 +100,7 @@
                     const response = await fetch('{{ route('rooms.availability', $room) }}');
                     events = await response.json();
                 } catch (error) {
-                    console.error('Erreur lors du chargement des événements:', error);
+                    console.error('Error loading events:', error);
                 }
             }
 
@@ -111,7 +111,14 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                locale: 'fr',
+                buttonText: {
+                    today:    '{{ __('today') }}',
+                    month:    '{{ __('month') }}',
+                    week:     '{{ __('week') }}',
+                    day:      '{{ __('day') }}',
+                    list:     '{{ __('list') }}'
+                },
+                locale: '{{ app()->getLocale() }}',
                 firstDay: 1, // Lundi
                 timeZone: '{{ $room->timezone ?? "Europe/Zurich" }}',
                 eventTimeFormat: {

@@ -30,19 +30,19 @@ class AvailabilityController
             // Add title and description based on view mode
             switch ($viewMode->value) {
                 case 'full':
-                    $event['title'] = $slot['title'] ?? 'Sans titre';
+                    $event['title'] = $slot['title'] ?? __('Untitled');
                     $descriptionParts = [
-                        '<strong>' . ($slot['title'] ?? 'Sans titre') . '</strong>',
-                        'Début: ' . $slot['start']->format('d.m.Y H:i'),
-                        'Fin: ' . $slot['end']->format('d.m.Y H:i'),
+                        '<strong>' . ($slot['title'] ?? __('Untitled')) . '</strong>',
+                        __('Start') . ': ' . $slot['start']->format('d.m.Y H:i'),
+                        __('End') . ': ' . $slot['end']->format('d.m.Y H:i'),
                     ];
 
                     if (!empty($slot['description'])) {
-                        $descriptionParts[] = 'Description: ' . $slot['description'];
+                        $descriptionParts[] = __('Description') . ': ' . $slot['description'];
                     }
 
                     if (!empty($slot['tenant'])) {
-                        $descriptionParts[] = 'Contact: ' . $slot['tenant'];
+                        $descriptionParts[] = __('Contact') . ': ' . $slot['tenant'];
                     }
 
                     $event['extendedProps'] = [
@@ -51,24 +51,24 @@ class AvailabilityController
                     break;
 
                 case 'title':
-                    $event['title'] = $slot['title'] ?? 'Sans titre';
+                    $event['title'] = $slot['title'] ?? __('Untitled');
                     $event['extendedProps'] = [
                         'description' => implode("\n", [
-                            '<strong>' . ($slot['title'] ?? 'Sans titre') . '</strong>',
-                            'Début: ' . $slot['start']->format('d.m.Y H:i'),
-                            'Fin: ' . $slot['end']->format('d.m.Y H:i'),
+                            '<strong>' . ($slot['title'] ?? __('Untitled')) . '</strong>',
+                            __('Start') . ': ' . $slot['start']->format('d.m.Y H:i'),
+                            __('End') . ': ' . $slot['end']->format('d.m.Y H:i'),
                         ]),
                     ];
                     break;
 
                 case 'slot':
                 default:
-                    $event['title'] = 'Occupé';
+                    $event['title'] = __('Occupied');
                     $event['extendedProps'] = [
                         'description' => implode("\n", [
-                            '<strong>Occupé</strong>',
-                            'Début: ' . $slot['start']->format('d.m.Y H:i'),
-                            'Fin: ' . $slot['end']->format('d.m.Y H:i'),
+                            "<strong>" . __('Occupied') . "</strong>",
+                            __('Start') . ': ' . $slot['start']->format('d.m.Y H:i'),
+                            __('End') . ': ' . $slot['end']->format('d.m.Y H:i'),
                         ]),
                     ];
                     break;

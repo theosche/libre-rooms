@@ -184,12 +184,15 @@ class Invoice extends Model
         return $this->computedStatus === InvoiceStatus::CANCELLED && $this->reservation->status === ReservationStatus::CONFIRMED;
     }
 
-    public function formatedReminderCount(): string
+    public function formattedReminderCount(): string
     {
-        return (match($this->reminder_count) {
-            1 => "1er rappel",
-            $this->owner->max_nb_reminders => "dernier rappel",
-            default => $this->reminder_count . "e rappel",
-        });
+        if ($this->reminder_count === $this->owner->max_nb_reminders) {
+            return __('last reminder');
+        }
+
+        $formatter = new \NumberFormatter(app()->getLocale(), \NumberFormatter::ORDINAL);
+        $ordinal = $formatter->format($this->reminder_count);
+
+        return __(':ordinal reminder', ['ordinal' => $ordinal]);
     }
 }

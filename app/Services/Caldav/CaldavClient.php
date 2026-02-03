@@ -43,7 +43,7 @@ class CaldavClient
             );
 
             if (!$result['success']) {
-                throw new \Exception("Impossible de créer le calendrier CalDAV : {$result['message']}");
+                throw new \Exception(__('Unable to create CalDAV calendar: :message', ['message' => $result['message']]));
             }
 
             // Refresh the calendars list
@@ -75,7 +75,7 @@ class CaldavClient
         if (!$caldavSettings || !$caldavSettings->url) {
             return [
                 'success' => false,
-                'message' => 'CalDAV non configuré pour ce propriétaire',
+                'message' => __('CalDAV not configured for this owner'),
                 'calendar_id' => null,
             ];
         }
@@ -91,7 +91,7 @@ class CaldavClient
         if (empty($calendarHome) || !isset($calendarHome[0])) {
             return [
                 'success' => false,
-                'message' => 'Impossible de trouver le calendar-home-set',
+                'message' => __('Unable to find calendar-home-set'),
                 'calendar_id' => null,
             ];
         }
@@ -126,19 +126,19 @@ class CaldavClient
         if ($httpCode === '201') {
             return [
                 'success' => true,
-                'message' => 'Calendrier créé avec succès',
+                'message' => __('Calendar created successfully'),
                 'calendar_id' => $calendarSlug,
             ];
         }
 
         $errorMessages = [
-            '403' => 'Permission refusée : vous n\'avez pas les droits pour créer un calendrier',
-            '405' => 'Méthode non supportée : le serveur CalDAV ne permet pas la création de calendriers',
-            '409' => 'Conflit : un calendrier avec ce nom existe peut-être déjà',
-            '507' => 'Espace insuffisant sur le serveur',
+            '403' => __('Permission denied: you do not have rights to create a calendar'),
+            '405' => __('Method not supported: the CalDAV server does not allow calendar creation'),
+            '409' => __('Conflict: a calendar with this name may already exist'),
+            '507' => __('Insufficient space on server'),
         ];
 
-        $message = $errorMessages[$httpCode] ?? "Erreur lors de la création du calendrier (HTTP {$httpCode})";
+        $message = $errorMessages[$httpCode] ?? __('Error creating calendar (HTTP :code)', ['code' => $httpCode]);
 
         return [
             'success' => false,

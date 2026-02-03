@@ -11,17 +11,17 @@ enum OwnerUserRoles: string
     public function label(): string
     {
         return match ($this) {
-            self::VIEWER => 'Lecteur·ice',
-            self::MODERATOR => 'Modérateur·ice',
-            self::ADMIN => 'Administrateur·ice',
+            self::VIEWER => __('Viewer'),
+            self::MODERATOR => __('Moderator'),
+            self::ADMIN => __('Administrator'),
         };
     }
     public function label_short(): string
     {
         return match ($this) {
-            self::VIEWER => 'Lect.',
-            self::MODERATOR => 'Mod.',
-            self::ADMIN => 'Admin',
+            self::VIEWER => __('Viewer.short'),
+            self::MODERATOR => __('Moderator.short'),
+            self::ADMIN => __('Administrator.short'),
         };
     }
 

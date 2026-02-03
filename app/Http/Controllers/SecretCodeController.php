@@ -25,7 +25,7 @@ class SecretCodeController extends Controller
 
         // Check if room has a secret message
         if (empty($reservation->room->secret_message)) {
-            abort(404, 'Aucun code d\'accès disponible pour cette salle.');
+            abort(404, __('No access codes available for this room.'));
         }
 
         return view('reservations.codes', [
@@ -40,9 +40,9 @@ class SecretCodeController extends Controller
     private function getStatusMessage(ReservationStatus $status): string
     {
         return match ($status) {
-            ReservationStatus::PENDING => 'Les codes d\'accès ne sont disponibles qu\'une fois la réservation confirmée.',
-            ReservationStatus::CANCELLED => 'Cette réservation a été annulée.',
-            ReservationStatus::FINISHED => 'Cette réservation est terminée. Les codes d\'accès ne sont plus accessibles.',
+            ReservationStatus::PENDING => __('Access codes are only available once the reservation is confirmed.'),
+            ReservationStatus::CANCELLED => __('This reservation has been cancelled.'),
+            ReservationStatus::FINISHED => __('This reservation is finished. Access codes are no longer available.'),
         };
     }
 }

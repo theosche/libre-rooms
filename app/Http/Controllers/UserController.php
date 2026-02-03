@@ -69,7 +69,7 @@ class UserController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Ces identifiants ne correspondent pas à nos enregistrements.',
+            'email' => __('These credentials do not match our records.'),
         ])->onlyInput('email');
     }
 
@@ -105,7 +105,7 @@ class UserController extends Controller
         app(SettingsService::class)->configureMailer();
         $user->sendEmailVerificationNotification();
 
-        return redirect()->route('verification.notice')->with('success', 'Compte créé avec succès ! Veuillez vérifier votre email pour activer votre compte.');
+        return redirect()->route('verification.notice')->with('success', __('Account created successfully! Please verify your email to activate your account.'));
     }
 
     /**
@@ -212,7 +212,7 @@ class UserController extends Controller
         $user->owners()->sync($ownerSync);
 
         return redirect()->route('users.index')
-            ->with('success', 'L\'utilisateur a été créé avec succès.');
+            ->with('success', __('User created successfully.'));
     }
 
     /**
@@ -253,7 +253,7 @@ class UserController extends Controller
         // Empêcher un utilisateur de retirer son propre statut de global_admin
         if ($user->id === auth()->id() && $user->is_global_admin && ! $request->boolean('is_global_admin')) {
             return redirect()->route('users.edit', $user)
-                ->with('error', 'Vous ne pouvez pas retirer votre propre statut d\'administrateur global.');
+                ->with('error', __('You cannot remove your own global administrator status.'));
         }
 
         $user->is_global_admin = $request->boolean('is_global_admin');
@@ -275,7 +275,7 @@ class UserController extends Controller
         $user->owners()->sync($ownerSync);
 
         return redirect()->route('users.index')
-            ->with('success', 'L\'utilisateur a été mis à jour avec succès.');
+            ->with('success', __('User updated successfully.'));
     }
 
     /**
@@ -287,13 +287,13 @@ class UserController extends Controller
         // Prevent deleting yourself
         if ($user->id === auth()->id()) {
             return redirect()->route('users.index')
-                ->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+                ->with('error', __('You cannot delete your own account.'));
         }
 
         $user->delete();
 
         return redirect()->route('users.index')
-            ->with('success', 'L\'utilisateur a été supprimé avec succès.');
+            ->with('success', __('User deleted successfully.'));
     }
 
     // ============================================
@@ -352,11 +352,11 @@ class UserController extends Controller
             $user->sendEmailVerificationNotification();
 
             return redirect()->route('verification.notice')
-                ->with('success', 'Profil mis à jour ! Un email de vérification a été envoyé à votre nouvelle adresse.');
+                ->with('success', __('Profile updated! A verification email has been sent to your new address.'));
         }
 
         return redirect()->route('profile')
-            ->with('success', 'Profil mis à jour avec succès !');
+            ->with('success', __('Profile updated successfully!'));
     }
 
     /**
@@ -389,7 +389,7 @@ class UserController extends Controller
             ->delete();
 
         return redirect()->route('profile')
-            ->with('success', 'Mot de passe modifié avec succès. Vos autres sessions ont été déconnectées.');
+            ->with('success', __('Password changed successfully. Your other sessions have been logged out.'));
     }
 
     /**
@@ -402,7 +402,7 @@ class UserController extends Controller
         // Prevent global admin from deleting themselves (security)
         if ($user->is_global_admin) {
             return redirect()->route('profile')
-                ->with('error', 'Les administrateurs globaux ne peuvent pas supprimer leur propre compte. Contactez un autre administrateur.');
+                ->with('error', __('Global administrators cannot delete their own account. Contact another administrator.'));
         }
 
         // Logout and delete
@@ -412,6 +412,6 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect('/')->with('success', 'Votre compte a été supprimé avec succès.');
+        return redirect('/')->with('success', __('Your account has been deleted successfully.'));
     }
 }

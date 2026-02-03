@@ -244,7 +244,7 @@ class ReservationService
                 }
             }
             if ($sendEmail && !$room->disable_mailer) {
-                $this->mail->sendCancellation($reservation, $reason ?? 'Aucune raison spécifiée');
+                $this->mail->sendCancellation($reservation, $reason ?? __('No reason specified'));
             }
         });
 

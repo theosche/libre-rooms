@@ -23,7 +23,7 @@ class RoomOptionController extends Controller
         $canViewMine = $user && ($user->is_global_admin || $user->owners()->wherePivot('role', 'admin')->exists());
 
         if (!$canViewMine) {
-            abort(403, 'Vous devez être administrateur d\'au moins un propriétaire pour accéder à cette page.');
+            abort(403, __('You must be an administrator of at least one owner to access this page.'));
         }
 
         // Get room IDs where user has admin rights
@@ -70,7 +70,7 @@ class RoomOptionController extends Controller
 
         // Check if user has admin rights for at least one owner
         if (!$user->is_global_admin && !$user->owners()->wherePivot('role', 'admin')->exists()) {
-            abort(403, 'Vous devez être administrateur d\'au moins un propriétaire pour créer une option.');
+            abort(403, __('You must be an administrator of at least one owner to create an option.'));
         }
 
         // Get rooms where user has admin rights
@@ -101,14 +101,14 @@ class RoomOptionController extends Controller
         $room = Room::with('owner')->findOrFail($validated['room_id']);
         if (!$user->is_global_admin && !$user->isAdminOf($room->owner)) {
             return redirect()->route('room-options.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour ce propriétaire.');
+                ->with('error', __('You do not have administration rights for this owner.'));
         }
 
         // Create option
         $option = RoomOption::create($validated);
 
         return redirect()->route('room-options.index')
-            ->with('success', 'L\'option a été créée avec succès.');
+            ->with('success', __('Option created successfully.'));
     }
 
     /**
@@ -120,7 +120,7 @@ class RoomOptionController extends Controller
 
         // Check if user has admin rights for this option's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($roomOption->room->owner)) {
-            abort(403, 'Vous n\'avez pas les droits d\'administration pour cette option.');
+            abort(403, __('You do not have administration rights for this option.'));
         }
 
         // Get rooms where user has admin rights
@@ -147,7 +147,7 @@ class RoomOptionController extends Controller
         // Check if user has admin rights for this option's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($roomOption->room->owner)) {
             return redirect()->route('room-options.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour cette option.');
+                ->with('error', __('You do not have administration rights for this option.'));
         }
 
         // Validate
@@ -157,14 +157,14 @@ class RoomOptionController extends Controller
         $room = Room::with('owner')->findOrFail($validated['room_id']);
         if (!$user->is_global_admin && !$user->isAdminOf($room->owner)) {
             return redirect()->route('room-options.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour le nouveau propriétaire.');
+                ->with('error', __('You do not have administration rights for the new owner.'));
         }
 
         // Update option
         $roomOption->update($validated);
 
         return redirect()->route('room-options.index')
-            ->with('success', 'L\'option a été mise à jour avec succès.');
+            ->with('success', __('Option updated successfully.'));
     }
 
     /**
@@ -177,12 +177,12 @@ class RoomOptionController extends Controller
         // Check if user has admin rights for this option's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($roomOption->room->owner)) {
             return redirect()->route('room-options.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour cette option.');
+                ->with('error', __('You do not have administration rights for this option.'));
         }
 
         $roomOption->delete();
 
         return redirect()->route('room-options.index')
-            ->with('success', 'L\'option a été supprimée avec succès.');
+            ->with('success', __('Option deleted successfully.'));
     }
 }

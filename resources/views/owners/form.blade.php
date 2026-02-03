@@ -1,11 +1,15 @@
 @extends('layouts.app')
 
-@section('title', isset($owner) ? 'Modifier le propriétaire' : 'Nouveau propriétaire')
+@section('title', isset($owner) ? __('Edit owner') : __('New owner'))
 
 @section('page-script')
     @vite(['resources/js/owners/owner-form.js'])
     <script>
         window.ownerId = {{ $owner->id ?? 'null' }};
+        window.translations = {
+            testing: @json(__('Testing...')),
+            verifying: @json(__('Verifying...')),
+        };
     </script>
 @endsection
 
@@ -13,7 +17,7 @@
 <div class="max-w-4xl mx-auto py-6">
     <div class="form-header">
         <h1 class="form-title">
-            {{ isset($owner) ? 'Modifier le propriétaire' : 'Nouveau propriétaire' }}
+            {{ isset($owner) ? __('Edit owner') : __('New owner') }}
         </h1>
     </div>
 
@@ -48,20 +52,20 @@
 
             <!-- Contact et Slug -->
             <div class="form-group">
-                <h3 class="form-group-title">Informations de base</h3>
+                <h3 class="form-group-title">{{ __('Basic information') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="contact_id" class="form-element-title">Contact</label>
+                        <label for="contact_id" class="form-element-title">{{ __('Contact') }}</label>
                         <select name="contact_id" id="contact_id" required>
-                            <option value="">Sélectionnez un contact</option>
+                            <option value="">{{ __('Select a contact') }}</option>
                             @foreach($contacts as $contact)
                                 @php
                                     $isCurrentContact = isset($currentContactId) && $contact->id === $currentContactId;
                                     $showCurrentLabel = $isCurrentContact && isset($currentContactInUserList) && !$currentContactInUserList;
                                 @endphp
                                 <option value="{{ $contact->id }}" @selected(old('contact_id', $owner?->contact_id) == $contact->id)>
-                                    {{ $contact->display_name() }}@if($showCurrentLabel) (Contact actuel)@endif
+                                    {{ $contact->display_name() }}@if($showCurrentLabel) ({{ __('Current contact') }})@endif
                                 </option>
                             @endforeach
                         </select>
@@ -73,16 +77,16 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="slug" class="form-element-title">Slug (identifiant unique)</label>
+                        <label for="slug" class="form-element-title">{{ __('Slug (unique identifier)') }}</label>
                         <input
                             type="text"
                             id="slug"
                             name="slug"
                             value="{{ old('slug', $owner?->slug) }}"
                             required
-                            placeholder="ex: mon-organisation"
+                            placeholder="{{ __('e.g.: my-organization') }}"
                         >
-                        <small class="text-gray-600">Utilisé dans les URLs. Uniquement lettres minuscules, chiffres et tirets.</small>
+                        <small class="text-gray-600">{{ __('Used in URLs. Only lowercase letters, numbers, and hyphens.') }}</small>
                         @error('slug')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -91,7 +95,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="website" class="form-element-title">Site internet (optionnel)</label>
+                        <label for="website" class="form-element-title">{{ __('Website (optional)') }}</label>
                         <input
                             type="url"
                             id="website"
@@ -108,13 +112,13 @@
 
             <!-- Paramètres de facturation -->
             <div class="form-group">
-                <h3 class="form-group-title">Paramètres de facturation</h3>
+                <h3 class="form-group-title">{{ __('Billing settings') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="invoice_due_mode" class="form-element-title">Mode d'échéance de la facture</label>
+                        <label for="invoice_due_mode" class="form-element-title">{{ __('Invoice due date mode') }}</label>
                         <select name="invoice_due_mode" id="invoice_due_mode" required>
-                            <option value="">Sélectionnez un mode</option>
+                            <option value="">{{ __('Select a mode') }}</option>
                             @foreach(App\Enums\InvoiceDueModes::cases() as $mode)
                                 <option value="{{ $mode->value }}" @selected(old('invoice_due_mode', $owner?->invoice_due_mode?->value) == $mode->value)>
                                     {{ $mode->label() }}
@@ -130,7 +134,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="invoice_due_days" class="form-element-title">Délai de paiement (jours)</label>
+                            <label for="invoice_due_days" class="form-element-title">{{ __('Payment delay (days)') }}</label>
                             <input
                                 type="number"
                                 id="invoice_due_days"
@@ -145,7 +149,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="invoice_due_days_after_reminder" class="form-element-title">Délai après rappel (jours)</label>
+                            <label for="invoice_due_days_after_reminder" class="form-element-title">{{ __('Delay after reminder (days)') }}</label>
                             <input
                                 type="number"
                                 id="invoice_due_days_after_reminder"
@@ -163,7 +167,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="max_nb_reminders" class="form-element-title">Nombre maximum de rappels</label>
+                        <label for="max_nb_reminders" class="form-element-title">{{ __('Maximum number of reminders') }}</label>
                         <input
                             type="number"
                             id="max_nb_reminders"
@@ -180,7 +184,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="late_invoices_reminder" class="form-element-title">Rappel pour les factures en retard</label>
+                        <label for="late_invoices_reminder" class="form-element-title">{{ __('Late invoices reminder') }}</label>
                         <select id="late_invoices_reminder" name="late_invoices_reminder">
                             @foreach(\App\Enums\LateInvoicesReminderFrequency::cases() as $frequency)
                                 <option value="{{ $frequency->value }}"
@@ -189,7 +193,7 @@
                                 </option>
                             @endforeach
                         </select>
-                        <p class="text-sm text-gray-500 mt-1">Recevez un rappel par email lorsqu'il y a des factures en retard à gérer</p>
+                        <p class="text-sm text-gray-500 mt-1">{{ __('Receive an email reminder when there are late invoices to manage') }}</p>
                         @error('late_invoices_reminder')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -203,17 +207,17 @@
                 $paymentType = old('payment_type', $paymentInstructions['type'] ?? '');
             @endphp
             <div class="form-group">
-                <h3 class="form-group-title">Instructions de paiement</h3>
-                <p class="text-sm text-gray-600 mb-4">Configurez les informations de paiement qui apparaîtront sur les factures</p>
+                <h3 class="form-group-title">{{ __('Payment instructions') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('Configure the payment information that will appear on invoices') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="payment_type" class="form-element-title">Type d'instructions</label>
+                        <label for="payment_type" class="form-element-title">{{ __('Instruction type') }}</label>
                         <select name="payment_type" id="payment_type">
-                            <option value="">Aucune</option>
-                            <option value="international" @selected($paymentType === 'international')>International (IBAN/BIC)</option>
-                            <option value="sepa" @selected($paymentType === 'sepa')>SEPA avec QR Code</option>
-                            <option value="swiss" @selected($paymentType === 'swiss')>QR Facture Suisse</option>
+                            <option value="">{{ __('None') }}</option>
+                            <option value="international" @selected($paymentType === 'international')>{{ __('International (IBAN/BIC)') }}</option>
+                            <option value="sepa" @selected($paymentType === 'sepa')>{{ __('SEPA with QR Code') }}</option>
+                            <option value="swiss" @selected($paymentType === 'swiss')>{{ __('Swiss QR Invoice') }}</option>
                         </select>
                         @error('payment_type')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -225,7 +229,7 @@
                 <div id="payment-fields" class="{{ $paymentType ? '' : 'hidden' }}">
                     <fieldset class="form-element">
                         <div class="form-field">
-                            <label for="payment_vat_number" class="form-element-title">Numéro de TVA (optionnel)</label>
+                            <label for="payment_vat_number" class="form-element-title">{{ __('VAT number (optional)') }}</label>
                             <input
                                 type="text"
                                 id="payment_vat_number"
@@ -242,13 +246,13 @@
                     <fieldset class="form-element">
                         <div class="form-element-row">
                             <div class="form-field">
-                                <label for="payment_account_holder" class="form-element-title">Titulaire du compte</label>
+                                <label for="payment_account_holder" class="form-element-title">{{ __('Account holder') }}</label>
                                 <input
                                     type="text"
                                     id="payment_account_holder"
                                     name="payment_account_holder"
                                     value="{{ old('payment_account_holder', $paymentInstructions['account_holder'] ?? '') }}"
-                                    placeholder="Nom du bénéficiaire"
+                                    placeholder="{{ __('Beneficiary name') }}"
                                 >
                                 @error('payment_account_holder')
                                     <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -256,7 +260,7 @@
                             </div>
 
                             <div class="form-field">
-                                <label for="payment_iban" class="form-element-title">IBAN</label>
+                                <label for="payment_iban" class="form-element-title">{{ __('IBAN') }}</label>
                                 <input
                                     type="text"
                                     id="payment_iban"
@@ -277,7 +281,7 @@
                             <div class="form-field">
                                 <label for="payment_bic" class="form-element-title">
                                     <span id="payment-bic-label">BIC/SWIFT</span>
-                                    <span id="payment-bic-optional" class="text-gray-500 text-xs">(optionnel)</span>
+                                    <span id="payment-bic-optional" class="text-gray-500 text-xs">({{ __('optional') }})</span>
                                 </label>
                                 <input
                                     type="text"
@@ -286,7 +290,7 @@
                                     value="{{ old('payment_bic', $paymentInstructions['bic'] ?? '') }}"
                                     placeholder="BCVLCH2LXXX"
                                 >
-                                <small id="payment-bic-hint" class="text-gray-600 hidden">Requis pour générer le QR code SEPA</small>
+                                <small id="payment-bic-hint" class="text-gray-600 hidden">{{ __('Required to generate the SEPA QR code') }}</small>
                                 @error('payment_bic')
                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                 @enderror
@@ -294,7 +298,7 @@
 
                             <!-- Bank name (only for international) -->
                             <div class="form-field" id="payment-bank-name-section">
-                                <label for="payment_bank_name" class="form-element-title">Nom de la banque (optionnel)</label>
+                                <label for="payment_bank_name" class="form-element-title">{{ __('Bank name (optional)') }}</label>
                                 <input
                                     type="text"
                                     id="payment_bank_name"
@@ -313,9 +317,9 @@
                     <fieldset class="form-element" id="payment-address-section">
                         <div class="form-field">
                             <label class="form-element-title">
-                                <span id="payment-address-label">Adresse</span>
-                                <span id="payment-address-optional" class="text-gray-500 text-xs">(optionnel)</span>
-                                <span id="payment-address-required" class="text-gray-500 text-xs hidden">(requise pour QR Suisse)</span>
+                                <span id="payment-address-label">{{ __('Address') }}</span>
+                                <span id="payment-address-optional" class="text-gray-500 text-xs">({{ __('optional') }})</span>
+                                <span id="payment-address-required" class="text-gray-500 text-xs hidden">({{ __('required for Swiss QR') }})</span>
                             </label>
                         </div>
                         <div class="form-element-row">
@@ -325,7 +329,7 @@
                                     id="payment_address_street"
                                     name="payment_address_street"
                                     value="{{ old('payment_address_street', $paymentInstructions['address']['street'] ?? '') }}"
-                                    placeholder="Rue"
+                                    placeholder="{{ __('Street') }}"
                                 >
                             </div>
                             <div class="form-field" style="max-width: 100px;">
@@ -334,7 +338,7 @@
                                     id="payment_address_zip"
                                     name="payment_address_zip"
                                     value="{{ old('payment_address_zip', $paymentInstructions['address']['zip'] ?? '') }}"
-                                    placeholder="NPA"
+                                    placeholder="{{ __('ZIP') }}"
                                 >
                             </div>
                             <div class="form-field">
@@ -343,7 +347,7 @@
                                     id="payment_address_city"
                                     name="payment_address_city"
                                     value="{{ old('payment_address_city', $paymentInstructions['address']['city'] ?? '') }}"
-                                    placeholder="Ville"
+                                    placeholder="{{ __('City') }}"
                                 >
                             </div>
                             <div class="form-field" style="max-width: 80px;">
@@ -375,18 +379,18 @@
                     <fieldset class="form-element" id="payment-besr-section">
                         <div class="form-field">
                             <label for="payment_besr_id" class="form-element-title">
-                                BESR-ID <span class="text-gray-500 text-xs">(optionnel - laissez vide pour PostFinance)</span>
+                                BESR-ID <span class="text-gray-500 text-xs">({{ __('optional - leave empty for PostFinance') }})</span>
                             </label>
                             <input
                                 type="text"
                                 id="payment_besr_id"
                                 name="payment_besr_id"
                                 value="{{ old('payment_besr_id', $paymentInstructions['besr_id'] ?? '') }}"
-                                placeholder="ex: 210000"
+                                placeholder="{{ __('e.g.: 210000') }}"
                                 maxlength="6"
                                 style="max-width: 150px;"
                             >
-                            <small class="text-gray-600">Code fourni par votre banque pour les références QR structurées</small>
+                            <small class="text-gray-600">{{ __('Code provided by your bank for structured QR references') }}</small>
                             @error('payment_besr_id')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
@@ -397,7 +401,7 @@
 
             <!-- Configuration email -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration email</h3>
+                <h3 class="form-group-title">{{ __('Email configuration') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
@@ -412,9 +416,9 @@
                                 @disabled(!$hasDefaultMail)
                             >
                             <span class="font-medium">
-                                Utiliser la configuration par défaut
+                                {{ __('Use default configuration') }}
                                 @if(!$hasDefaultMail)
-                                    <span class="text-red-600 text-sm">(aucune configuration par défaut disponible)</span>
+                                    <span class="text-red-600 text-sm">({{ __('no default configuration available') }})</span>
                                 @endif
                             </span>
                         </label>
@@ -425,9 +429,9 @@
                 <div id="mail-defaults" class="{{ ($hasDefaultMail && $useDefaultMail) ? '' : 'hidden' }}">
                     <fieldset class="form-element">
                         <div class="bg-gray-50 p-4 rounded-md text-sm">
-                            <p><strong>Serveur:</strong> {{ $systemSettings?->mail_host }}:{{ $systemSettings?->mail_port }}</p>
-                            <p><strong>Utilisateur:</strong> {{ $systemSettings?->mail }}</p>
-                            <p><strong>Mot de passe:</strong> ••••••••</p>
+                            <p><strong>{{ __('Server') }}:</strong> {{ $systemSettings?->mail_host }}:{{ $systemSettings?->mail_port }}</p>
+                            <p><strong>{{ __('User') }}:</strong> {{ $systemSettings?->mail }}</p>
+                            <p><strong>{{ __('Password') }}:</strong> ••••••••</p>
                         </div>
                     </fieldset>
                 </div>
@@ -437,7 +441,7 @@
                     <fieldset class="form-element">
                         <div class="form-element-row">
                             <div class="form-field">
-                                <label for="mail_host" class="form-element-title">Serveur SMTP</label>
+                                <label for="mail_host" class="form-element-title">{{ __('SMTP server') }}</label>
                                 <input
                                     type="text"
                                     id="mail_host"
@@ -450,7 +454,7 @@
                             </div>
 
                             <div class="form-field">
-                                <label for="mail_port" class="form-element-title">Port</label>
+                                <label for="mail_port" class="form-element-title">{{ __('Port') }}</label>
                                 <input
                                     type="number"
                                     id="mail_port"
@@ -469,7 +473,7 @@
                     <fieldset class="form-element">
                         <div class="form-element-row">
                             <div class="form-field">
-                                <label for="mail" class="form-element-title">Email (utilisateur SMTP)</label>
+                                <label for="mail" class="form-element-title">{{ __('Email (SMTP user)') }}</label>
                                 <input
                                     type="text"
                                     id="mail"
@@ -483,9 +487,9 @@
 
                             <div class="form-field">
                                 <label for="mail_pass" class="form-element-title">
-                                    Mot de passe SMTP
+                                    {{ __('SMTP password') }}
                                     @if(isset($owner) && $owner->mail_pass)
-                                        <span class="text-xs text-gray-500">(laisser vide pour conserver)</span>
+                                        <span class="text-xs text-gray-500">({{ __('leave empty to keep current') }})</span>
                                     @endif
                                 </label>
                                 <input
@@ -510,8 +514,8 @@
 
             <!-- Configuration CalDAV -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration CalDAV</h3>
-                <p>Si une configuration CalDAV est fournie, les salles pourront utiliser un calendrier CalDAV externe pour vérifier la disponibilité.</p>
+                <h3 class="form-group-title">{{ __('CalDAV configuration') }}</h3>
+                <p>{{ __('If a CalDAV configuration is provided, rooms can use an external CalDAV calendar to check availability.') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-field">
@@ -524,7 +528,7 @@
                                 value="1"
                                 @checked($useCaldav)
                             >
-                            <span class="font-medium">Activer CalDAV</span>
+                            <span class="font-medium">{{ __('Enable CalDAV') }}</span>
                         </label>
                     </div>
                 </fieldset>
@@ -543,9 +547,9 @@
                                     @disabled(!$hasDefaultCaldav)
                                 >
                                 <span class="font-medium">
-                                    Utiliser la configuration par défaut définie pour le système
+                                    {{ __('Use the default configuration defined for the system') }}
                                     @if(!$hasDefaultCaldav)
-                                        <span class="text-red-600 text-sm">(aucune configuration par défaut disponible)</span>
+                                        <span class="text-red-600 text-sm">({{ __('no default configuration available') }})</span>
                                     @endif
                                 </span>
                             </label>
@@ -556,9 +560,9 @@
                     <div id="caldav-defaults" class="{{ ($hasDefaultCaldav && $useDefaultCaldav) ? '' : 'hidden' }}">
                         <fieldset class="form-element">
                             <div class="bg-gray-50 p-4 rounded-md text-sm">
-                                <p><strong>URL:</strong> {{ $systemSettings?->dav_url }}</p>
-                                <p><strong>Utilisateur:</strong> {{ $systemSettings?->dav_user }}</p>
-                                <p><strong>Mot de passe:</strong> ••••••••</p>
+                                <p><strong>{{ __('URL') }}:</strong> {{ $systemSettings?->dav_url }}</p>
+                                <p><strong>{{ __('User') }}:</strong> {{ $systemSettings?->dav_user }}</p>
+                                <p><strong>{{ __('Password') }}:</strong> ••••••••</p>
                             </div>
                         </fieldset>
                     </div>
@@ -567,7 +571,7 @@
                     <div id="caldav-inputs" class="{{ (!$hasDefaultCaldav || !$useDefaultCaldav) ? '' : 'hidden' }}">
                         <fieldset class="form-element">
                             <div class="form-field">
-                                <label for="dav_url" class="form-element-title">URL CalDAV</label>
+                                <label for="dav_url" class="form-element-title">{{ __('CalDAV URL') }}</label>
                                 <input
                                     type="text"
                                     id="dav_url"
@@ -583,7 +587,7 @@
                         <fieldset class="form-element">
                             <div class="form-element-row">
                                 <div class="form-field">
-                                    <label for="dav_user" class="form-element-title">Utilisateur CalDAV</label>
+                                    <label for="dav_user" class="form-element-title">{{ __('CalDAV user') }}</label>
                                     <input
                                         type="text"
                                         id="dav_user"
@@ -597,9 +601,9 @@
 
                                 <div class="form-field">
                                     <label for="dav_pass" class="form-element-title">
-                                        Mot de passe CalDAV
+                                        {{ __('CalDAV password') }}
                                         @if(isset($owner) && $owner->dav_pass)
-                                            <span class="text-xs text-gray-500">(laisser vide pour conserver)</span>
+                                            <span class="text-xs text-gray-500">({{ __('leave empty to keep current') }})</span>
                                         @endif
                                     </label>
                                     <input
@@ -625,8 +629,8 @@
 
             <!-- Configuration WebDAV -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration WebDAV</h3>
-                <p>Si une configuration WebDAV est fournie, les documents pdf générés (confirmations et factures) seront stockés sur le serveur WebDAV.</p>
+                <h3 class="form-group-title">{{ __('WebDAV configuration') }}</h3>
+                <p>{{ __('If a WebDAV configuration is provided, generated PDF documents (confirmations and invoices) will be stored on the WebDAV server.') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-field">
@@ -639,7 +643,7 @@
                                 value="1"
                                 @checked($useWebdav)
                             >
-                            <span class="font-medium">Activer WebDAV</span>
+                            <span class="font-medium">{{ __('Enable WebDAV') }}</span>
                         </label>
                     </div>
                 </fieldset>
@@ -658,9 +662,9 @@
                                     @disabled(!$hasDefaultWebdav)
                                 >
                                 <span class="font-medium">
-                                    Utiliser la configuration par défaut définie pour le système
+                                    {{ __('Use the default configuration defined for the system') }}
                                     @if(!$hasDefaultWebdav)
-                                        <span class="text-red-600 text-sm">(aucune configuration par défaut disponible)</span>
+                                        <span class="text-red-600 text-sm">({{ __('no default configuration available') }})</span>
                                     @endif
                                 </span>
                             </label>
@@ -671,10 +675,10 @@
                     <div id="webdav-defaults" class="{{ ($hasDefaultWebdav && $useDefaultWebdav) ? '' : 'hidden' }}">
                         <fieldset class="form-element">
                             <div class="bg-gray-50 p-4 rounded-md text-sm">
-                                <p><strong>Endpoint:</strong> {{ $systemSettings?->webdav_endpoint }}</p>
-                                <p><strong>Utilisateur:</strong> {{ $systemSettings?->webdav_user }}</p>
-                                <p><strong>Mot de passe:</strong> ••••••••</p>
-                                <p><strong>Chemin:</strong> {{ $systemSettings?->webdav_save_path }}</p>
+                                <p><strong>{{ __('Endpoint') }}:</strong> {{ $systemSettings?->webdav_endpoint }}</p>
+                                <p><strong>{{ __('User') }}:</strong> {{ $systemSettings?->webdav_user }}</p>
+                                <p><strong>{{ __('Password') }}:</strong> ••••••••</p>
+                                <p><strong>{{ __('Path') }}:</strong> {{ $systemSettings?->webdav_save_path }}</p>
                             </div>
                         </fieldset>
                     </div>
@@ -683,7 +687,7 @@
                     <div id="webdav-inputs" class="{{ (!$hasDefaultWebdav || !$useDefaultWebdav) ? '' : 'hidden' }}">
                         <fieldset class="form-element">
                             <div class="form-field">
-                                <label for="webdav_endpoint" class="form-element-title">Endpoint WebDAV</label>
+                                <label for="webdav_endpoint" class="form-element-title">{{ __('WebDAV endpoint') }}</label>
                                 <input
                                     type="text"
                                     id="webdav_endpoint"
@@ -699,7 +703,7 @@
                         <fieldset class="form-element">
                             <div class="form-element-row">
                                 <div class="form-field">
-                                    <label for="webdav_user" class="form-element-title">Utilisateur WebDAV</label>
+                                    <label for="webdav_user" class="form-element-title">{{ __('WebDAV user') }}</label>
                                     <input
                                         type="text"
                                         id="webdav_user"
@@ -713,9 +717,9 @@
 
                                 <div class="form-field">
                                     <label for="webdav_pass" class="form-element-title">
-                                        Mot de passe WebDAV
+                                        {{ __('WebDAV password') }}
                                         @if(isset($owner) && $owner->webdav_pass)
-                                            <span class="text-xs text-gray-500">(laisser vide pour conserver)</span>
+                                            <span class="text-xs text-gray-500">({{ __('leave empty to keep current') }})</span>
                                         @endif
                                     </label>
                                     <input
@@ -736,7 +740,7 @@
 
                         <fieldset class="form-element">
                             <div class="form-field">
-                                <label for="webdav_save_path" class="form-element-title">Chemin de sauvegarde</label>
+                                <label for="webdav_save_path" class="form-element-title">{{ __('Save path') }}</label>
                                 <input
                                     type="text"
                                     id="webdav_save_path"
@@ -756,18 +760,18 @@
 
             <!-- Paramètres régionaux -->
             <div class="form-group">
-                <h3 class="form-group-title">Paramètres régionaux (optionnel)</h3>
-                <p class="text-sm text-gray-600 mb-4">Laissez vide pour utiliser les paramètres système par défaut</p>
+                <h3 class="form-group-title">{{ __('Regional settings (optional)') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('Leave empty to use system default settings') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="timezone" class="form-element-title">Fuseau horaire</label>
+                            <label for="timezone" class="form-element-title">{{ __('Timezone') }}</label>
                             @include('partials._timezone_select', [
                                 'name' => 'timezone',
                                 'id' => 'timezone',
                                 'value' => old('timezone') ?? $owner?->timezone,
-                                'defaultTimezone' => $systemSettings?->getTimezone() ?? 'Non défini',
+                                'defaultTimezone' => $systemSettings?->getTimezone() ?? __('Not defined'),
                             ])
                             @error('timezone')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -775,7 +779,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="currency" class="form-element-title">Devise</label>
+                            <label for="currency" class="form-element-title">{{ __('Currency') }}</label>
                             @include('partials._currency_select', [
                                 'name' => 'currency',
                                 'id' => 'currency',
@@ -791,7 +795,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="locale" class="form-element-title">Langue</label>
+                        <label for="locale" class="form-element-title">{{ __('Language') }}</label>
                         @include('partials._locale_select', [
                             'name' => 'locale',
                             'id' => 'locale',
@@ -807,10 +811,10 @@
 
             <div class="btn-group justify-end mt-6">
                 <a href="{{ route('owners.index') }}" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {{ isset($owner) ? 'Mettre à jour' : 'Créer' }}
+                    {{ isset($owner) ? __('Update') : __('Create') }}
                 </button>
                 @if(isset($owner))
                     @php
@@ -819,11 +823,11 @@
                     @endphp
                     @if($otherUsers->count() > 0 && !$user->is_global_admin)
                         <button type="button" onclick="confirmDeleteOwner()" class="btn btn-delete">
-                            Retirer
+                            {{ __('Remove') }}
                         </button>
                     @else
                         <button type="button" onclick="confirmDeleteOwner()" class="btn btn-delete">
-                            Supprimer
+                            {{ __('Delete') }}
                         </button>
                     @endif
                 @endif
@@ -841,11 +845,11 @@
     @if(isset($owner))
     function confirmDeleteOwner() {
         @if($otherUsers->count() > 0 && !$user->is_global_admin)
-            if (confirm('Êtes-vous sûr de vouloir retirer ce propriétaire de votre liste ? D\'autres utilisateurs y ont également accès, il ne sera pas supprimé définitivement.')) {
+            if (confirm('{{ __('Are you sure you want to remove this owner from your list? Other users also have access to it, it will not be permanently deleted.') }}')) {
                 document.getElementById('delete-owner-form').submit();
             }
         @else
-            if (confirm('Êtes-vous sûr de vouloir supprimer définitivement ce propriétaire ? Cette action est irréversible et supprimera également toutes les salles associées.')) {
+            if (confirm('{{ __('Are you sure you want to permanently delete this owner? This action cannot be undone and will also delete all associated rooms.') }}')) {
                 document.getElementById('delete-owner-form').submit();
             }
         @endif

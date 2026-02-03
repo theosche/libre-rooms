@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Mes réservations')
+@section('title', __('My reservations'))
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Réservations</h1>
+        <h1 class="page-header-title">{{ __('Reservations') }}</h1>
 
         @include('reservations._submenu', ['view' => $view, 'canViewAdmin' => $canViewAdmin])
 
         @if(!$canViewAdmin)
-            <p class="mt-2 text-sm text-gray-600">Liste de toutes vos réservations</p>
+            <p class="mt-2 text-sm text-gray-600">{{ __('List of all your reservations') }}</p>
         @endif
     </div>
 
@@ -19,9 +19,9 @@
         <form method="GET" action="{{ route('reservations.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input type="hidden" name="view" value="{{ $view }}">
             <div>
-                <label for="room_id" class="block text-sm font-medium text-gray-700 mb-1">Salle</label>
+                <label for="room_id" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Room') }}</label>
                 <select name="room_id" id="room_id" class="form-select">
-                    <option value="">Toutes les salles</option>
+                    <option value="">{{ __('All rooms') }}</option>
                     @foreach($rooms as $room)
                         <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>
                             {{ $room->name }}
@@ -31,9 +31,9 @@
             </div>
 
             <div>
-                <label for="tenant_id" class="block text-sm font-medium text-gray-700 mb-1">Contact</label>
+                <label for="tenant_id" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Contact') }}</label>
                 <select name="tenant_id" id="tenant_id" class="form-select">
-                    <option value="">Tous les contacts</option>
+                    <option value="">{{ __('All contacts') }}</option>
                     @foreach($contacts as $contact)
                         <option value="{{ $contact->id }}" {{ request('tenant_id') == $contact->id ? 'selected' : '' }}>
                             {{ $contact->display_name() }}
@@ -43,9 +43,9 @@
             </div>
 
             <div>
-                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Status') }}</label>
                 <select name="status" id="status" class="form-select">
-                    <option value="">Tous les statuts</option>
+                    <option value="">{{ __('All statuses') }}</option>
                     @foreach(\App\Enums\ReservationStatus::cases() as $status)
                         <option value="{{ $status->value }}" {{ request('status') == $status->value ? 'selected' : '' }}>
                             {{ $status->label() }}
@@ -56,11 +56,11 @@
 
             <div class="flex items-end gap-2">
                 <button type="submit" class="btn btn-primary flex-1">
-                    Filtrer
+                    {{ __('Filter') }}
                 </button>
                 @if(request()->hasAny(['room_id', 'tenant_id', 'status']))
                     <a href="{{ route('reservations.index', ['view' => $view]) }}" class="btn btn-secondary">
-                        Réinitialiser
+                        {{ __('Reset') }}
                     </a>
                 @endif
             </div>
@@ -73,28 +73,28 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        N°
+                        {{ __('No.') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Salle
+                        {{ __('Room') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Locataire
+                        {{ __('Tenant') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Titre
+                        {{ __('Title') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
-                        Prix
+                        {{ __('Price') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        État
+                        {{ __('Status') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
-                        Créée le
+                        {{ __('Created on') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -162,9 +162,9 @@
                             <div class="action-group">
                                 @if($canEdit)
                                     @if($isPending && $canManage)
-                                        <a href="{{ route('reservations.edit', $reservation) }}" class="link-success">Contrôler</a>
+                                        <a href="{{ route('reservations.edit', $reservation) }}" class="link-success">{{ __('Review') }}</a>
                                     @else
-                                        <a href="{{ route('reservations.edit', $reservation) }}" class="link-primary">Éditer</a>
+                                        <a href="{{ route('reservations.edit', $reservation) }}" class="link-primary">{{ __('Edit') }}</a>
                                     @endif
                                 @endif
 
@@ -172,7 +172,7 @@
                                     <button type="button"
                                             onclick="openCancelModal({{ $reservation->id }})"
                                             class="link-danger">
-                                        Annuler
+                                        {{ __('Cancel') }}
                                     </button>
                                 @endif
                             </div>
@@ -187,12 +187,12 @@
                                 <div class="space-y-4">
                                     @if($reservation->description)
                                     <div>
-                                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Description</h4>
+                                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ __('Description') }}</h4>
                                         <p class="text-sm text-slate-700">{{ $reservation->description ?: '—' }}</p>
                                     </div>
                                     @endif
                                     <div>
-                                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Événements</h4>
+                                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ __('Events') }}</h4>
                                         <div class="space-y-1">
                                             @foreach($reservation->events as $event)
                                                 <div class="text-sm text-slate-700 flex items-center gap-2">
@@ -210,7 +210,7 @@
                                 <div class="space-y-4">
                                     @if($reservation->customFieldValues->count() > 0)
                                         <div>
-                                            <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Informations complémentaires</h4>
+                                            <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ __('Additional information') }}</h4>
                                             <dl class="space-y-1">
                                                 @foreach($reservation->customFieldValues as $fieldValue)
                                                     <div class="text-sm flex gap-2">
@@ -225,7 +225,7 @@
                                     @endif
 
                                     <div>
-                                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Documents</h4>
+                                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ __('Documents') }}</h4>
                                         <div class="flex flex-wrap gap-2">
                                             @if(!$isCancelled)
                                                 <a href="{{ route('reservations.prebook.pdf', $reservation->hash) }}"
@@ -234,7 +234,7 @@
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                                     </svg>
-                                                    Pré-réservation
+                                                    {{ __('Pre-booking') }}
                                                 </a>
                                             @endif
                                             @if($reservation->invoice)
@@ -244,7 +244,7 @@
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                                     </svg>
-                                                    Facture {{ $reservation->invoice->number }}
+                                                    {{ __('Invoice') }} {{ $reservation->invoice->number }}
                                                 </a>
                                             @endif
                                         </div>
@@ -256,29 +256,29 @@
                                     @php $invoiceStatus = $reservation->invoice->computed_status; @endphp
                                     <div class="bg-white rounded-lg border border-slate-200 p-4">
                                         <div class="flex items-center justify-between mb-3">
-                                            <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Facture</h4>
+                                            <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ __('Invoice') }}</h4>
                                             <span class="px-2 py-0.5 text-xs font-semibold rounded-full {{ $invoiceStatus->color() }}">
                                                 {{ $invoiceStatus->label() }}
                                             </span>
                                         </div>
                                         <dl class="space-y-2 text-sm">
                                             <div class="flex justify-between">
-                                                <dt class="text-slate-500">Émise le</dt>
+                                                <dt class="text-slate-500">{{ __('Issued on') }}</dt>
                                                 <dd class="text-slate-900 font-medium">{{ $reservation->invoice->issued_at?->format('d.m.Y') ?? '—' }}</dd>
                                             </div>
                                             <div class="flex justify-between">
-                                                <dt class="text-slate-500">Échéance</dt>
+                                                <dt class="text-slate-500">{{ __('Due date') }}</dt>
                                                 <dd class="text-slate-900 font-medium">{{ $reservation->invoice->due_at?->format('d.m.Y') ?? '—' }}</dd>
                                             </div>
                                             @if($reservation->invoice->reminder_count > 0)
                                                 <div class="flex justify-between">
-                                                    <dt class="text-slate-500">Rappels</dt>
+                                                    <dt class="text-slate-500">{{ __('Reminders') }}</dt>
                                                     <dd class="text-orange-600 font-medium">{{ $reservation->invoice->reminder_count }}</dd>
                                                 </div>
                                             @endif
                                             @if($reservation->invoice->paid_at)
                                                 <div class="flex justify-between pt-2 border-t border-slate-100">
-                                                    <dt class="text-green-600">Payée le</dt>
+                                                    <dt class="text-green-600">{{ __('Paid on') }}</dt>
                                                     <dd class="text-green-600 font-medium">{{ $reservation->invoice->paid_at->format('d.m.Y') }}</dd>
                                                 </div>
                                             @endif
@@ -291,7 +291,7 @@
                 @empty
                     <tr>
                         <td colspan="8" class="px-4 py-3 text-center text-gray-500">
-                            Aucune réservation trouvée
+                            {{ __('No reservations found') }}
                         </td>
                     </tr>
                 @endforelse
@@ -309,14 +309,14 @@
 <div id="loader-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg p-8 shadow-xl flex flex-col items-center gap-4">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
-        <p class="text-gray-700 font-medium">Traitement en cours...</p>
+        <p class="text-gray-700 font-medium">{{ __('Processing...') }}</p>
     </div>
 </div>
 
 <!-- Modal d'annulation -->
 <div id="cancel-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Annuler la réservation</h3>
+        <h3 class="text-lg font-bold text-gray-900 mb-4">{{ __('Cancel reservation') }}</h3>
         <form id="cancel-form" method="POST">
             @csrf
             <div class="mb-4">
@@ -324,28 +324,28 @@
                     <input type="checkbox" name="send_email" value="1" checked
                            id="cancel-send-email"
                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                    <span class="text-sm text-gray-700">Envoyer un email d'annulation</span>
+                    <span class="text-sm text-gray-700">{{ __('Send cancellation email') }}</span>
                 </label>
             </div>
             <div class="mb-4">
                 <label for="cancel-reason" class="block text-sm font-medium text-gray-700 mb-1">
-                    Raison de l'annulation (facultatif)
+                    {{ __('Cancellation reason (optional)') }}
                 </label>
                 <textarea name="cancellation_reason"
                           id="cancel-reason"
                           class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                           rows="3"
-                          placeholder="Expliquez la raison de l'annulation..."></textarea>
-                <p class="mt-1 text-xs text-gray-500">Cette raison sera incluse dans l'email d'annulation si la case ci-dessus est cochée.</p>
+                          placeholder="{{ __('Explain the reason for the cancellation...') }}"></textarea>
+                <p class="mt-1 text-xs text-gray-500">{{ __('This reason will be included in the cancellation email if the box above is checked.') }}</p>
             </div>
             <div class="flex justify-end gap-3">
                 <button type="button"
                         onclick="closeCancelModal()"
                         class="btn btn-secondary">
-                    Retour
+                    {{ __('Back') }}
                 </button>
                 <button type="submit" class="btn btn-delete">
-                    Confirmer l'annulation
+                    {{ __('Confirm cancellation') }}
                 </button>
             </div>
         </form>

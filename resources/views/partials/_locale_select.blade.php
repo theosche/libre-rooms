@@ -6,7 +6,7 @@
     - $value: current value (nullable)
     - $defaultLocale: default locale to show in placeholder (optional)
     - $required: whether field is required (default: false)
-    - $showDefaultOption: show "Paramètres par défaut" option (default: true)
+    - $showDefaultOption: show "{{ __('Default settings') }}" option (default: true)
 --}}
 
 @php
@@ -48,7 +48,7 @@
             'nl_NL' => 'Nederlands (Nederland)',
             'nl_BE' => 'Nederlands (België)',
         ],
-        'Autres' => [
+        __('Others') => [
             'pl_PL' => 'Polski (Polska)',
             'cs_CZ' => 'Čeština (Česká republika)',
             'hu_HU' => 'Magyar (Magyarország)',
@@ -68,7 +68,7 @@
 <select name="{{ $name }}" id="{{ $id }}" @if($required) required @endif>
     @if($showDefaultOption)
         <option value="">
-            Paramètres par défaut
+            {{ __('Default settings') }}
             @if(isset($defaultLocale))
                 ({{ $defaultLocale }})
             @endif

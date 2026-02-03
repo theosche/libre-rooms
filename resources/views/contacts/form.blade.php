@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', isset($contact) ? 'Modifier le contact' : 'Nouveau contact')
+@section('title', isset($contact) ? __('Edit contact') : __('New contact'))
 
 @section('page-script')
     @vite(['resources/js/contacts/contact-form.js'])
@@ -10,7 +10,7 @@
 <div class="max-w-3xl mx-auto py-6">
     <div class="form-header">
         <h1 class="form-title">
-            {{ isset($contact) ? 'Modifier le contact' : 'Nouveau contact' }}
+            {{ isset($contact) ? __('Edit contact') : __('New contact') }}
         </h1>
     </div>
 
@@ -28,11 +28,11 @@
             @endphp
 
             <div class="form-group">
-                <h3 class="form-group-title">Type de contact</h3>
+                <h3 class="form-group-title">{{ __('Contact type') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="contact_type" class="form-element-title">Type</label>
+                        <label for="contact_type" class="form-element-title">{{ __('Type') }}</label>
                         <select name="contact_type" id="contact_type" required>
                             @foreach (App\Enums\ContactTypes::cases() as $type)
                                 <option value="{{ $type->value }}" @selected($contactType === $type->value)>
@@ -45,11 +45,11 @@
             </div>
 
             <div class="form-group">
-                <h3 class="form-group-title">Informations</h3>
+                <h3 class="form-group-title">{{ __('Informations') }}</h3>
 
                 <fieldset class="form-element {{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{ App\Enums\ContactTypes::ORGANIZATION->value }}">
                     <div class="form-field">
-                        <label for="entity_name" class="form-element-title">Nom de l'organisation</label>
+                        <label for="entity_name" class="form-element-title"> {{ __('Organization name') }}</label>
                         <input
                             type="text"
                             id="entity_name"
@@ -67,8 +67,8 @@
                     <div class="form-element-row">
                         <div class="form-field">
                             <label for="first_name" class="form-element-title">
-                                Prénom
-                                <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{ App\Enums\ContactTypes::ORGANIZATION->value }}">(personne de contact)</span>
+                                {{ __('First name') }}
+                                <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{ App\Enums\ContactTypes::ORGANIZATION->value }}">({{ __('contact person') }})</span>
                             </label>
                             <input
                                 type="text"
@@ -83,8 +83,8 @@
                         </div>
                         <div class="form-field">
                             <label for="last_name" class="form-element-title">
-                                Nom
-                                <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{ App\Enums\ContactTypes::ORGANIZATION->value }}">(personne de contact)</span>
+                                {{ __('Last name') }}
+                                <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{ App\Enums\ContactTypes::ORGANIZATION->value }}">({{ __('contact person') }})</span>
                             </label>
                             <input
                                 type="text"
@@ -102,7 +102,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="email" class="form-element-title">Email</label>
+                        <label for="email" class="form-element-title">{{ __('Email') }}</label>
                         <input
                             type="email"
                             id="email"
@@ -125,11 +125,11 @@
                             value="1"
                             @checked($hasInvoiceEmail)
                         >
-                        <label for="has_invoice_email">Email différent pour la facturation</label>
+                        <label for="has_invoice_email">{{ __('Different email for billing') }}</label>
                     </div>
 
                     <div class="form-field {{ $hasInvoiceEmail ? '' : 'hidden' }}" data-toggle="invoice-email">
-                        <label for="invoice_email" class="form-element-title">Email de facturation</label>
+                        <label for="invoice_email" class="form-element-title">{{ __('Billing email') }}</label>
                         <input
                             type="email"
                             id="invoice_email"
@@ -144,7 +144,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="phone" class="form-element-title">Téléphone</label>
+                        <label for="phone" class="form-element-title">{{ __('Phone') }}</label>
                         <input
                             type="text"
                             id="phone"
@@ -160,13 +160,13 @@
             </div>
 
             <div class="form-group">
-                <h3 class="form-group-title">Adresse</h3>
+                <h3 class="form-group-title">{{ __('Address') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
                         <label for="street" class="form-element-title">
-                            <span class="{{ $isOrganization ? 'hidden' : '' }}" data-show-when="{{ App\Enums\ContactTypes::INDIVIDUAL->value }}">Adresse</span>
-                            <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{ App\Enums\ContactTypes::ORGANIZATION->value }}">Adresse de l'organisation</span>
+                            <span class="{{ $isOrganization ? 'hidden' : '' }}" data-show-when="{{ App\Enums\ContactTypes::INDIVIDUAL->value }}">{{ __('Address') }}</span>
+                            <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{ App\Enums\ContactTypes::ORGANIZATION->value }}">{{ __('Organization address') }}</span>
                         </label>
                         <textarea
                             rows="2"
@@ -183,7 +183,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="zip" class="form-element-title">NPA</label>
+                            <label for="zip" class="form-element-title">{{ __('ZIP') }}</label>
                             <input
                                 type="text"
                                 id="zip"
@@ -196,7 +196,7 @@
                             @enderror
                         </div>
                         <div class="form-field">
-                            <label for="city" class="form-element-title">Ville</label>
+                            <label for="city" class="form-element-title">{{ __('City') }}</label>
                             <input
                                 type="text"
                                 id="city"
@@ -214,14 +214,14 @@
 
             <div class="btn-group justify-end mt-6">
                 <a href="{{ route('contacts.index') }}" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {{ isset($contact) ? 'Mettre à jour' : 'Créer' }}
+                    {{ isset($contact) ? __('Update') : __('Create') }}
                 </button>
                 @if(isset($contact))
                     <button type="button" onclick="confirmDeleteContact()" class="btn btn-delete">
-                        Supprimer
+                        {{ __('Delete') }}
                     </button>
                 @endif
             </div>
@@ -236,7 +236,7 @@
 </div>
 <script>
     function confirmDeleteContact() {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce contact ?')) {
+        if (confirm(__('Are you sure you want to delete this contact?'))) {
             document.getElementById('delete-contact-form').submit();
         }
     }

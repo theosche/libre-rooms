@@ -20,10 +20,10 @@ enum ReservationStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::PENDING => "À confirmer",
-            self::CONFIRMED => "Confirmé",
-            self::FINISHED => "Terminé",
-            self::CANCELLED => "Annulé",
+            self::PENDING => __('Pending'),
+            self::CONFIRMED => __('Confirmed'),
+            self::FINISHED => __('Finished'),
+            self::CANCELLED => __('Cancelled.m'),
         };
     }
 }

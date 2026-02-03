@@ -1,21 +1,21 @@
 <div class="form-group" id="contact-form-group">
-    <h3 class="form-group-title">Coordonnées</h3>
+    <h3 class="form-group-title">{{ __('Contact details') }}</h3>
     @guest
-        <div class="info">Vous n'êtes pas connecté·e. Connectez-vous ou créez un compte pour pouvoir enregistrer vos informations et remplir les formulaires plus rapidement.</div>
+        <div class="info">{{ __('You are not logged in. Log in or create an account to save your information and fill out forms faster.') }}</div>
     @endguest
     @auth
         @if ($contacts->isEmpty())
-            <div class="info">Pas de coordonnées enregistrées. Ajoutez de nouvelles coordonnées. Elles seront sauvegardées pour votre prochaine visite.</div>
+            <div class="info">{{ __('No contact details saved. Add new contact details. They will be saved for your next visit.') }}</div>
         @endif
         <fieldset class="form-element">
             <div class="form-field">
-                <label for="contact-select" class="form-element-title">Charger des coordonnées *</label>
+                <label for="contact-select" class="form-element-title">{{ __('Load contact details') }} *</label>
                 <select name="contact_id" id="contact-select">
                     @php
                         $selectedContact = $contacts->find(old('contact_id')) ?? $tenant ?? $contacts?->first();
                     @endphp
                     <option value="" @selected(is_null($selectedContact))>
-                        Nouvelles coordonnées
+                        {{ __('New contact details') }}
                     </option>
                     @foreach($contacts as $contact)
                         <option value="{{ $contact->id }}" @selected($selectedContact?->id == $contact->id)>
@@ -50,7 +50,7 @@
         @endphp
 
         <fieldset class="form-element">
-            <legend class="form-element-title">Type *</legend>
+            <legend class="form-element-title">{{ __('Type') }} *</legend>
             <div class="form-element-row">
             @foreach (App\Enums\ContactTypes::cases() as $type)
                 <div class="form-field">
@@ -75,7 +75,7 @@
 
         <fieldset class="form-element {{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{App\Enums\ContactTypes::ORGANIZATION->value}}">
             <div class="form-field">
-                <label for="entity_name" class="form-element-title">Nom de l'organisation *</label>
+                <label for="entity_name" class="form-element-title">{{ __('Organization name') }} *</label>
                 <input
                     type="text"
                     id="entity_name"
@@ -92,8 +92,8 @@
         <fieldset class="form-element">
             <div class="form-element-row">
                 <div class="form-field">
-                    <label for="first_name" class="form-element-title">Prénom
-                        <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{App\Enums\ContactTypes::ORGANIZATION->value}}">(personne de contact)</span> *
+                    <label for="first_name" class="form-element-title">{{ __('First name') }}
+                        <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{App\Enums\ContactTypes::ORGANIZATION->value}}">({{ __('contact person') }})</span> *
                     </label>
                     <input
                         type="text"
@@ -107,8 +107,8 @@
                     @enderror
                 </div>
                 <div class="form-field">
-                    <label for="last_name" class="form-element-title">Nom
-                        <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{App\Enums\ContactTypes::ORGANIZATION->value}}">(personne de contact)</span> *
+                    <label for="last_name" class="form-element-title">{{ __('Last name') }}
+                        <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{App\Enums\ContactTypes::ORGANIZATION->value}}">({{ __('contact person') }})</span> *
                     </label>
                     <input
                         type="text"
@@ -126,7 +126,7 @@
 
         <fieldset class="form-element">
             <div class="form-field">
-                <label for="email" class="form-element-title">Email *</label>
+                <label for="email" class="form-element-title">{{ __('Email') }} *</label>
                 <input
                     type="email"
                     id="email"
@@ -149,11 +149,11 @@
                     value="1"
                     @checked($hasInvoiceEmail)
                 >
-                <label for="has_invoice_email">Email différent pour la facturation</label>
+                <label for="has_invoice_email">{{ __('Different email for billing') }}</label>
             </div>
 
             <div class="form-field {{ $hasInvoiceEmail ? '' : 'hidden' }}" data-toggle="invoice-email">
-                <label for="invoice_email" class="form-element-title">Email de facturation</label>
+                <label for="invoice_email" class="form-element-title">{{ __('Billing email') }}</label>
                 <input
                     type="email"
                     id="invoice_email"
@@ -168,7 +168,7 @@
 
         <fieldset class="form-element">
             <div class="form-field">
-                <label for="phone" class="form-element-title">Téléphone *</label>
+                <label for="phone" class="form-element-title">{{ __('Phone') }} *</label>
                 <input
                     type="text"
                     id="phone"
@@ -185,8 +185,8 @@
         <fieldset class="form-element">
             <div class="form-field">
                 <label for="street" class="form-element-title">
-                    <span class="{{ $isOrganization ? 'hidden' : '' }}" data-show-when="{{App\Enums\ContactTypes::INDIVIDUAL->value}}">Adresse *</span>
-                    <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{App\Enums\ContactTypes::ORGANIZATION->value}}">Adresse de l'organisation *</span>
+                    <span class="{{ $isOrganization ? 'hidden' : '' }}" data-show-when="{{App\Enums\ContactTypes::INDIVIDUAL->value}}">{{ __('Address') }} *</span>
+                    <span class="{{ $isOrganization ? '' : 'hidden' }}" data-show-when="{{App\Enums\ContactTypes::ORGANIZATION->value}}">{{ __('Organization address') }} *</span>
                 </label>
                 <input
                     type="text"
@@ -204,7 +204,7 @@
         <fieldset class="form-element">
             <div class="form-element-row">
                 <div class="form-field">
-                    <label for="zip" class="form-element-title">NPA *</label>
+                    <label for="zip" class="form-element-title">{{ __('ZIP') }} *</label>
                     <input
                         type="text"
                         id="zip"
@@ -217,7 +217,7 @@
                     @enderror
                 </div>
                 <div class="form-field">
-                    <label for="city" class="form-element-title">Ville *</label>
+                    <label for="city" class="form-element-title">{{ __('City') }} *</label>
                     <input
                         type="text"
                         id="city"

@@ -125,7 +125,7 @@ class ReservationController extends Controller
     public function edit(Reservation $reservation): View|RedirectResponse
     {
         if (!$reservation->isEditable()) {
-            return redirect()->route('reservations.index')->with('error', 'Réservation non modifiable');
+            return redirect()->route('reservations.index')->with('error', __('Reservation cannot be edited.'));
         }
         return $this->reservationForm($reservation->room, $reservation);
     }
@@ -240,8 +240,8 @@ class ReservationController extends Controller
         );
 
         $msg = $reservation->status === ReservationStatus::PENDING ?
-            "Nouvelle réservation créée avec succès - en attente de validation" :
-            "Nouvelle réservation confirmée avec succès";
+            __('New reservation created successfully - pending confirmation.') :
+            __('New reservation confirmed successfully.');
 
 
         if (auth()->check()) {
@@ -254,7 +254,7 @@ class ReservationController extends Controller
     public function update(UpdateReservationRequest $request, Reservation $reservation, ReservationService $service): RedirectResponse
     {
         if (!$reservation->isEditable()) {
-            return redirect()->route('reservations.index')->with('error', 'Réservation non modifiable');
+            return redirect()->route('reservations.index')->with('error', __('Reservation cannot be edited.'));
         }
 
         $request->validated();
@@ -265,8 +265,8 @@ class ReservationController extends Controller
         );
 
         $msg = $reservation->status === ReservationStatus::PENDING ?
-            "Réservation mise à jour avec succès - en attente de validation" :
-            "Réservation confirmée avec succès";
+            __('Reservation updated successfully - pending confirmation.') :
+            __('Reservation confirmed successfully.');
 
         if (auth()->check()) {
             return redirect()->route('reservations.index')->with('success', $msg);
@@ -294,7 +294,7 @@ class ReservationController extends Controller
         }
 
         if (! $canCancel) {
-            return redirect()->back()->with('error', 'Vous n\'avez pas la permission d\'annuler cette réservation.');
+            return redirect()->back()->with('error', __('You do not have permission to cancel this reservation.'));
         }
 
         // Get modal parameters
@@ -305,9 +305,9 @@ class ReservationController extends Controller
         $service->cancel($reservation, $sendEmail, $reason);
 
         if ($reservation->isPaid()) {
-            return redirect()->route('reservations.index')->with('success', 'Réservation annulée. Attention - facture déjà payée.');
+            return redirect()->route('reservations.index')->with('success', __('Reservation cancelled. Warning - invoice already paid.'));
         }
-        return redirect()->route('reservations.index')->with('success', 'Réservation annulée avec succès.');
+        return redirect()->route('reservations.index')->with('success', __('Reservation cancelled successfully.'));
     }
 
     /**

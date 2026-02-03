@@ -167,10 +167,10 @@ class Room extends Model
         }
         $rules = ['≤ '.$this->max_hours_short.'h'];
         if ($this->always_short_before) {
-            $rules[] = 'avant '.$this->always_short_before.'h';
+            $rules[] = __('before') . ' ' . $this->always_short_before.'h';
         }
         if ($this->always_short_after) {
-            $rules[] = 'après '.$this->always_short_after.'h';
+            $rules[] = __('after') . ' ' . $this->always_short_after.'h';
         }
 
         return implode(', ', $rules);

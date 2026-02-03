@@ -1,12 +1,12 @@
 @extends('emails.layout')
 
 @section('content')
-    <h1>Confirmation de votre réservation</h1>
+    <h1>{{ __('Confirmation of your reservation') }}</h1>
 
-    <p>Bonjour,</p>
+    <p>{{ __('Hello') }},</p>
 
     <p>
-        Votre réservation de la salle <em>{{ $room->name }}</em> a été confirmée.
+        {{ __('Your reservation of the room :room has been confirmed.', ['room' => $room->name]) }}
     </p>
 
     <div class="highlight-box">
@@ -16,18 +16,18 @@
         @endif
     </div>
 
-    <h2>{{ $reservation->events->count() > 1 ? 'Dates réservées' : 'Date réservée' }}</h2>
+    <h2>{{ $reservation->events->count() > 1 ? __('Reserved dates') : __('Reserved date') }}</h2>
     <ul>
         @foreach ($reservation->events as $event)
             <li>
-                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} au {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
+                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} {{ __('to') }} {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
                 <a href="{{ route('reservations.event-ics', ['hash' => $reservation->hash, 'uid' => $event->uid]) }}" style="font-size: 12px;">(ics)</a>
             </li>
         @endforeach
     </ul>
 
     @if ($room->custom_message)
-        <h2>Informations importantes</h2>
+        <h2>{{ __('Important information') }}</h2>
         <p>{{ $room->custom_message }}</p>
     @endif
 
@@ -38,33 +38,33 @@
     @endif
 
     @if ($room->secret_message)
-        <h2>Codes d'accès</h2>
+        <h2>{{ __('Access codes') }}</h2>
         <p>
-            Vous aurez besoin de codes d'accès. Comme ces informations peuvent changer, nous vous invitons à les vérifier peu avant votre événement :
+            {{ __('You will need access codes. As this information may change, we invite you to check it shortly before your event:') }}
         </p>
         <p>
-            <a href="{{ route('reservations.codes', $reservation->hash) }}" class="btn btn-secondary">Voir les codes d'accès</a>
+            <a href="{{ route('reservations.codes', $reservation->hash) }}" class="btn btn-secondary">{{ __('View access codes') }}</a>
         </p>
     @endif
 
-    <h2>Facture</h2>
+    <h2>{{ __('Invoice') }}</h2>
     <div class="highlight-box">
         <p style="margin: 0;">
-            <strong>Montant dû :</strong> {{ currency($invoice->amount, $room->owner) }}
+            <strong>{{ __('Amount due:') }}</strong> {{ currency($invoice->amount, $room->owner) }}
             @if ($reservation->special_discount > 0)
-                <br><span style="color: #059669;">Une réduction de {{ currency($reservation->special_discount, $room->owner) }} vous a été accordée.</span>
+                <br><span style="color: #059669;">{{ __('A discount of :amount has been applied.', ['amount' => currency($reservation->special_discount, $room->owner)]) }}</span>
             @endif
         </p>
         <p style="margin: 8px 0 0 0; font-size: 14px; color: #6b7280;">
-            Échéance : {{ $invoice->due_at->format('d.m.Y') }}
+            {{ __('Due date:') }} {{ $invoice->due_at->format('d.m.Y') }}
             <small>({{ $owner->invoice_due_mode->label($owner->invoice_due_days) }})</small>
         </p>
     </div>
     <p>
-        <a href="{{ route('reservations.invoice.pdf', $reservation->hash) }}" class="btn">Télécharger la facture</a>
+        <a href="{{ route('reservations.invoice.pdf', $reservation->hash) }}" class="btn">{{ __('Download the invoice') }}</a>
     </p>
 
-    <p>Pour toute question, n'hésitez pas à nous contacter en réponse à cet email.</p>
+    <p>{{ __('For any questions, feel free to contact us by replying to this email.') }}</p>
 
-    <p>Avec nos meilleures salutations,</p>
+    <p>{{ __('Best regards,') }}</p>
 @endsection

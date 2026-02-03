@@ -87,7 +87,7 @@ class ContactController extends Controller
         $user->contacts()->attach($contact->id);
 
         return redirect()->route('contacts.index')
-            ->with('success', 'Le contact a été créé avec succès.');
+            ->with('success', __('Contact created successfully.'));
     }
 
     /**
@@ -99,7 +99,7 @@ class ContactController extends Controller
 
         // Global admins can edit any contact, otherwise check ownership
         if (! $user->canAccessContact($contact)) {
-            abort(403, 'Vous n\'avez pas accès à ce contact.');
+            abort(403, __('You do not have access to this contact.'));
         }
 
         return view('contacts.form', [
@@ -117,7 +117,7 @@ class ContactController extends Controller
         // Global admins can update any contact, otherwise check ownership
         if (! $user->canAccessContact($contact)) {
             return redirect()->route('contacts.index')
-                ->with('error', 'Vous n\'avez pas accès à ce contact.');
+                ->with('error', __('You do not have access to this contact.'));
         }
 
         // Prepare data
@@ -134,7 +134,7 @@ class ContactController extends Controller
         $contact->update($validated);
 
         return redirect()->route('contacts.index')
-            ->with('success', 'Le contact a été mis à jour avec succès.');
+            ->with('success', __('Contact updated successfully.'));
     }
 
     /**
@@ -148,7 +148,7 @@ class ContactController extends Controller
         // Global admins can delete any contact, otherwise check ownership
         if (! $user->is_global_admin && ! $userOwnsContact) {
             return redirect()->back()
-                ->with('error', 'Vous n\'avez pas accès à ce contact.');
+                ->with('error', __('You do not have access to this contact.'));
         }
 
         // If user owns the contact and other users have access, just detach
@@ -160,7 +160,7 @@ class ContactController extends Controller
                 $user->contacts()->detach($contact->id);
 
                 return redirect()->back()
-                    ->with('success', 'Le contact a été retiré de votre liste.');
+                    ->with('success', __('Contact removed from your list.'));
             }
         }
 
@@ -171,7 +171,7 @@ class ContactController extends Controller
 
         if ($activeReservations) {
             return redirect()->back()
-                ->with('error', 'Ce contact a des réservations en cours (en attente ou confirmées). Veuillez les annuler avant de supprimer le contact.');
+                ->with('error', __('This contact has active reservations (pending or confirmed). Please cancel them before deleting the contact.'));
         }
 
         // Check for unpaid/uncancelled invoices
@@ -184,14 +184,14 @@ class ContactController extends Controller
 
         if ($unpaidInvoices) {
             return redirect()->back()
-                ->with('error', 'Ce contact a des factures impayées. Veuillez les marquer comme payées ou les annuler avant de supprimer le contact.');
+                ->with('error', __('This contact has unpaid invoices. Please mark them as paid or cancel them before deleting the contact.'));
         }
 
         // Delete the contact entirely
         $contact->delete();
 
         return redirect()->back()
-            ->with('success', 'Le contact a été supprimé définitivement.');
+            ->with('success', __('Contact deleted permanently.'));
     }
 
     /**
@@ -204,7 +204,7 @@ class ContactController extends Controller
         // Global admins can share any contact, otherwise check ownership
         if (! $currentUser->canAccessContact($contact)) {
             return redirect()->route('contacts.index')
-                ->with('error', 'Vous n\'avez pas accès à ce contact.');
+                ->with('error', __('You do not have access to this contact.'));
         }
 
         $validated = $request->validate([
@@ -216,24 +216,24 @@ class ContactController extends Controller
 
         if (! $userToShareWith) {
             return redirect()->back()
-                ->with('error', 'Aucun utilisateur trouvé avec cet email.');
+                ->with('error', __('No user found with this email.'));
         }
 
         if ($userToShareWith->id === $currentUser->id && !$currentUser->is_global_admin) {
             return redirect()->back()
-                ->with('error', 'Vous ne pouvez pas partager un contact avec vous-même.');
+                ->with('error', __('You cannot share a contact with yourself.'));
         }
 
         // Check if already shared
         if ($userToShareWith->contacts()->where('contacts.id', $contact->id)->exists()) {
             return redirect()->back()
-                ->with('error', 'Ce contact est déjà partagé avec cet utilisateur.');
+                ->with('error', __('This contact is already shared with this user.'));
         }
 
         // Share the contact
         $userToShareWith->contacts()->attach($contact->id);
 
         return redirect()->back()
-            ->with('success', "Le contact a été partagé avec {$userToShareWith->name}.");
+            ->with('success', __('Contact shared with :name.', ['name' => $userToShareWith->name]));
     }
 }

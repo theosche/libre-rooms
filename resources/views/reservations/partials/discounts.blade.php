@@ -7,9 +7,9 @@
 
     @endphp
     <div class="form-group {{ $nbShownDiscounts == 0 ? 'hidden' : '' }}" id="discounts-form-group">
-        <h3 class="form-group-title">Réductions</h3>
+        <h3 class="form-group-title">{{ __('Discounts') }}</h3>
         <fieldset class="form-element">
-            <legend class="form-element-title">Cocher ce qui s'applique</legend>
+            <legend class="form-element-title">{{ __('Check what applies') }}</legend>
             @foreach($discounts as $discount)
                 @php
                 $visible = is_null($discount->limit_to_contact_type) || $discount->limit_to_contact_type?->value == $contactType;

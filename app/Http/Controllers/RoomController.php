@@ -171,7 +171,7 @@ class RoomController extends Controller
         $this->handleImageUploadsAndOrder($request, $room);
 
         return redirect()->route('rooms.show', $room)
-            ->with('success', 'La salle a été créée avec succès.');
+            ->with('success', __('Room created successfully.'));
     }
 
     /**
@@ -264,7 +264,7 @@ class RoomController extends Controller
         $room->update($validated);
 
         return redirect()->route('rooms.show', $room)
-            ->with('success', 'La salle a été mise à jour avec succès.');
+            ->with('success', __('Room updated successfully.'));
     }
 
     /**
@@ -281,7 +281,7 @@ class RoomController extends Controller
 
         if ($activeReservations) {
             return redirect()->route('rooms.edit', $room)
-                ->with('error', 'Cette salle a des réservations en cours (en attente ou confirmées). Veuillez les annuler avant de supprimer la salle.');
+                ->with('error', __('This room has active reservations (pending or confirmed). Please cancel them before deleting the room.'));
         }
 
         // Check for unpaid/uncancelled invoices
@@ -294,13 +294,13 @@ class RoomController extends Controller
 
         if ($unpaidInvoices) {
             return redirect()->route('rooms.edit', $room)
-                ->with('error', 'Cette salle a des factures impayées. Veuillez les marquer comme payées ou les annuler avant de supprimer la salle.');
+                ->with('error', __('This room has unpaid invoices. Please mark them as paid or cancel them before deleting the room.'));
         }
 
         $room->delete();
 
         return redirect()->route('rooms.index', ['view' => 'mine'])
-            ->with('success', 'La salle a été supprimée avec succès.');
+            ->with('success', __('Room deleted successfully.'));
     }
 
     /**

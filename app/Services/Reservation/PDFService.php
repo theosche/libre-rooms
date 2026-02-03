@@ -26,7 +26,7 @@ class PDFService
         $entite = preg_replace("/[^\w]/u", '', html_entity_decode($reservation->tenant->display_name()));
 
         return $reservation->room->slug . '/' . $reservation->created_at->format('Y') . '/'
-            . $reservation->id . '_' . $entite . '_Pré-réservation_' . $reservation->room->slug . '.pdf';
+            . $reservation->id . '_' . $entite . '_' . __('Pre-booking') . '_' . $reservation->room->slug . '.pdf';
     }
 
     /**
@@ -38,7 +38,7 @@ class PDFService
         $entite = preg_replace("/[^\w]/u", '', html_entity_decode($reservation->tenant->display_name()));
 
         return $reservation->room->slug . '/' . $reservation->created_at->format('Y') . '/'
-            . $invoice->number . '_' . $entite . '_Facture.pdf';
+            . $invoice->number . '_' . $entite . '_' . __('Invoice') . '.pdf';
     }
 
     /**
@@ -50,7 +50,7 @@ class PDFService
         $entite = preg_replace("/[^\w]/u", '', html_entity_decode($reservation->tenant->display_name()));
 
         return $reservation->room->slug . '/' . $reservation->created_at->format('Y') . '/'
-            . $invoice->number . '_' . $entite . '_Rappel.pdf';
+            . $invoice->number . '_' . $entite . '_' . __('Reminder') . '.pdf';
     }
 
     /**
@@ -217,7 +217,7 @@ class PDFService
 
             // Add invoice number as additional information
             $qrBill->setAdditionalInformation(
-                AdditionalInformation::create('Facture ' . $invoice->number)
+                AdditionalInformation::create(__('Invoice') . ' ' . $invoice->number)
             );
         }
 

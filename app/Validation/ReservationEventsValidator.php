@@ -40,13 +40,13 @@ class ReservationEventsValidator
                 }
                 // Check overlap: start1 < end2 AND end1 > start2
                 if ($event['start']->lt($event2['end']) && $event['end']->gt($event2['start'])) {
-                    $validator->errors()->add('events', __('Les créneaux de réservation ne peuvent pas se chevaucher.'));
+                    $validator->errors()->add('events', __('Reservation slots cannot overlap.'));
                     return; // Stop validation after first overlap found
                 }
             }
 
             if (!$event['start']->lt($event['end'])) {
-                $validator->errors()->add('events', __('Réservation invalide.'));
+                $validator->errors()->add('events', __('Invalid reservation.'));
             }
 
             // cutoff
@@ -57,7 +57,7 @@ class ReservationEventsValidator
                         ->addDays($room->reservation_cutoff_days);
 
                     if ($event['start']->lt($min)) {
-                        $validator->errors()->add('events', __('Réservation trop tardive.'));
+                        $validator->errors()->add('events', __('Reservation too late.'));
                     }
                 }
             }
@@ -68,13 +68,13 @@ class ReservationEventsValidator
                     ->addDays($room->reservation_advance_limit);
 
                 if ($event['start']->gt($max)) {
-                    $validator->errors()->add('events', __('Réservation trop anticipée.'));
+                    $validator->errors()->add('events', __('Reservation too far in advance.'));
                 }
             }
 
             // availability
             if (! $availability->checkAvailability($room, $event['start'], $event['end'], $event['uid'])) {
-                $validator->errors()->add('events', __('Salle indisponible.'));
+                $validator->errors()->add('events', __('Room unavailable.'));
             }
         }
     }

@@ -9,13 +9,13 @@ enum RoomUserRoles: string
     public function label(): string
     {
         return match ($this) {
-            self::VIEWER => 'Lecteur',
+            self::VIEWER => __('Viewer'),
         };
     }
     public function label_short(): string
     {
         return match ($this) {
-            self::VIEWER => 'Lect.',
+            self::VIEWER => __('Viewer.short'),
         };
     }
 }

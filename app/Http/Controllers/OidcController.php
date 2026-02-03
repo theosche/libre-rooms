@@ -54,7 +54,7 @@ class OidcController extends Controller
         } else {
             if ($user->email_verified_at === null) {
                 return redirect()->route('login')
-                    ->with('error', 'Un compte existe déjà avec cet email mais il n\'est pas vérifié. Si vous ne pouvez pas vérifier l\'adresse mail, réinitialisez le mot de passe.');
+                    ->with('error', __('An account already exists with this email but is not verified. If you cannot verify the email address, reset the password.'));
             }
             // Fusion avec compte existant si même email et vérifié
         }
@@ -95,13 +95,13 @@ class OidcController extends Controller
         // Verify the provider matches
         if ($expectedProviderId !== $provider->id) {
             return redirect()->route('reauthenticate')
-                ->with('error', 'Fournisseur d\'identité invalide.');
+                ->with('error', __('Invalid identity provider.'));
         }
 
         // Verify user is still logged in
         if (! auth()->check() || auth()->id() !== $expectedUserId) {
             return redirect()->route('login')
-                ->with('error', 'Session expirée. Veuillez vous reconnecter.');
+                ->with('error', __('Session expired. Please log in again.'));
         }
 
         // Verify the OIDC sub matches the current user's linked provider
@@ -113,7 +113,7 @@ class OidcController extends Controller
 
         if (! $authProvider) {
             return redirect()->route('reauthenticate')
-                ->with('error', 'L\'identité OIDC ne correspond pas à votre compte.');
+                ->with('error', __('The OIDC identity does not match your account.'));
         }
 
         // Update tokens

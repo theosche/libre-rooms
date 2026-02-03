@@ -1,20 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Réglages système')
+@section('title', __('System settings'))
 
 @section('page-script')
     @vite(['resources/js/system-settings/system-settings-form.js'])
     <script>
         window.systemSettingsId = {{ $settings?->id ?? 'null' }};
+        window.translations = {
+            testing: @json(__('Testing...')),
+            verifying: @json(__('Verifying...')),
+            network_error: @json(__('Network error')),
+        };
     </script>
 @endsection
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Réglages système</h1>
+        <h1 class="page-header-title">{{ __('System settings') }}</h1>
         @include('system-settings._submenu')
-        <p class="mt-2 text-sm text-gray-600">Configuration globale de l'application</p>
+        <p class="mt-2 text-sm text-gray-600">{{ __('Global application configuration') }}</p>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
@@ -24,13 +29,13 @@
 
             <!-- Configuration email -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration email</h3>
-                <p class="text-sm text-gray-600 mb-4">Configuration SMTP pour l'envoi des emails (requis)</p>
+                <h3 class="form-group-title">{{ __('Email configuration') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('SMTP configuration for sending emails (required)') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="mail_host" class="form-element-title">Serveur SMTP</label>
+                            <label for="mail_host" class="form-element-title">{{ __('SMTP server') }}</label>
                             <input
                                 type="text"
                                 id="mail_host"
@@ -44,7 +49,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="mail_port" class="form-element-title">Port</label>
+                            <label for="mail_port" class="form-element-title">{{ __('Port') }}</label>
                             <input
                                 type="number"
                                 id="mail_port"
@@ -64,7 +69,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="mail" class="form-element-title">Email (utilisateur SMTP)</label>
+                            <label for="mail" class="form-element-title">{{ __('Email (SMTP user)') }}</label>
                             <input
                                 type="text"
                                 id="mail"
@@ -79,9 +84,9 @@
 
                         <div class="form-field">
                             <label for="mail_pass" class="form-element-title">
-                                Mot de passe SMTP
+                                {{ __('SMTP password') }}
                                 @if($settings?->mail_pass)
-                                    <span class="text-xs text-gray-500">(laisser vide pour conserver)</span>
+                                    <span class="text-xs text-gray-500">{{ __('(leave blank to keep current)') }}</span>
                                 @endif
                             </label>
                             <input
@@ -106,12 +111,12 @@
 
             <!-- Configuration CalDAV -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration CalDAV par défaut</h3>
-                <p class="text-sm text-gray-600 mb-4">Configuration CalDAV utilisable par les propriétaires (facultatif)</p>
+                <h3 class="form-group-title">{{ __('Default CalDAV configuration') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('CalDAV configuration available to owners (optional)') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="dav_url" class="form-element-title">URL CalDAV</label>
+                        <label for="dav_url" class="form-element-title">{{ __('CalDAV URL') }}</label>
                         <input
                             type="text"
                             id="dav_url"
@@ -127,7 +132,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="dav_user" class="form-element-title">Utilisateur CalDAV</label>
+                            <label for="dav_user" class="form-element-title">{{ __('CalDAV user') }}</label>
                             <input
                                 type="text"
                                 id="dav_user"
@@ -141,9 +146,9 @@
 
                         <div class="form-field">
                             <label for="dav_pass" class="form-element-title">
-                                Mot de passe CalDAV
+                                {{ __('CalDAV password') }}
                                 @if($settings?->dav_pass)
-                                    <span class="text-xs text-gray-500">(laisser vide pour conserver)</span>
+                                    <span class="text-xs text-gray-500">{{ __('(leave blank to keep current)') }}</span>
                                 @endif
                             </label>
                             <input
@@ -167,12 +172,12 @@
 
             <!-- Configuration WebDAV -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration WebDAV par défaut</h3>
-                <p class="text-sm text-gray-600 mb-4">Configuration WebDAV utilisable par les propriétaires (facultatif)</p>
+                <h3 class="form-group-title">{{ __('Default WebDAV configuration') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('WebDAV configuration available to owners (optional)') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="webdav_endpoint" class="form-element-title">Endpoint WebDAV</label>
+                        <label for="webdav_endpoint" class="form-element-title">{{ __('WebDAV endpoint') }}</label>
                         <input
                             type="text"
                             id="webdav_endpoint"
@@ -188,7 +193,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="webdav_user" class="form-element-title">Utilisateur WebDAV</label>
+                            <label for="webdav_user" class="form-element-title">{{ __('WebDAV user') }}</label>
                             <input
                                 type="text"
                                 id="webdav_user"
@@ -202,9 +207,9 @@
 
                         <div class="form-field">
                             <label for="webdav_pass" class="form-element-title">
-                                Mot de passe WebDAV
+                                {{ __('WebDAV password') }}
                                 @if($settings?->webdav_pass)
-                                    <span class="text-xs text-gray-500">(laisser vide pour conserver)</span>
+                                    <span class="text-xs text-gray-500">{{ __('(leave blank to keep current)') }}</span>
                                 @endif
                             </label>
                             <input
@@ -225,7 +230,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="webdav_save_path" class="form-element-title">Chemin de sauvegarde</label>
+                        <label for="webdav_save_path" class="form-element-title">{{ __('Save path') }}</label>
                         <input
                             type="text"
                             id="webdav_save_path"
@@ -243,12 +248,12 @@
 
             <!-- Paramètres régionaux -->
             <div class="form-group">
-                <h3 class="form-group-title">Paramètres régionaux</h3>
-                <p class="text-sm text-gray-600 mb-4">Paramètres par défaut pour l'application (requis)</p>
+                <h3 class="form-group-title">{{ __('Regional settings') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('Default settings for owners (required)') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="timezone" class="form-element-title">Fuseau horaire</label>
+                        <label for="timezone" class="form-element-title">{{ __('Timezone') }}</label>
                         @include('partials._timezone_select', [
                             'name' => 'timezone',
                             'id' => 'timezone',
@@ -265,7 +270,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="currency" class="form-element-title">Devise</label>
+                            <label for="currency" class="form-element-title">{{ __('Currency') }}</label>
                             @include('partials._currency_select', [
                                 'name' => 'currency',
                                 'id' => 'currency',
@@ -279,7 +284,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="locale" class="form-element-title">Langue</label>
+                            <label for="locale" class="form-element-title">{{ __('Locale') }}</label>
                             @include('partials._locale_select', [
                                 'name' => 'locale',
                                 'id' => 'locale',
@@ -297,7 +302,7 @@
 
             <div class="btn-group justify-end mt-6">
                 <button type="submit" class="btn btn-primary">
-                    Enregistrer
+                    {{ __('Save') }}
                 </button>
             </div>
         </form>

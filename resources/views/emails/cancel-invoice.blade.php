@@ -1,34 +1,33 @@
 @extends('emails.layout')
 
 @section('content')
-    <h1>Annulation de votre facture n° {{ $invoice->number }}</h1>
+    <h1>{{ __('Cancellation of your invoice no. :number', ['number' => $invoice->number]) }}</h1>
 
-    <p>Bonjour,</p>
+    <p>{{ __('Hello') }},</p>
 
     <p>
-        Vous aviez reçu une facture en lien avec une réservation de la salle <em>{{ $room->name }}</em> pour l'événement/activité
-        <em>{{ $reservation->title }}</em>.
+        {{ __('You had received an invoice related to a reservation of the room :room for the event/activity :title.', ['room' => $room->name, 'title' => $reservation->title]) }}
     </p>
 
-    <h2>{{ $reservation->events->count() > 1 ? 'Dates demandées' : 'Date demandée' }}</h2>
+    <h2>{{ $reservation->events->count() > 1 ? __('Requested dates') : __('Requested date') }}</h2>
     <ul>
         @foreach ($reservation->events as $event)
             <li>
-                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} au {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
+                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} {{ __('to') }} {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
             </li>
         @endforeach
     </ul>
 
     <p>
-        Nous vous informons que cette facture est annulée.
+        {{ __('We inform you that this invoice has been cancelled.') }}
     </p>
 
     @if($complement)
         <div class="warning-box">
-            <strong>Raison de l'annulation :</strong><br>
+            <strong>{{ __('Reason for cancellation:') }}</strong><br>
             {{ $complement }}
         </div>
     @endif
 
-    <p>Avec nos meilleures salutations,</p>
+    <p>{{ __('Best regards,') }}</p>
 @endsection

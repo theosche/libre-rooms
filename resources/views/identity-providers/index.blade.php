@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Fournisseurs d\'identité')
+@section('title', __('Identity providers'))
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Réglages système</h1>
+        <h1 class="page-header-title">{{ __('System settings') }}</h1>
         @include('system-settings._submenu')
-        <p class="mt-2 text-sm text-gray-600">Gestion des fournisseurs d'identité (OIDC)</p>
+        <p class="mt-2 text-sm text-gray-600">{{ __('Manage identity providers (OIDC)') }}</p>
     </div>
 
     <!-- Tableau des fournisseurs d'identité -->
@@ -16,19 +16,19 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
+                        {{ __('Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Slug
+                        {{ __('Slug') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Driver
+                        {{ __('Driver') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Statut
+                        {{ __('Status') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -53,21 +53,21 @@
                         <td class="px-4 py-3 whitespace-nowrap">
                             @if($provider->enabled)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    Actif
+                                    {{ __('Active') }}
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                    Inactif
+                                    {{ __('Inactive') }}
                                 </span>
                             @endif
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex justify-end gap-2">
                                 <a href="{{ route('identity-providers.edit', $provider) }}" class="link-primary">
-                                    Modifier
+                                    {{ __('Edit') }}
                                 </a>
                                 <button type="button" onclick="confirmDelete({{ $provider->id }})" class="link-danger">
-                                    Supprimer
+                                    {{ __('Delete') }}
                                 </button>
                                 <form id="delete-form-{{ $provider->id }}" action="{{ route('identity-providers.destroy', $provider) }}" method="POST" class="hidden">
                                     @csrf
@@ -79,7 +79,7 @@
                 @empty
                     <tr>
                         <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
-                            Aucun fournisseur d'identité configuré.
+                            {{ __('No identity provider configured.') }}
                         </td>
                     </tr>
                 @endforelse
@@ -90,7 +90,7 @@
 
 <script>
     function confirmDelete(providerId) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur d\'identité ? Les utilisateurs liés ne pourront plus se connecter via ce fournisseur.')) {
+        if (confirm(@json(__('Are you sure you want to delete this identity provider? Linked users will no longer be able to log in via this provider.')))) {
             document.getElementById('delete-form-' + providerId).submit();
         }
     }

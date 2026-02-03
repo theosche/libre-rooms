@@ -1,6 +1,6 @@
 @extends('pdf.layouts.base')
 
-@section('title', 'Confirmation de pré-réservation')
+@section('title', __('Pre-booking confirmation'))
 
 @section('content')
     @include('pdf.partials.header', ['owner' => $owner])
@@ -12,14 +12,14 @@
         </div>
     </div>
 
-    <h1 style="text-align: center; margin: 10mm 0;">Confirmation de pré-réservation de {{ $room->name }}</h1>
+    <h1 style="text-align: center; margin: 10mm 0;">{{ __('Pre-booking confirmation for :room', ['room' => $room->name]) }}</h1>
 
     @php
         $ownerContact = $owner->contact;
         $currentDate = now();
     @endphp
 
-    <p>{{ $ownerContact->city }}, le {{ $currentDate->format('d.m.Y') }}</p>
+    <p>{{ $ownerContact->city }}, {{ $currentDate->translatedFormat('j F Y') }}</p>
 
     <div style="margin: 8mm 0;">
         <h2>{{ html_entity_decode($reservation->title) }}</h2>
@@ -34,10 +34,10 @@
 
     <div class="message">
         <p>
-            Votre demande de réservation de {{ $room->name }} a bien été reçue.
-            La réservation doit être confirmée par {{ lcfirst($ownerContact->display_name()) }} avant d'être effective.
-            Vous recevrez une confirmation et une facture par email.
-            Si les délais sont courts et que vous ne recevez rien, contactez-nous !
+            {{ __('Your reservation request for :room has been received.', ['room' => $room->name]) }}
+            {{ __('The reservation must be confirmed by :owner before it becomes effective.', ['owner' => lcfirst($ownerContact->display_name())]) }}
+            {{ __('You will receive a confirmation and an invoice by email.') }}
+            {{ __('If the deadlines are short and you do not receive anything, please contact us!') }}
         </p>
     </div>
 @endsection

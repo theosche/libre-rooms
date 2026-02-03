@@ -6,7 +6,7 @@
                 type="button"
                 class="event-remove"
                 id="event-remove-{{ $event['id'] }}"
-                aria-label="Supprimer cette date"
+                aria-label="{{ __('Remove this date') }}"
             >
                 ✕
             </button>

@@ -37,7 +37,7 @@ class ContactRules
                                             ->where('user_id', $userId)
                                             ->exists();
                                         if (!$exists) {
-                                            $fail('Le contact sélectionné n\'est pas valide.');
+                                            $fail(__('The selected contact is not valid.'));
                                         }
                                     },
                                     ],

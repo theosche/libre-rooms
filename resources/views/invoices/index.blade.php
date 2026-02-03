@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Factures')
+@section('title', __('Invoices'))
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Factures</h1>
+        <h1 class="page-header-title">{{ __('Invoices') }}</h1>
 
         @include('invoices._submenu', ['view' => $view, 'canViewAdmin' => $canViewAdmin])
 
         @if(!$canViewAdmin)
-            <p class="mt-2 text-sm text-gray-600">Liste de toutes vos factures</p>
+            <p class="mt-2 text-sm text-gray-600">{{ __('List of all your invoices') }}</p>
         @endif
     </div>
 
@@ -20,9 +20,9 @@
             <input type="hidden" name="view" value="{{ $view }}">
 
             <div>
-                <label for="tenant_id" class="block text-sm font-medium text-gray-700 mb-1">Débiteur</label>
+                <label for="tenant_id" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Debtor') }}</label>
                 <select name="tenant_id" id="tenant_id" class="form-select">
-                    <option value="">Tous les débiteurs</option>
+                    <option value="">{{ __('All debtors') }}</option>
                     @foreach($contacts as $contact)
                         <option value="{{ $contact->id }}" {{ request('tenant_id') == $contact->id ? 'selected' : '' }}>
                             {{ $contact->display_name() }}
@@ -32,23 +32,23 @@
             </div>
 
             <div>
-                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Status') }}</label>
                 <select name="status" id="status" class="form-select">
-                    <option value="">Tous les statuts</option>
-                    <option value="due" {{ request('status') == 'due' ? 'selected' : '' }}>À payer</option>
-                    <option value="late" {{ request('status') == 'late' ? 'selected' : '' }}>En retard</option>
-                    <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Payée</option>
-                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Annulée</option>
+                    <option value="">{{ __('All statuses') }}</option>
+                    <option value="due" {{ request('status') == 'due' ? 'selected' : '' }}>{{ __('Due') }}</option>
+                    <option value="late" {{ request('status') == 'late' ? 'selected' : '' }}>{{ __('Late') }}</option>
+                    <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>{{ __('Paid') }}</option>
+                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>{{ __('Cancelled') }}</option>
                 </select>
             </div>
 
             <div class="flex items-end gap-2">
                 <button type="submit" class="btn btn-primary flex-1">
-                    Filtrer
+                    {{ __('Filter') }}
                 </button>
                 @if(request()->hasAny(['tenant_id', 'status']))
                     <a href="{{ route('invoices.index', ['view' => $view]) }}" class="btn btn-secondary">
-                        Réinitialiser
+                        {{ __('Reset') }}
                     </a>
                 @endif
             </div>
@@ -61,28 +61,28 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Numéro
+                        {{ __('Number') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Débiteur
+                        {{ __('Debtor') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Montant
+                        {{ __('Amount') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
-                        Date d'émission
+                        {{ __('Issue date') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
-                        Rappels
+                        {{ __('Reminders') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
-                        Échéance
+                        {{ __('Due date') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Statut
+                        {{ __('Status') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -148,8 +148,8 @@
                                     @if(in_array($computedStatus, [\App\Enums\InvoiceStatus::LATE, \App\Enums\InvoiceStatus::TOO_LATE]))
                                         <form method="POST" action="{{ route('invoices.remind', $invoice) }}" class="inline">
                                             @csrf
-                                            <button type="submit" class="link-primary" onclick="return confirm('Envoyer un rappel de paiement ?')">
-                                                Rappel
+                                            <button type="submit" class="link-primary" onclick="return confirm('{{ __('Send a payment reminder?') }}')">
+                                                {{ __('Reminder') }}
                                             </button>
                                         </form>
                                     @endif
@@ -157,15 +157,15 @@
                                     @if(!in_array($computedStatus, [\App\Enums\InvoiceStatus::PAID, \App\Enums\InvoiceStatus::CANCELLED]))
                                         <form method="POST" action="{{ route('invoices.pay', $invoice) }}" class="inline">
                                             @csrf
-                                            <button type="submit" class="link-success" onclick="return confirm('Marquer cette facture comme payée ?')">
-                                                Payée
+                                            <button type="submit" class="link-success" onclick="return confirm('{{ __('Mark this invoice as paid?') }}')">
+                                                {{ __('Paid') }}
                                             </button>
                                         </form>
 
                                         <button type="button"
                                                 onclick="openCancelModal({{ $invoice->id }})"
                                                 class="link-danger">
-                                            Annuler
+                                            {{ __('Cancel') }}
                                         </button>
                                     @endif
 
@@ -173,7 +173,7 @@
                                         <button type="button"
                                                 onclick="openRecreateModal({{ $invoice->id }})"
                                                 class="link-primary">
-                                            Recréer
+                                            {{ __('Recreate') }}
                                         </button>
                                     @endif
                                 @else
@@ -182,13 +182,13 @@
                                         <a href="{{ route('reservations.reminder.pdf', $invoice->reservation->hash) }}"
                                            target="_blank"
                                            class="link-primary">
-                                            Voir PDF
+                                            {{ __('View PDF') }}
                                         </a>
                                     @else
                                         <a href="{{ route('reservations.invoice.pdf', $invoice->reservation->hash) }}"
                                            target="_blank"
                                            class="link-primary">
-                                            Voir PDF
+                                            {{ __('View PDF') }}
                                         </a>
                                     @endif
                                 @endif
@@ -200,26 +200,26 @@
                         <td colspan="8" class="px-4 py-3">
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                 <div>
-                                    <span class="text-gray-500">Date d'émission:</span>
+                                    <span class="text-gray-500">{{ __('Issue date') }}:</span>
                                     <span class="ml-1 text-gray-900">{{ $invoice->first_issued_at?->format('d.m.Y') ?? '-' }}</span>
                                 </div>
                                 <div>
-                                    <span class="text-gray-500">Échéance:</span>
+                                    <span class="text-gray-500">{{ __('Due date') }}:</span>
                                     <span class="ml-1 text-gray-900">{{ $invoice->due_at?->format('d.m.Y') ?? '-' }}</span>
                                 </div>
                                 <div>
-                                    <span class="text-gray-500">Rappels:</span>
+                                    <span class="text-gray-500">{{ __('Reminders') }}:</span>
                                     <span class="ml-1 text-gray-900">{{ $invoice->reminder_count }}</span>
                                 </div>
                                 @if($invoice->paid_at)
                                     <div>
-                                        <span class="text-gray-500">Payée le:</span>
+                                        <span class="text-gray-500">{{ __('Paid on') }}:</span>
                                         <span class="ml-1 text-gray-900">{{ $invoice->paid_at->format('d.m.Y') }}</span>
                                     </div>
                                 @endif
                                 @if($invoice->cancelled_at)
                                     <div>
-                                        <span class="text-gray-500">Annulée le:</span>
+                                        <span class="text-gray-500">{{ __('Cancelled on') }}:</span>
                                         <span class="ml-1 text-gray-900">{{ $invoice->cancelled_at->format('d.m.Y') }}</span>
                                     </div>
                                 @endif
@@ -229,7 +229,7 @@
                 @empty
                     <tr>
                         <td colspan="8" class="px-4 py-3 text-center text-gray-500">
-                            Aucune facture trouvée
+                            {{ __('No invoices found') }}
                         </td>
                     </tr>
                 @endforelse
@@ -261,7 +261,7 @@
     <!-- Modal d'annulation de facture -->
     <div id="cancel-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Annuler la facture</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-4">{{ __('Cancel the invoice') }}</h3>
             <form id="cancel-form" method="POST">
                 @csrf
                 <div class="mb-4">
@@ -269,28 +269,28 @@
                         <input type="checkbox" name="send_email" value="1" checked
                                id="cancel-send-email"
                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <span class="text-sm text-gray-700">Envoyer un email au débiteur</span>
+                        <span class="text-sm text-gray-700">{{ __('Send an email to the debtor') }}</span>
                     </label>
                 </div>
                 <div class="mb-4">
                     <label for="cancel-reason" class="block text-sm font-medium text-gray-700 mb-1">
-                        Raison de l'annulation (facultatif)
+                        {{ __('Cancellation reason (optional)') }}
                     </label>
                     <textarea name="reason"
                               id="cancel-reason"
                               class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                               rows="3"
-                              placeholder="Expliquez la raison de l'annulation..."></textarea>
-                    <p class="mt-1 text-xs text-gray-500">Cette raison sera incluse dans l'email si la case ci-dessus est cochée.</p>
+                              placeholder="{{ __('Explain the reason for cancellation...') }}"></textarea>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('This reason will be included in the email if the box above is checked.') }}</p>
                 </div>
                 <div class="flex justify-end gap-3">
                     <button type="button"
                             onclick="closeCancelModal()"
                             class="btn btn-secondary">
-                        Retour
+                        {{ __('Back') }}
                     </button>
                     <button type="submit" class="btn btn-delete">
-                        Confirmer l'annulation
+                        {{ __('Confirm cancellation') }}
                     </button>
                 </div>
             </form>
@@ -300,7 +300,7 @@
     <!-- Modal de recréation de facture -->
     <div id="recreate-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Recréer la facture</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-4">{{ __('Recreate the invoice') }}</h3>
             <form id="recreate-form" method="POST">
                 @csrf
                 <div class="mb-4">
@@ -308,28 +308,28 @@
                         <input type="checkbox" name="send_email" value="1" checked
                                id="recreate-send-email"
                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <span class="text-sm text-gray-700">Envoyer un email au débiteur</span>
+                        <span class="text-sm text-gray-700">{{ __('Send an email to the debtor') }}</span>
                     </label>
                 </div>
                 <div class="mb-4">
                     <label for="recreate-reason" class="block text-sm font-medium text-gray-700 mb-1">
-                        Explication (facultatif)
+                        {{ __('Explanation (optional)') }}
                     </label>
                     <textarea name="reason"
                               id="recreate-reason"
                               class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                               rows="3"
-                              placeholder="Ajoutez une explication..."></textarea>
-                    <p class="mt-1 text-xs text-gray-500">Cette explication sera incluse dans l'email si la case ci-dessus est cochée.</p>
+                              placeholder="{{ __('Add an explanation...') }}"></textarea>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('This explanation will be included in the email if the box above is checked.') }}</p>
                 </div>
                 <div class="flex justify-end gap-3">
                     <button type="button"
                             onclick="closeRecreateModal()"
                             class="btn btn-secondary">
-                        Retour
+                        {{ __('Back') }}
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        Recréer la facture
+                        {{ __('Recreate the invoice') }}
                     </button>
                 </div>
             </form>

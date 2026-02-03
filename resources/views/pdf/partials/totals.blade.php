@@ -10,7 +10,7 @@
     <table class="totals-table">
 
             <tr>
-                <td class="label-col"><strong>Total initial</strong></td>
+                <td class="label-col"><strong>{{ __('Initial total') }}</strong></td>
                 <td class="price-col"><strong>{{ currency($totalPrice, $owner) }}</strong></td>
             </tr>
     </table>
@@ -34,14 +34,14 @@
 
             @if($reservation->special_discount)
                 <tr>
-                    <td class="label-col">Réduction spéciale</td>
+                    <td class="label-col">{{ __('Special discount') }}</td>
                     <td class="price-col">{{ currency(-$reservation->special_discount, $owner) }}</td>
                 </tr>
             @endif
 
             @if($reservation->donation && !$useFreePrice)
                 <tr>
-                    <td class="label-col">Don supplémentaire</td>
+                    <td class="label-col">{{ __('Additional donation') }}</td>
                     <td class="price-col">{{ currency($reservation->donation, $owner) }}</td>
                 </tr>
             @endif
@@ -52,17 +52,17 @@
         @if($useFreePrice)
         <table class="totals-table">
             <tr>
-                <td class="label-col">Total tarif recommandé</td>
+                <td class="label-col">{{ __('Total recommended rate') }}</td>
                 <td class="price-col">{{ currency($reservation->recommendedPrice(), $owner) }}</td>
             </tr>
             <tr class="total-row">
-                <td class="label-col">Tarif libre</td>
+                <td class="label-col">{{ __('Free rate') }}</td>
                 <td class="price-col">{{ currency($finalTotal, $owner) }}</td>
             </tr>
         @else
         <table class="totals-table">
             <tr class="total-row">
-                <td class="label-col">Total (TTC)</td>
+                <td class="label-col">{{ __('Total (incl. VAT)') }}</td>
                 <td class="price-col">{{ currency($finalTotal, $owner) }}</td>
             </tr>
         </table>

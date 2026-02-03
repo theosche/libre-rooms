@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Mon profil')
+@section('title', __('My profile'))
 
 @section('content')
     <div class="max-w-4xl mx-auto py-6">
         <div class="form-header">
-            <h1 class="form-title">Mon profil</h1>
-            <p class="form-subtitle">Gérez vos informations personnelles</p>
+            <h1 class="form-title">{{ __('My profile') }}</h1>
+            <p class="form-subtitle">{{ __('Manage your personal information') }}</p>
         </div>
 
         @if(!$user->email_verified_at)
@@ -22,8 +22,7 @@
                     </div>
                     <div class="ml-3">
                         <p class="text-sm text-yellow-700">
-                            Votre email n'est pas encore vérifié. Veuillez vérifier votre boîte email et cliquer sur le
-                            lien de vérification.
+                            {{ __('Your email is not yet verified. Please check your inbox and click the verification link.') }}
                         </p>
                     </div>
                 </div>
@@ -41,14 +40,14 @@
                 ])
 
                 <div class="form-group">
-                    <h3 class="form-group-title">Sécurité</h3>
+                    <h3 class="form-group-title">{{ __('Security') }}</h3>
                     <fieldset class="form-element">
                         <div class="form-field">
                             <a href="{{ route('profile.password') }}" class="link-primary">
-                                {{ auth()->user()->password ? 'Modifier le mot de passe' : 'Définir un mot de passe' }}
+                                {{ auth()->user()->password ? __('Change password') : __('Set a password') }}
                             </a>
                             @if(!auth()->user()->password)
-                                <small class="text-gray-600">Définir un mot de passe vous permettra de vous connecter avec votre email</small>
+                                <small class="text-gray-600">{{ __('Setting a password will allow you to log in with your email') }}</small>
                             @endif
                         </div>
                     </fieldset>
@@ -56,14 +55,14 @@
 
                 <div class="btn-group justify-end mt-6">
                     <a href="{{ url()->previous() }}" class="btn btn-secondary">
-                        Annuler
+                        {{ __('Cancel') }}
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        Mettre à jour
+                        {{ __('Update') }}
                     </button>
                     <button type="button" onclick="confirmDeleteAccount()"
                             class="btn bg-red-600 hover:bg-red-700 text-white">
-                        Supprimer mon compte
+                        {{ __('Delete my account') }}
                     </button>
                 </div>
             </form>
@@ -77,7 +76,7 @@
 
     <script>
         function confirmDeleteAccount() {
-            if (confirm('Êtes-vous absolument sûr de vouloir supprimer votre compte ? Cette action est irréversible et toutes vos données seront perdues.')) {
+            if (confirm('{{ __('Are you absolutely sure you want to delete your account? This action cannot be undone and all your data will be lost.') }}')) {
                 document.getElementById('delete-account-form').submit();
             }
         }

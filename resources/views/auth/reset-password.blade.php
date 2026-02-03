@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Réinitialiser le mot de passe')
+@section('title', __('Reset Password'))
 
 @section('content')
 <div class="auth-container container-full-form">
     <div class="form-header">
-        <h1 class="form-title">Réinitialiser le mot de passe</h1>
+        <h1 class="form-title">{{ __('Reset Password') }}</h1>
     </div>
 
     @if($errors->any())
@@ -23,7 +23,7 @@
 
         <div class="form-group">
             <div class="form-element">
-                <label for="email" class="form-element-title">Adresse email</label>
+                <label for="email" class="form-element-title">{{ __('Email address') }}</label>
                 <div class="form-field">
                     <input
                         type="email"
@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-element">
-                <label for="password" class="form-element-title">Nouveau mot de passe</label>
+                <label for="password" class="form-element-title">{{ __('New password') }}</label>
                 <div class="form-field">
                     <input
                         type="password"
@@ -46,11 +46,11 @@
                         required
                     >
                 </div>
-                <p class="text-sm text-gray-600 mt-1">Minimum 12 caractères</p>
+                <p class="text-sm text-gray-600 mt-1">{{ __('Minimum :count characters', ['count' => 12]) }}</p>
             </div>
 
             <div class="form-element">
-                <label for="password_confirmation" class="form-element-title">Confirmer le mot de passe</label>
+                <label for="password_confirmation" class="form-element-title">{{ __('Confirm password') }}</label>
                 <div class="form-field">
                     <input
                         type="password"
@@ -63,7 +63,7 @@
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn btn-primary">Réinitialiser le mot de passe</button>
+            <button type="submit" class="btn btn-primary">{{ __('Reset Password') }}</button>
         </div>
     </form>
 </div>

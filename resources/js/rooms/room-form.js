@@ -1,4 +1,5 @@
 // Handle conditional field display and requirements
+const t = window.translations || {};
 
 document.addEventListener('DOMContentLoaded', () => {
     // ================================
@@ -45,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <button
                             type="button"
-                            class="image-remove-btn absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity ignore-styled-form"
-                            title="Supprimer cette image"
+                            class="image-remove-btn absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity ignore-styled-form cursor-pointer"
+                            title="${t.delete_image || 'Delete this image'}"
                         >
                             <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -127,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.draggable = true;
                 button.classList.remove('bg-green-600');
                 button.classList.add('bg-red-600');
-                button.title = 'Supprimer cette image';
+                button.title = t.delete_image || 'Delete this image';
                 button.innerHTML = `
                     <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -160,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.draggable = false;
                 button.classList.remove('bg-red-600');
                 button.classList.add('bg-green-600');
-                button.title = 'Restaurer cette image';
+                button.title = t.restore_image || 'Restore this image';
                 button.innerHTML = `
                     <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -233,14 +234,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (priceShortInput && maxHoursShortInput) {
         function toggleMaxHoursShort() {
             const hasPriceShort = priceShortInput.value.trim() !== '';
+            const maxHoursLabel = t.max_hours_short || 'Max hours for short reservation';
             if (hasPriceShort) {
                 maxHoursShortInput.required = true;
                 maxHoursShortInput.parentElement.querySelector('label').innerHTML =
-                    'Heures max pour réservation courte <span>*</span>';
+                    maxHoursLabel + ' <span>*</span>';
             } else {
                 maxHoursShortInput.required = false;
                 maxHoursShortInput.parentElement.querySelector('label').innerHTML =
-                    'Heures max pour réservation courte';
+                    maxHoursLabel;
             }
         }
 
@@ -267,9 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Update label based on mode
                 if (mode === 'text') {
-                    charterStrLabel.textContent = 'Contenu de la charte';
+                    charterStrLabel.textContent = t.charter_content || 'Charter content';
                 } else if (mode === 'link') {
-                    charterStrLabel.textContent = 'Lien vers la charte';
+                    charterStrLabel.textContent = t.charter_link || 'Charter link';
                 }
 
                 // Add required asterisk
@@ -295,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 secretMessageField.classList.remove('hidden');
                 secretMessageTextarea.required = true;
                 secretMessageField.querySelector('label').innerHTML =
-                    'Message secret <span class="text-red-500">*</span>';
+                    (t.secret_message || 'Secret message') + ' <span class="text-red-500">*</span>';
             } else {
                 secretMessageField.classList.add('hidden');
                 secretMessageTextarea.required = false;
@@ -356,9 +358,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (defaultOption && ownerId && window.ownerTimezones[ownerId]) {
                 const ownerTimezone = window.ownerTimezones[ownerId];
-                defaultOption.textContent = `Paramètres par défaut (${ownerTimezone})`;
+                defaultOption.textContent = (t.default_settings || 'Default settings') + ` (${ownerTimezone})`;
             } else if (defaultOption) {
-                defaultOption.textContent = 'Paramètres par défaut';
+                defaultOption.textContent = t.default_settings || 'Default settings';
             }
         }
 

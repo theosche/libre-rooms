@@ -3,11 +3,11 @@
     $enabledDiscounts = old('discounts') ?? $reservationDiscounts;
 @endphp
 <div class="form-group" id="donation-form-group">
-    <h3 class="form-group-title">Résumé{{ $useFreePrice ? " (tarif indicatif suggéré pour le prix libre)" : "" }}</h3>
+    <h3 class="form-group-title">{{ __('Summary') }}{{ $useFreePrice ? " (" . __('suggested rate for free pricing') . ")" : "" }}</h3>
     <div class="form-element">
         <div class="form-field">
             <p id="total-cost-p" class="cost">
-                <span class="cost-label">Total initial:</span>
+                <span class="cost-label">{{ __('Initial total') }}:</span>
                 <span class="cost-value"><span id="total-cost">{{currency(0,$owner)}}</span></span>
             </p>
             @foreach($discounts as $discount)
@@ -17,15 +17,15 @@
                 </p>
             @endforeach
             <p id="special_discount-cost-p" class="cost {{ $specialDiscount > 0 ? '' : 'hidden' }}">
-                <span class="cost-label">Réduction spéciale (admin):</span>
+                <span class="cost-label">{{ __('Special discount (admin)') }}:</span>
                 <span class="cost-value"><span id="special_discount-cost">{{ currency($specialDiscount,$owner) }}</span></span>
             </p>
             <p id="donation-cost-p" class="cost {{ $donation > 0 ? '' : 'hidden'}}">
-                <span class="cost-label">Don supplémentaire:</span>
+                <span class="cost-label">{{ __('Additional donation') }}:</span>
                 <span class="cost-value"><span id="donation-cost">{{ currency($donation,$owner) }}</span></span>
             </p>
             <p id="final-cost-p" class="cost">
-                <span class="cost-label">Total:</span>
+                <span class="cost-label">{{ __('Total') }}:</span>
                 <span class="cost-value"><span id="final-cost">{{currency(0,$owner)}}</span></span>
             </p>
         </div>

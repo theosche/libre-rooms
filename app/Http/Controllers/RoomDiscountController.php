@@ -23,7 +23,7 @@ class RoomDiscountController extends Controller
         $canViewMine = $user && ($user->is_global_admin || $user->owners()->wherePivot('role', 'admin')->exists());
 
         if (!$canViewMine) {
-            abort(403, 'Vous devez être administrateur d\'au moins un propriétaire pour accéder à cette page.');
+            abort(403, __('You must be an administrator of at least one owner to access this page.'));
         }
 
         // Get room IDs where user has admin rights
@@ -70,7 +70,7 @@ class RoomDiscountController extends Controller
 
         // Check if user has admin rights for at least one owner
         if (!$user->is_global_admin && !$user->owners()->wherePivot('role', 'admin')->exists()) {
-            abort(403, 'Vous devez être administrateur d\'au moins un propriétaire pour créer une réduction.');
+            abort(403, __('You must be an administrator of at least one owner to create a discount.'));
         }
 
         // Get rooms where user has admin rights
@@ -101,14 +101,14 @@ class RoomDiscountController extends Controller
         $room = Room::with('owner')->findOrFail($validated['room_id']);
         if (!$user->is_global_admin && !$user->isAdminOf($room->owner)) {
             return redirect()->route('room-discounts.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour ce propriétaire.');
+                ->with('error', __('You do not have administration rights for this owner.'));
         }
 
         // Create discount
         $discount = RoomDiscount::create($validated);
 
         return redirect()->route('room-discounts.index')
-            ->with('success', 'La réduction a été créée avec succès.');
+            ->with('success', __('Discount created successfully.'));
     }
 
     /**
@@ -120,7 +120,7 @@ class RoomDiscountController extends Controller
 
         // Check if user has admin rights for this discount's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($roomDiscount->room->owner)) {
-            abort(403, 'Vous n\'avez pas les droits d\'administration pour cette réduction.');
+            abort(403, __('You do not have administration rights for this discount.'));
         }
 
         // Get rooms where user has admin rights
@@ -147,7 +147,7 @@ class RoomDiscountController extends Controller
         // Check if user has admin rights for this discount's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($roomDiscount->room->owner)) {
             return redirect()->route('room-discounts.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour cette réduction.');
+                ->with('error', __('You do not have administration rights for this discount.'));
         }
 
         // Validate
@@ -157,14 +157,14 @@ class RoomDiscountController extends Controller
         $room = Room::with('owner')->findOrFail($validated['room_id']);
         if (!$user->is_global_admin && !$user->isAdminOf($room->owner)) {
             return redirect()->route('room-discounts.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour le nouveau propriétaire.');
+                ->with('error', __('You do not have administration rights for the new owner.'));
         }
 
         // Update discount
         $roomDiscount->update($validated);
 
         return redirect()->route('room-discounts.index')
-            ->with('success', 'La réduction a été mise à jour avec succès.');
+            ->with('success', __('Discount updated successfully.'));
     }
 
     /**
@@ -177,12 +177,12 @@ class RoomDiscountController extends Controller
         // Check if user has admin rights for this discount's room's owner
         if (!$user->is_global_admin && !$user->isAdminOf($roomDiscount->room->owner)) {
             return redirect()->route('room-discounts.index')
-                ->with('error', 'Vous n\'avez pas les droits d\'administration pour cette réduction.');
+                ->with('error', __('You do not have administration rights for this discount.'));
         }
 
         $roomDiscount->delete();
 
         return redirect()->route('room-discounts.index')
-            ->with('success', 'La réduction a été supprimée avec succès.');
+            ->with('success', __('Discount deleted successfully.'));
     }
 }

@@ -1,12 +1,10 @@
 @extends('emails.layout')
 
 @section('content')
-    <h1>Nouvelle demande de réservation</h1>
+    <h1>{{ __('New reservation request') }}</h1>
 
     <p>
-        Une demande de réservation a été faite par
-        <em>{{ $reservation->tenant->display_name() }}</em> pour la salle
-        <em>{{ $room->name }}</em>.
+        {{ __('A reservation request has been made by :tenant for the room :room.', ['tenant' => $reservation->tenant->display_name(), 'room' => $room->name]) }}
     </p>
 
     <div class="highlight-box">
@@ -16,19 +14,19 @@
         @endif
     </div>
 
-    <h2>Dates demandées</h2>
+    <h2>{{ __('Requested dates') }}</h2>
     <ul>
         @foreach ($reservation->events as $event)
             <li>
-                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} au {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
+                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} {{ __('to') }} {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
                 <a href="{{ route('reservations.event-ics', ['hash' => $reservation->hash, 'uid' => $event->uid]) }}" style="font-size: 12px;">(ics)</a>
             </li>
         @endforeach
     </ul>
 
-    <p>Merci de contrôler la demande pour la confirmer ou la refuser :</p>
+    <p>{{ __('Please review the request to confirm or reject it:') }}</p>
 
     <p>
-        <a href="{{ route('reservations.edit', $reservation) }}" class="btn">Voir la demande</a>
+        <a href="{{ route('reservations.edit', $reservation) }}" class="btn">{{ __('View the request') }}</a>
     </p>
 @endsection

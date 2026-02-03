@@ -60,7 +60,7 @@ class IdentityProviderController extends Controller
 
         IdentityProvider::create($validated);
 
-        return redirect()->route('identity-providers.index')->with('success', 'Fournisseur d\'identité créé avec succès.');
+        return redirect()->route('identity-providers.index')->with('success', __('Identity provider created successfully.'));
     }
 
     /**
@@ -109,7 +109,7 @@ class IdentityProviderController extends Controller
 
         $identityProvider->update($validated);
 
-        return redirect()->route('identity-providers.index')->with('success', 'Fournisseur d\'identité mis à jour avec succès.');
+        return redirect()->route('identity-providers.index')->with('success', __('Identity provider updated successfully.'));
     }
 
     /**
@@ -119,6 +119,6 @@ class IdentityProviderController extends Controller
     {
         $identityProvider->delete();
 
-        return redirect()->route('identity-providers.index')->with('success', 'Fournisseur d\'identité supprimé avec succès.');
+        return redirect()->route('identity-providers.index')->with('success', __('Identity provider deleted successfully.'));
     }
 }

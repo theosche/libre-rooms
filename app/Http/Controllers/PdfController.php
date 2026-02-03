@@ -43,7 +43,7 @@ class PdfController extends Controller
             ->firstOrFail();
 
         if (! $reservation->invoice) {
-            abort(404, 'Aucune facture pour cette réservation.');
+            abort(404, __('No invoice for this reservation.'));
         }
 
         $pdfContent = $this->pdfService->generateInvoicePDF($reservation);
@@ -66,11 +66,11 @@ class PdfController extends Controller
             ->firstOrFail();
 
         if (! $reservation->invoice) {
-            abort(404, 'Aucune facture pour cette réservation.');
+            abort(404, __('No invoice for this reservation.'));
         }
 
         if ($reservation->invoice->reminder_count < 1) {
-            abort(404, 'Aucun rappel pour cette facture.');
+            abort(404, __('No reminder for this invoice.'));
         }
 
         $pdfContent = $this->pdfService->generateReminderPDF($reservation->invoice);

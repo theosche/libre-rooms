@@ -17,7 +17,7 @@ class UnverifiedUserOnly
     {
         if (auth()->user()->hasVerifiedEmail()) {
             return redirect()->route('rooms.index')
-                ->with('success', 'Votre adresse email est vérifiée !');
+                ->with('success', __('Your email address is verified!'));
         }
 
         return $next($request);

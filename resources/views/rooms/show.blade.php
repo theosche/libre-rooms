@@ -12,12 +12,12 @@
         <nav class="page-submenu">
             <a href="{{ route('rooms.index') }}"
                class="page-submenu-item page-submenu-nav">
-                Retour aux salles
+                {{ __('Back to rooms') }}
             </a>
             <span class="page-submenu-separator"></span>
             @if($canReserve)
                 <a href="{{ route('reservations.create', $room) }}" class="page-submenu-item page-submenu-action">
-                    Réserver cette salle
+                    {{ __('Reserve this room') }}
                 </a>
             @endif
         </nav>
@@ -58,7 +58,7 @@
             <!-- Description -->
             @if($room->description)
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Description</h2>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Description') }}</h2>
                     <div class="prose prose-sm max-w-none text-gray-700">
                         {!! nl2br(e($room->description)) !!}
                     </div>
@@ -67,20 +67,20 @@
 
             <!-- Calendar -->
             <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Calendrier</h2>
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Calendar') }}</h2>
                 @if($isAdmin)
-                    <p class="text-sm text-green-600 font-medium mb-4">Mode administrateur - Vous voyez toutes les informations</p>
+                    <p class="text-sm text-green-600 font-medium mb-4">{{ __('Administrator mode - You see all information') }}</p>
                 @else
                     <p class="text-sm text-gray-500 mb-4">
                         @switch($room->calendar_view_mode->value)
                             @case('full')
-                                Vous voyez toutes les informations des réservations
+                                {{ __('You see all reservation information') }}
                                 @break
                             @case('title')
-                                Vous voyez les titres des réservations
+                                {{ __('You see reservation titles') }}
                                 @break
                             @case('slot')
-                                Vous voyez uniquement les créneaux occupés
+                                {{ __('You only see occupied slots') }}
                                 @break
                         @endswitch
                     </p>
@@ -91,13 +91,13 @@
             <!-- Admin actions -->
             @if($isAdmin)
                 <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-yellow-800 mb-4">Administration</h3>
+                    <h3 class="text-lg font-semibold text-yellow-800 mb-4">{{ __('Administration') }}</h3>
                     <div class="space-y-2">
                         <a href="{{ route('rooms.edit', $room) }}" class="block w-full btn btn-secondary text-center">
-                            Modifier la salle
+                            {{ __('Edit room') }}
                         </a>
                         <a href="{{ route('rooms.users.index', $room) }}" class="block w-full btn btn-secondary text-center">
-                            Gérer les utilisateurs
+                            {{ __('Manage users') }}
                         </a>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
             <!-- Address and map -->
             @if($room->hasAddress())
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Adresse</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Address') }}</h3>
                     <p class="text-sm text-gray-700 mb-4">
                         {{ $room->formattedAddress() }}
                     </p>
@@ -121,7 +121,7 @@
                             target="_blank"
                             class="text-sm text-blue-600 hover:underline"
                         >
-                            Ouvrir dans OpenStreetMap
+                            {{ __('Open in OpenStreetMap') }}
                         </a>
                     @endif
                 </div>
@@ -129,7 +129,7 @@
 
             <!-- Pricing -->
             <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Tarifs</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Pricing') }}</h3>
 
                 @if($room->price_mode->value === 'fixed')
                     <div class="space-y-3">
@@ -140,19 +140,19 @@
                             </div>
                         @endif
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">Journée</span>
+                            <span class="text-gray-600">{{ __('Full day') }}</span>
                             <span class="text-gray-900 font-medium">{{ currency($room->price_full_day, $room->owner) }}</span>
                         </div>
                     </div>
                 @elseif($room->price_mode->value === 'free')
                     <span class="px-3 py-1.5 bg-green-100 text-green-700 text-sm font-medium rounded-full">
-                        Libre participation
+                        {{ __('Free contribution') }}
                     </span>
                 @endif
 
                 @if($room->discounts->where('active', true)->count() > 0)
                     <div class="mt-4 pt-4 border-t border-gray-200">
-                        <h4 class="text-sm font-medium text-gray-900 mb-2">Réductions disponibles</h4>
+                        <h4 class="text-sm font-medium text-gray-900 mb-2">{{ __('Available discounts') }}</h4>
                         <div class="space-y-2">
                             @foreach($room->discounts->where('active', true) as $discount)
                                 <div class="flex items-center justify-between text-sm">
@@ -165,7 +165,7 @@
                                             {{ $discount->name }}
                                         @endif
                                         @if($discount->limit_to_contact_type)
-                                            <span class="text-gray-400 text-xs">({{ $discount->limit_to_contact_type->value === 'individual' ? 'Privé' : 'Org.' }})</span>
+                                            <span class="text-gray-400 text-xs">({{ $discount->limit_to_contact_type->value === 'individual' ? __('Individual') : __('Org.') }})</span>
                                         @endif
                                     </span>
                                     <span class="text-green-600 font-medium">
@@ -185,7 +185,7 @@
             <!-- Charter -->
             @if($room->charter_mode->value !== 'none')
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Charte</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Charter') }}</h3>
 
                     @if($room->charter_mode->value === 'text')
                         <p class="text-sm text-gray-700 whitespace-pre-line">{{ $room->charter_str }}</p>
@@ -198,7 +198,7 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
-                            Consulter la charte
+                            {{ __('View charter') }}
                         </a>
                     @endif
                 </div>
@@ -206,7 +206,7 @@
 
             <!-- Owner info -->
             <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Propriétaire</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Owner') }}</h3>
                 <div class="space-y-3">
                     @if ($user?->isAdminOf($room->owner))
                         <a href="{{ route('owners.edit', $room->owner) }}">
@@ -237,7 +237,7 @@
                             class="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm text-white font-medium transition"
                         >
                             <i class='fa-solid fa-link'></i>
-                            Visiter le site
+                            {{ __('Visit website') }}
                         </a>
                     @endif
                 </div>
@@ -246,7 +246,7 @@
             <!-- Options -->
             @if($room->options->where('active', true)->count() > 0)
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Options</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Options') }}</h3>
                     <div class="space-y-3">
                         @foreach($room->options->where('active', true) as $option)
                             @if($isAdmin)
@@ -272,18 +272,18 @@
             <!-- Booking rules -->
             @if($room->reservation_cutoff_days || $room->reservation_advance_limit)
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Conditions de réservation</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Booking conditions') }}</h3>
                     <dl class="space-y-2 text-sm">
                         @if($room->reservation_cutoff_days)
                             <div class="flex justify-between">
-                                <dt class="text-gray-600">Délai minimum</dt>
-                                <dd class="text-gray-900">{{ $room->reservation_cutoff_days }} jours avant</dd>
+                                <dt class="text-gray-600">{{ __('Minimum notice') }}</dt>
+                                <dd class="text-gray-900">{{ $room->reservation_cutoff_days }} {{ __('days before') }}</dd>
                             </div>
                         @endif
                         @if($room->reservation_advance_limit)
                             <div class="flex justify-between">
-                                <dt class="text-gray-600">Réservation max.</dt>
-                                <dd class="text-gray-900">{{ $room->reservation_advance_limit }} jours à l'avance</dd>
+                                <dt class="text-gray-600">{{ __('Max. reservation') }}</dt>
+                                <dd class="text-gray-900">{{ $room->reservation_advance_limit }} {{ __('days in advance') }}</dd>
                             </div>
                         @endif
                     </dl>

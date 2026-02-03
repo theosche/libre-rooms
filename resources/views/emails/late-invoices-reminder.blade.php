@@ -1,28 +1,28 @@
 @extends('emails.layout')
 
 @section('content')
-    <h1>Factures en retard</h1>
+    <h1>{{ __('Late invoices') }}</h1>
 
-    <p>Bonjour,</p>
+    <p>{{ __('Hello') }},</p>
 
     <div class="warning-box">
-        <strong>{{ $lateCount }} facture{{ $lateCount > 1 ? 's' : '' }} en retard</strong>
-        {{ $lateCount > 1 ? 'nécessitent' : 'nécessite' }} votre attention.
+        <strong>{{ __(':count late invoice', ['count' => $lateCount]) }}{{ $lateCount > 1 ? 's' : '' }}</strong>
+        {{ $lateCount > 1 ? __('require your attention.') : __('requires your attention.') }}
     </div>
 
     <p>
-        Nous vous rappelons que certaines factures sont en attente de paiement et ont dépassé leur date d'échéance.
+        {{ __('We remind you that some invoices are awaiting payment and have passed their due date.') }}
     </p>
 
     <p>
-        Veuillez vérifier si ces factures ont été réglées et les marquer comme payées, ou envoyer un rappel de paiement si nécessaire.
+        {{ __('Please check if these invoices have been paid and mark them as paid, or send a payment reminder if necessary.') }}
     </p>
 
     <p>
         <a href="{{ route('invoices.index', ['view' => 'admin', 'status' => 'late']) }}" class="btn">
-            Voir les factures en retard
+            {{ __('View late invoices') }}
         </a>
     </p>
 
-    <p>Avec nos meilleures salutations,</p>
+    <p>{{ __('Best regards,') }}</p>
 @endsection

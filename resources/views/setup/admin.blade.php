@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Configuration initiale')
+@section('title', __('Initial setup'))
 
 @section('content')
 <div class="auth-container container-full-form">
     <div class="form-header">
-        <h1 class="form-title">Configuration initiale</h1>
-        <p class="form-subtitle">Créez le premier compte administrateur</p>
+        <h1 class="form-title">{{ __('Initial setup') }}</h1>
+        <p class="form-subtitle">{{ __('Create the first administrator account') }}</p>
     </div>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -15,8 +15,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             <div class="text-sm text-blue-800">
-                <p class="font-medium mb-1">Bienvenue dans l'application de réservation !</p>
-                <p>Aucun administrateur n'a été configuré. Créez le premier compte administrateur pour commencer à utiliser l'application.</p>
+                <p class="font-medium mb-1">{{ __('Welcome to the reservation application!') }}</p>
+                <p>{{ __('No administrator has been configured. Create the first administrator account to start using the application.') }}</p>
             </div>
         </div>
     </div>
@@ -33,10 +33,10 @@
         @csrf
 
         <div class="form-group">
-            <h3 class="form-group-title">Compte administrateur</h3>
+            <h3 class="form-group-title">{{ __('Administrator account') }}</h3>
 
             <div class="form-element">
-                <label for="name" class="form-element-title">Nom du compte</label>
+                <label for="name" class="form-element-title">{{ __('Account name') }}</label>
                 <div class="form-field">
                     <input
                         type="text"
@@ -45,7 +45,7 @@
                         value="{{ old('name') }}"
                         required
                         autofocus
-                        placeholder="Votre nom complet"
+                        placeholder="{{ __('Your full name') }}"
                     >
                 </div>
             </div>
@@ -65,7 +65,7 @@
             </div>
 
             <div class="form-element">
-                <label for="password" class="form-element-title">Mot de passe</label>
+                <label for="password" class="form-element-title">{{ __('Password') }}</label>
                 <div class="form-field">
                     <input
                         type="password"
@@ -75,11 +75,11 @@
                         minlength="12"
                     >
                 </div>
-                <p class="text-xs text-gray-500 mt-1">Minimum 12 caractères</p>
+                <p class="text-xs text-gray-500 mt-1">{{ __('Minimum :count characters', ['count' => 12]) }}</p>
             </div>
 
             <div class="form-element">
-                <label for="password_confirmation" class="form-element-title">Confirmer le mot de passe</label>
+                <label for="password_confirmation" class="form-element-title">{{ __('Confirm password') }}</label>
                 <div class="form-field">
                     <input
                         type="password"
@@ -93,7 +93,7 @@
 
         <div class="btn-group justify-end mt-6">
             <button type="submit" class="btn btn-primary">
-                Créer le compte administrateur
+                {{ __('Create administrator account') }}
             </button>
         </div>
     </form>

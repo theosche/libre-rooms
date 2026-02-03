@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Salles disponibles')
+@section('title', __('Available rooms'))
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Salles</h1>
+        <h1 class="page-header-title">{{ __('Rooms') }}</h1>
 
         @include('rooms._submenu', ['view' => $view])
 
         @cannot('viewMine', App\Models\Room::class)
-            <p class="mt-2 text-sm text-gray-600">Liste de toutes les salles disponibles à la réservation</p>
+            <p class="mt-2 text-sm text-gray-600">{{ __('List of all rooms available for reservation') }}</p>
         @endcannot
     </div>
 
@@ -19,9 +19,9 @@
         <form method="GET" action="{{ route('rooms.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input type="hidden" name="view" value="{{ $view }}">
             <div>
-                <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-1">Propriétaire</label>
+                <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Owner') }}</label>
                 <select name="owner_id" id="owner_id" class="form-select">
-                    <option value="">Tous les propriétaires</option>
+                    <option value="">{{ __('All owners') }}</option>
                     @foreach($owners as $owner)
                         <option value="{{ $owner->id }}" {{ request('owner_id') == $owner->id ? 'selected' : '' }}>
                             {{ $owner->contact->display_name() }}
@@ -32,11 +32,11 @@
 
             <div class="flex items-end gap-2 col-span-2">
                 <button type="submit" class="btn btn-primary">
-                    Filtrer
+                    {{ __('Filter') }}
                 </button>
                 @if(request()->has('owner_id'))
                     <a href="{{ route('rooms.index', ['view' => $view]) }}" class="btn btn-secondary">
-                        Réinitialiser
+                        {{ __('Reset') }}
                     </a>
                 @endif
             </div>
@@ -49,22 +49,22 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
+                        {{ __('Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Propriétaire
+                        {{ __('Owner') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hide-on-mobile">
-                        Description
+                        {{ __('Description') }}
                     </th>
                     @if($view === 'mine')
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Statut
+                            {{ __('Status') }}
                         </th>
                     @endif
                     @if($user?->canManageAnyOwner())
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
+                            {{ __('Actions') }}
                         </th>
                     @endif
                 </tr>
@@ -96,11 +96,11 @@
                             <td class="px-4 py-3">
                                 <div class="flex gap-1 flex-wrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $room->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $room->active ? 'Active' : 'Inactive' }}
+                                        {{ $room->active ? __('Active') : __('Inactive') }}
                                     </span>
                                     @if(!$room->is_public)
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            Privée
+                                            {{ __('Private') }}
                                         </span>
                                     @endif
                                 </div>
@@ -111,21 +111,21 @@
                                 <div class="action-group" onclick="event.stopPropagation()">
                                     @can('manageUsers', $room)
                                         <a href="{{ route('rooms.users.index', $room) }}" class="link-primary">
-                                            Utilisateurs
+                                            {{ __('Users') }}
                                         </a>
                                     @endcan
 
                                     @can('update', $room)
                                         <a href="{{ route('rooms.edit', $room) }}" class="link-primary">
-                                            Modifier
+                                            {{ __('Edit') }}
                                         </a>
 
                                         <form action="{{ route('rooms.destroy', $room) }}" method="POST"
-                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ? Cette action est irréversible.');">
+                                              onsubmit="return confirm('{{ __('Are you sure you want to delete this room? This action cannot be undone.') }}');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="link-danger">
-                                                Supprimer
+                                                {{ __('Delete') }}
                                             </button>
                                         </form>
                                     @endcan
@@ -145,17 +145,17 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                                 <!-- Adresse -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Adresse</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Address') }}</h4>
                                     @if($room->hasAddress())
                                         <p class="text-sm text-slate-700">{{ $room->formattedAddress() }}</p>
                                     @else
-                                        <p class="text-sm text-slate-400">Adresse non renseignée</p>
+                                        <p class="text-sm text-slate-400">{{ __('Address not provided') }}</p>
                                     @endif
                                 </div>
 
                                 <!-- Charte -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Charte</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Charter') }}</h4>
                                     @if($room->charter_mode->value === 'text')
                                         <p class="text-sm text-slate-700 line-clamp-4">{{ $room->charter_str }}</p>
                                     @elseif($room->charter_mode->value === 'link')
@@ -164,16 +164,16 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                             </svg>
-                                            Voir la charte
+                                            {{ __('View charter') }}
                                         </a>
                                     @else
-                                        <p class="text-sm text-slate-400">Aucune charte</p>
+                                        <p class="text-sm text-slate-400">{{ __('No charter') }}</p>
                                     @endif
                                 </div>
 
                                 <!-- Tarifs -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Tarifs</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Prices') }}</h4>
                                     @if($room->price_mode->value === 'fixed')
                                         <div class="bg-white rounded-lg border border-slate-200 p-3 space-y-2">
                                             @if($room->price_short && $room->max_hours_short)
@@ -183,14 +183,14 @@
                                                 </div>
                                             @endif
                                             <div class="flex justify-between text-sm">
-                                                <span class="text-slate-500">Journée</span>
+                                                <span class="text-slate-500">{{ __('Full day') }}</span>
                                                 <span class="text-slate-900 font-medium">{{ currency($room->price_full_day, $room->owner) }}</span>
                                             </div>
                                         </div>
                                     @elseif($room->price_mode->value === 'free')
-                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">Libre participation</span>
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">{{ __('Pay what you want') }}</span>
                                     @else
-                                        <p class="text-sm text-slate-400">Non spécifié</p>
+                                        <p class="text-sm text-slate-400">{{ __('Not specified') }}</p>
                                     @endif
 
                                     @if($room->discounts->where('active', true)->count() > 0)
@@ -209,7 +209,7 @@
                                                     </span>
                                                     <span class="text-slate-600">{{ $discount->name }}</span>
                                                     @if($discount->limit_to_contact_type)
-                                                        <span class="text-slate-400 text-xs">({{ $discount->limit_to_contact_type->value === 'individual' ? 'Privé' : 'Org.' }})</span>
+                                                        <span class="text-slate-400 text-xs">({{ $discount->limit_to_contact_type->value === 'individual' ? __('Private') : __('Org.') }})</span>
                                                     @endif
                                                 </div>
                                                 @if($user?->isAdminOf($room->owner))
@@ -222,29 +222,29 @@
 
                                 <!-- Règles -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Règles</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Rules') }}</h4>
                                     <dl class="space-y-2 text-sm">
                                         @if($room->reservation_cutoff_days)
                                             <div class="flex">
-                                                <dt class="text-slate-500 mr-4">Délai min.</dt>
-                                                <dd class="text-slate-900">{{ $room->reservation_cutoff_days }}j avant</dd>
+                                                <dt class="text-slate-500 mr-4">{{ __('Min. delay') }}</dt>
+                                                <dd class="text-slate-900">{{ __(':days d before', ['days' => $room->reservation_cutoff_days]) }}</dd>
                                             </div>
                                         @endif
                                         @if($room->reservation_advance_limit)
                                             <div class="flex">
-                                                <dt class="text-slate-500 mr-4">Rés. max.</dt>
-                                                <dd class="text-slate-900">{{ $room->reservation_advance_limit }}j à l'avance</dd>
+                                                <dt class="text-slate-500 mr-4">{{ __('Max. advance') }}</dt>
+                                                <dd class="text-slate-900">{{ __(':days d in advance', ['days' => $room->reservation_advance_limit]) }}</dd>
                                             </div>
                                         @endif
                                         @if(!$room->reservation_cutoff_days && !$room->reservation_advance_limit)
-                                            <p class="text-slate-400">Aucune restriction</p>
+                                            <p class="text-slate-400">{{ __('No restrictions') }}</p>
                                         @endif
                                     </dl>
                                 </div>
 
                                 <!-- Options -->
                                 <div>
-                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Options</h4>
+                                    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ __('Options') }}</h4>
                                     @if($room->options->where('active', true)->count() > 0)
                                         <div class="space-y-2">
                                             @foreach($room->options->where('active', true) as $option)
@@ -266,7 +266,7 @@
                                             @endforeach
                                         </div>
                                     @else
-                                        <p class="text-sm text-slate-400">Aucune option</p>
+                                        <p class="text-sm text-slate-400">{{ __('No options') }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -280,7 +280,7 @@
                     @endphp
                     <tr>
                         <td colspan="{{ $emptyColspan }}" class="px-4 py-3 text-center text-gray-500">
-                            Aucune salle trouvée
+                            {{ __('No room found') }}
                         </td>
                     </tr>
                 @endforelse

@@ -16,7 +16,7 @@
         <a href="/" class="nav-logo">{{ config('app.name') }}</a>
 
         @auth
-            <button type="button" class="nav-toggle" onclick="toggleNavMenu()" aria-label="Menu">
+            <button type="button" class="nav-toggle" onclick="toggleNavMenu()" aria-label="{{ __('Menu') }}">
                 <svg class="nav-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
@@ -25,16 +25,16 @@
 
         <div class="nav-menu" id="nav-menu">
             @auth
-                <a href="{{ route('reservations.index') }}" class="nav-link">Réservations</a>
-                <a href="{{ route('contacts.index') }}" class="nav-link">Contacts</a>
-                <a href="{{ route('invoices.index') }}" class="nav-link">Factures</a>
-                <a href="{{ route('rooms.index') }}" class="nav-link">Salles</a>
+                <a href="{{ route('reservations.index') }}" class="nav-link">{{ __('Reservations') }}</a>
+                <a href="{{ route('contacts.index') }}" class="nav-link">{{ __('Contacts') }}</a>
+                <a href="{{ route('invoices.index') }}" class="nav-link">{{ __('Invoices') }}</a>
+                <a href="{{ route('rooms.index') }}" class="nav-link">{{ __('Rooms') }}</a>
                 @can('viewany', App\Models\Owner::class)
-                    <a href="{{ route('owners.index') }}" class="nav-link">Propriétaires</a>
+                    <a href="{{ route('owners.index') }}" class="nav-link">{{ __('Owners') }}</a>
                 @endcan
                 @if(auth()->user()->is_global_admin)
-                    <a href="{{ route('users.index') }}" class="nav-link">Utilisateurs</a>
-                    <a href="{{ route('system-settings.edit') }}" class="nav-link" title="Réglages système">
+                    <a href="{{ route('users.index') }}" class="nav-link">{{ __('Users') }}</a>
+                    <a href="{{ route('system-settings.edit') }}" class="nav-link" title="{{ __('System settings') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
                         </svg>
@@ -43,11 +43,11 @@
                 <a href="{{ route('profile') }}" class="nav-user-link"><span class="nav-user">{{ auth()->user()->name }}</span></a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="nav-action logout">Déconnexion</button>
+                    <button type="submit" class="nav-action logout">{{ __('Logout') }}</button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="nav-action login">Connexion</a>
-                <a href="{{ route('register') }}" class="nav-action register">Inscription</a>
+                <a href="{{ route('login') }}" class="nav-action login">{{ __('Login') }}</a>
+                <a href="{{ route('register') }}" class="nav-action register">{{ __('Register') }}</a>
             @endauth
         </div>
     </nav>
@@ -72,10 +72,10 @@
     // Handle query parameter messages (for login/logout where session is regenerated)
     $successMessage = session('success');
     if (!$successMessage && request()->query('login_success')) {
-        $successMessage = 'Connexion réussie !';
+        $successMessage = __('Login successful!');
     }
     if (!$successMessage && request()->query('logout_success')) {
-        $successMessage = 'Vous êtes maintenant déconnecté.';
+        $successMessage = __('You are now logged out.');
     }
 @endphp
 

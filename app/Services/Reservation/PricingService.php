@@ -95,17 +95,17 @@ class PricingService
         $label = '';
         if (count($segments) > 1) {
             if ($nbShort) {
-                $label .= $nbShort . 'x réservation courte, ';
+                $label .= $nbShort . 'x ' . __('short booking') . ', ';
             }
             if ($nbFull) {
-                $label .= $nbFull . 'x réservation journée, ';
+                $label .= $nbFull . 'x ' . __('full day booking') . ', ';
             }
             $label = substr($label, 0, -2);
         } else {
             if ($nbShort) {
-                $label .= 'Réservation courte';
+                $label .= __('Short booking');
             } else if ($nbFull) {
-                $label .= 'Réservation journée';
+                $label .= __('Full day booking');
             }
         }
 
@@ -127,7 +127,7 @@ class PricingService
             return ['label' => '', 'price' => 0];
         }
 
-        $label = count($optionIds) === 1 ? 'option: ' : 'options: ';
+        $label = count($optionIds) === 1 ? __('option') . ': ' : __('options') . ': ';
         $price = 0;
 
         foreach ($optionIds as $optionId) {

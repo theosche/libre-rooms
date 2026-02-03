@@ -1,16 +1,30 @@
 @extends('layouts.app')
 
-@section('title', isset($room) ? 'Modifier la salle' : 'Nouvelle salle')
+@section('title', isset($room) ? __('Edit room') : __('New room'))
 
 @section('page-script')
     @vite(['resources/js/rooms/room-form.js', 'resources/js/rooms/geocoding.js'])
+    <script>
+        window.translations = {
+            max_hours_short: @json(__('Max hours for short reservation')),
+            charter_content: @json(__('Charter content')),
+            charter_link: @json(__('Charter link')),
+            secret_message: @json(__('Secret message')),
+            default_settings: @json(__('Default settings')),
+            delete_image: @json(__('Delete this image')),
+            restore_image: @json(__('Restore this image')),
+            geocode_fill_fields: @json(__('Please fill in at least the street and city.')),
+            geocode_not_found: @json(__('Address not found. Please check or enter coordinates manually.')),
+            geocode_error: @json(__('Search error. Please try again.')),
+        };
+    </script>
 @endsection
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     <div class="form-header">
         <h1 class="form-title">
-            {{ isset($room) ? 'Modifier la salle' : 'Nouvelle salle' }}
+            {{ isset($room) ? __('Edit room') : __('New room') }}
         </h1>
     </div>
 
@@ -23,13 +37,13 @@
 
             <!-- Informations de base -->
             <div class="form-group">
-                <h3 class="form-group-title">Informations de base</h3>
+                <h3 class="form-group-title">{{ __('Basic information') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="owner_id" class="form-element-title">Propriétaire</label>
+                        <label for="owner_id" class="form-element-title">{{ __('Owner') }}</label>
                         <select name="owner_id" id="owner_id" required>
-                            <option value="">Sélectionner un propriétaire</option>
+                            <option value="">{{ __('Select an owner') }}</option>
                             @foreach($owners as $owner)
                                 <option value="{{ $owner->id }}" @selected(old('owner_id', $room?->owner_id) == $owner->id)>
                                     {{ $owner->contact->display_name() }}
@@ -44,7 +58,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="name" class="form-element-title">Nom de la salle</label>
+                        <label for="name" class="form-element-title">{{ __('Room name') }}</label>
                         <input
                             type="text"
                             id="name"
@@ -52,7 +66,7 @@
                             value="{{ old('name', $room?->name) }}"
                             required
                         >
-                        <small class="text-gray-600">Le slug sera généré automatiquement à partir du nom</small>
+                        <small class="text-gray-600">{{ __('The slug will be automatically generated from the name') }}</small>
                         @error('name')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -61,7 +75,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="description" class="form-element-title">Description</label>
+                        <label for="description" class="form-element-title">{{ __('Description') }}</label>
                         <textarea
                             id="description"
                             name="description"
@@ -87,7 +101,7 @@
                                 value="1"
                                 @checked(old('active', $room?->active ?? true))
                             >
-                            <span>Salle active (réservable)</span>
+                            <span>{{ __('Active room (bookable)') }}</span>
                         </label>
                     </div>
                 </fieldset>
@@ -95,11 +109,11 @@
 
             <!-- Adresse -->
             <div class="form-group">
-                <h3 class="form-group-title">Adresse</h3>
+                <h3 class="form-group-title">{{ __('Address') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="street" class="form-element-title">Rue <span class="text-red-500">*</span></label>
+                        <label for="street" class="form-element-title">{{ __('Street') }} <span class="text-red-500">*</span></label>
                         <input
                             type="text"
                             id="street"
@@ -116,7 +130,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="postal_code" class="form-element-title">Code postal <span class="text-red-500">*</span></label>
+                            <label for="postal_code" class="form-element-title">{{ __('Postal code') }} <span class="text-red-500">*</span></label>
                             <input
                                 type="text"
                                 id="postal_code"
@@ -130,7 +144,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="city" class="form-element-title">Ville <span class="text-red-500">*</span></label>
+                            <label for="city" class="form-element-title">{{ __('City') }} <span class="text-red-500">*</span></label>
                             <input
                                 type="text"
                                 id="city"
@@ -147,7 +161,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="country" class="form-element-title">Pays <span class="text-red-500">*</span></label>
+                        <label for="country" class="form-element-title">{{ __('Country') }} <span class="text-red-500">*</span></label>
                         <input
                             type="text"
                             id="country"
@@ -164,12 +178,12 @@
 
             <!-- Coordonnées GPS -->
             <div class="form-group">
-                <h3 class="form-group-title">Coordonnées GPS</h3>
+                <h3 class="form-group-title">{{ __('GPS coordinates') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="latitude" class="form-element-title">Latitude <span class="text-red-500">*</span></label>
+                            <label for="latitude" class="form-element-title">{{ __('Latitude') }} <span class="text-red-500">*</span></label>
                             <input
                                 type="number"
                                 id="latitude"
@@ -186,7 +200,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="longitude" class="form-element-title">Longitude <span class="text-red-500">*</span></label>
+                            <label for="longitude" class="form-element-title">{{ __('Longitude') }} <span class="text-red-500">*</span></label>
                             <input
                                 type="number"
                                 id="longitude"
@@ -210,22 +224,22 @@
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
                                 </span>
-                                Rechercher
+                                {{ __('Search') }}
                             </button>
                         </div>
                     </div>
-                    <small class="text-gray-600">Cliquez sur "Rechercher" pour obtenir les coordonnées à partir de l'adresse</small>
+                    <small class="text-gray-600">{{ __('Click "Search" to get coordinates from the address') }}</small>
                     <div id="geocode-error" class="text-red-600 text-sm mt-2 hidden"></div>
                 </fieldset>
             </div>
 
             <!-- Images -->
             <div class="form-group">
-                <h3 class="form-group-title">Images</h3>
-                <small class="text-gray-600 block mb-4">Glissez-déposez les images pour modifier l'ordre d'affichage. La première image sera utilisée comme image principale.</small>
+                <h3 class="form-group-title">{{ __('Images') }}</h3>
+                <small class="text-gray-600 block mb-4">{{ __('Drag and drop images to change the display order. The first image will be used as the main image.') }}</small>
 
-                <fieldset class="form-element">
-                    <label class="form-element-title">Images</label>
+                <fieldset class="form-element fieldset-images">
+                    <label class="form-element-title">{{ __('Images') }}</label>
                     <div id="images-sortable" class="grid grid-cols-3 gap-4 mt-2 min-h-[8rem]">
                         @if(isset($room) && $room->images->count() > 0)
                             @foreach($room->images as $index => $image)
@@ -241,7 +255,7 @@
                                     <button
                                         type="button"
                                         class="image-remove-btn absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ignore-styled-form"
-                                        title="Supprimer cette image"
+                                        title="{{ __('Delete this image') }}"
                                     >
                                         <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -257,7 +271,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="images-input" class="form-element-title">Ajouter des images</label>
+                        <label for="images-input" class="form-element-title">{{ __('Add images') }}</label>
                         <input
                             type="file"
                             id="images-input"
@@ -270,7 +284,7 @@
                                 file:bg-blue-50 file:text-blue-700
                                 hover:file:bg-blue-100 cursor-pointer"
                         >
-                        <small class="text-gray-600">Maximum 3 images au total. Formats acceptés: JPEG, PNG, WebP. Taille max: 5 Mo par image.</small>
+                        <small class="text-gray-600">{{ __('Maximum 3 images total. Accepted formats: JPEG, PNG, WebP. Max size: 5 MB per image.') }}</small>
                         @error('images')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -285,7 +299,7 @@
 
             <!-- Visibilité -->
             <div class="form-group">
-                <h3 class="form-group-title">Visibilité</h3>
+                <h3 class="form-group-title">{{ __('Visibility') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
@@ -297,11 +311,11 @@
                                 value="1"
                                 @checked(old('is_public', $room?->is_public ?? true))
                             >
-                            <span>Salle publique</span>
+                            <span>{{ __('Public room') }}</span>
                         </label>
                         <small class="text-gray-600 block mt-1">
-                            Si activé, la salle est visible et réservable par tous (y compris les visiteurs non connectés).<br>
-                            Si désactivé, seuls les utilisateurs ayant un accès au propriétaire ou un accès direct à la salle pourront la voir et la réserver.
+                            {{ __('If enabled, the room is visible and bookable by everyone (including non-logged-in visitors).') }}<br>
+                            {{ __('If disabled, only users with access to the owner or direct access to the room can see and book it.') }}
                         </small>
                     </div>
                 </fieldset>
@@ -309,16 +323,16 @@
 
             <!-- Tarification -->
             <div class="form-group">
-                <h3 class="form-group-title">Tarification</h3>
+                <h3 class="form-group-title">{{ __('Pricing') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="price_mode" class="form-element-title">Mode de tarification</label>
+                        <label for="price_mode" class="form-element-title">{{ __('Pricing mode') }}</label>
                         <select name="price_mode" id="price_mode" required>
-                            <option value="fixed" @selected(old('price_mode', $room?->price_mode?->value ?? 'fixed') == 'fixed')>Prix fixe</option>
-                            <option value="free" @selected(old('price_mode', $room?->price_mode?->value) == 'free')>Libre participation</option>
+                            <option value="fixed" @selected(old('price_mode', $room?->price_mode?->value ?? 'fixed') == 'fixed')>{{ __('Fixed price') }}</option>
+                            <option value="free" @selected(old('price_mode', $room?->price_mode?->value) == 'free')>{{ __('Free contribution') }}</option>
                         </select>
-                        <small class="text-gray-600">Si le prix libre est choisi, les paramètres suivants servent à calculé un prix suggéré</small>
+                        <small class="text-gray-600">{{ __('If free contribution is selected, the following settings are used to calculate a suggested price') }}</small>
                         @error('price_mode')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -328,7 +342,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="price_short" class="form-element-title">Prix réservation courte</label>
+                            <label for="price_short" class="form-element-title">{{ __('Short reservation price') }}</label>
                             <input
                                 type="number"
                                 id="price_short"
@@ -337,14 +351,14 @@
                                 min="0"
                                 value="{{ old('price_short', $room?->price_short ?? '') }}"
                             >
-                            <small class="text-gray-600">Laisser vide pour désactiver</small>
+                            <small class="text-gray-600">{{ __('Leave empty to disable') }}</small>
                             @error('price_short')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-field">
-                            <label for="max_hours_short" class="form-element-title">Heures max pour réservation courte</label>
+                            <label for="max_hours_short" class="form-element-title">{{ __('Max hours for short reservation') }}</label>
                             <input
                                 type="number"
                                 id="max_hours_short"
@@ -353,7 +367,7 @@
                                 value="{{ old('max_hours_short', $room?->max_hours_short) }}"
                                 data-show-when="price_short"
                             >
-                            <small class="text-gray-600">Requis si prix pour réservation courte défini</small>
+                            <small class="text-gray-600">{{ __('Required if short reservation price is set') }}</small>
                             @error('max_hours_short')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
@@ -363,7 +377,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="price_full_day" class="form-element-title">Prix journée complète</label>
+                        <label for="price_full_day" class="form-element-title">{{ __('Full day price') }}</label>
                         <input
                             type="number"
                             id="price_full_day"
@@ -382,7 +396,7 @@
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="always_short_after" class="form-element-title">Toujours court après (heure)</label>
+                            <label for="always_short_after" class="form-element-title">{{ __('Always short after (hour)') }}</label>
                             <input
                                 type="number"
                                 id="always_short_after"
@@ -391,14 +405,14 @@
                                 max="24"
                                 value="{{ old('always_short_after', $room?->always_short_after) }}"
                             >
-                            <small class="text-gray-600">Ex: réservations après 17h ont toujours le tarif "court"</small>
+                            <small class="text-gray-600">{{ __('E.g.: reservations after 5pm always get the "short" rate') }}</small>
                             @error('always_short_after')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-field">
-                            <label for="always_short_before" class="form-element-title">Toujours court avant (heure)</label>
+                            <label for="always_short_before" class="form-element-title">{{ __('Always short before (hour)') }}</label>
                             <input
                                 type="number"
                                 id="always_short_before"
@@ -407,7 +421,7 @@
                                 max="24"
                                 value="{{ old('always_short_before', $room?->always_short_before) }}"
                             >
-                            <small class="text-gray-600">Ex: réservations finies avant 12h ont toujours le tarif "court"</small>
+                            <small class="text-gray-600">{{ __('E.g.: reservations ending before 12pm always get the "short" rate') }}</small>
                             @error('always_short_before')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
@@ -417,7 +431,7 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="allow_late_end_hour" class="form-element-title">Heure de fin tardive autorisée</label>
+                        <label for="allow_late_end_hour" class="form-element-title">{{ __('Allowed late end hour') }}</label>
                         <input
                             type="number"
                             id="allow_late_end_hour"
@@ -425,7 +439,7 @@
                             min="0"
                             value="{{ old('allow_late_end_hour', $room?->allow_late_end_hour ?? 0) }}"
                         >
-                        <small class="text-gray-600">Ex: si une réservation se termine le lendemain avant 3h du matin, on ne compte pas le jour suivant</small>
+                        <small class="text-gray-600">{{ __('E.g.: if a reservation ends the next day before 3am, the following day is not counted') }}</small>
                         @error('allow_late_end_hour')
                         <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -442,10 +456,10 @@
                                 value="1"
                                 @checked(old('use_special_discount', $room?->use_special_discount))
                             >
-                            <span>Utiliser les réductions spéciales</span>
+                            <span>{{ __('Use special discounts') }}</span>
                         </label>
                     </div>
-                    <small class="text-gray-600">Permet aux admins d'accorder des réductions spéciales au cas par cas</small>
+                    <small class="text-gray-600">{{ __('Allows admins to grant special discounts on a case-by-case basis') }}</small>
                 </fieldset>
 
                 <fieldset class="form-element">
@@ -458,7 +472,7 @@
                                 value="1"
                                 @checked(old('use_donation', $room?->use_donation))
                             >
-                            <span>Autoriser les dons</span>
+                            <span>{{ __('Allow donations') }}</span>
                         </label>
                     </div>
                 </fieldset>
@@ -466,12 +480,12 @@
 
             <!-- Règles de réservation -->
             <div class="form-group">
-                <h3 class="form-group-title">Règles de réservation</h3>
+                <h3 class="form-group-title">{{ __('Reservation rules') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="reservation_cutoff_days" class="form-element-title">Délai minimum (jours avant)</label>
+                            <label for="reservation_cutoff_days" class="form-element-title">{{ __('Minimum notice (days before)') }}</label>
                             <input
                                 type="number"
                                 id="reservation_cutoff_days"
@@ -485,7 +499,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="reservation_advance_limit" class="form-element-title">Réservation max (jours à l'avance)</label>
+                            <label for="reservation_advance_limit" class="form-element-title">{{ __('Maximum booking (days in advance)') }}</label>
                             <input
                                 type="number"
                                 id="reservation_advance_limit"
@@ -503,15 +517,15 @@
 
             <!-- Charte -->
             <div class="form-group">
-                <h3 class="form-group-title">Charte</h3>
+                <h3 class="form-group-title">{{ __('Charter') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="charter_mode" class="form-element-title">Type de charte</label>
+                        <label for="charter_mode" class="form-element-title">{{ __('Charter type') }}</label>
                         <select name="charter_mode" id="charter_mode" required>
-                            <option value="text" @selected(old('charter_mode', $room?->charter_mode?->value ?? 'text') == 'text')>Texte</option>
-                            <option value="link" @selected(old('charter_mode', $room?->charter_mode?->value) == 'link')>Lien</option>
-                            <option value="none" @selected(old('charter_mode', $room?->charter_mode?->value) == 'none')>Aucune</option>
+                            <option value="text" @selected(old('charter_mode', $room?->charter_mode?->value ?? 'text') == 'text')>{{ __('Text') }}</option>
+                            <option value="link" @selected(old('charter_mode', $room?->charter_mode?->value) == 'link')>{{ __('Link') }}</option>
+                            <option value="none" @selected(old('charter_mode', $room?->charter_mode?->value) == 'none')>{{ __('None') }}</option>
                         </select>
                         @error('charter_mode')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -522,14 +536,14 @@
                 <fieldset class="form-element" id="charter_str_field">
                     <div class="form-field">
                         <label for="charter_str" class="form-element-title">
-                            <span id="charter_str_label">Contenu de la charte</span>
+                            <span id="charter_str_label">{{ __('Charter content') }}</span>
                         </label>
                         <textarea
                             id="charter_str"
                             name="charter_str"
                             rows="4"
                         >{{ old('charter_str', $room?->charter_str) }}</textarea>
-                        <small class="text-gray-600">Requis sauf si "Aucune" est sélectionné</small>
+                        <small class="text-gray-600">{{ __('Required unless "None" is selected') }}</small>
                         @error('charter_str')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -539,10 +553,10 @@
 
             <!-- Message secret -->
             <div class="form-group">
-                <h3 class="form-group-title">Messages</h3>
+                <h3 class="form-group-title">{{ __('Messages') }}</h3>
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="custom_message" class="form-element-title">Message personnalisé (transmis par email avec la confirmation de réservation)</label>
+                        <label for="custom_message" class="form-element-title">{{ __('Custom message (sent by email with the reservation confirmation)') }}</label>
                         <textarea
                             id="custom_message"
                             name="custom_message"
@@ -556,13 +570,13 @@
 
                 <fieldset class="form-element" id="secret_message_field">
                     <div class="form-field">
-                        <label for="secret_message" class="form-element-title">Message secret</label>
+                        <label for="secret_message" class="form-element-title">{{ __('Secret message') }}</label>
                         <textarea
                             id="secret_message"
                             name="secret_message"
                             rows="3"
                         >{{ old('secret_message', $room?->secret_message) }}</textarea>
-                        <small class="text-gray-600">Par exemple pour transmettre le code de la salle. Le message peut être changé en tout temps et sera transmis par un lien, valable jusqu'à la fin de la réservation.</small>
+                        <small class="text-gray-600">{{ __('For example, to share the room code. The message can be changed at any time and will be shared via a link valid until the end of the reservation.') }}</small>
                         @error('secret_message')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -572,13 +586,13 @@
 
             <!-- Configuration Calendrier -->
             <div class="form-group">
-                <h3 class="form-group-title">Configuration Calendrier</h3>
+                <h3 class="form-group-title">{{ __('Calendar configuration') }}</h3>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="external_slot_provider" class="form-element-title">Fournisseur de créneaux externe</label>
+                        <label for="external_slot_provider" class="form-element-title">{{ __('External slot provider') }}</label>
                         <select name="external_slot_provider" id="external_slot_provider">
-                            <option value="" @selected(is_null(old('external_slot_provider', $room?->external_slot_provider)))>Aucun</option>
+                            <option value="" @selected(is_null(old('external_slot_provider', $room?->external_slot_provider)))>{{ __('None') }}</option>
                             <option value="caldav" id="caldav-option" @selected(old('external_slot_provider', $room?->external_slot_provider?->value) == 'caldav')>CalDAV</option>
                         </select>
                         @error('external_slot_provider')
@@ -589,14 +603,14 @@
 
                 <fieldset class="form-element" id="dav_calendar_field">
                     <div class="form-field">
-                        <label for="dav_calendar" class="form-element-title">Calendrier CalDAV</label>
+                        <label for="dav_calendar" class="form-element-title">{{ __('CalDAV calendar') }}</label>
                         <input
                             type="text"
                             id="dav_calendar"
                             name="dav_calendar"
                             value="{{ old('dav_calendar', $room?->dav_calendar) }}"
                         >
-                        <small class="text-gray-600">Si le calendrier n'existe pas, le système essayera le créer.</small>
+                        <small class="text-gray-600">{{ __('If the calendar does not exist, the system will try to create it.') }}</small>
                         @error('dav_calendar')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -605,13 +619,13 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="embed_calendar_mode" class="form-element-title">Mode d'intégration du calendrier</label>
+                        <label for="embed_calendar_mode" class="form-element-title">{{ __('Calendar integration mode') }}</label>
                         <select name="embed_calendar_mode" id="embed_calendar_mode">
-                            <option value="disabled" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value ?? 'disabled') == 'disabled')>Désactivé</option>
-                            <option value="enabled" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value) == 'enabled')>Activé (formulaire utilisateur)</option>
-                            <option value="admin_only" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value) == 'admin_only')>Admin uniquement</option>
+                            <option value="disabled" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value ?? 'disabled') == 'disabled')>{{ __('Disabled') }}</option>
+                            <option value="enabled" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value) == 'enabled')>{{ __('Enabled (user form)') }}</option>
+                            <option value="admin_only" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value) == 'admin_only')>{{ __('Admin only') }}</option>
                         </select>
-                        <small class="text-gray-600">Définir si une vue calendrier de la salle doit être visible directement dans le formulaire de réservation.</small>
+                        <small class="text-gray-600">{{ __('Define whether a calendar view of the room should be visible directly in the reservation form.') }}</small>
                         @error('embed_calendar_mode')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -620,11 +634,11 @@
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="calendar_view_mode" class="form-element-title">Mode d'affichage du calendrier</label>
+                        <label for="calendar_view_mode" class="form-element-title">{{ __('Calendar display mode') }}</label>
                         <select name="calendar_view_mode" id="calendar_view_mode">
-                            <option value="slot" @selected(old('calendar_view_mode', $room?->calendar_view_mode?->value ?? 'slot') == 'slot')>Créneaux uniquement</option>
-                            <option value="title" @selected(old('calendar_view_mode', $room?->calendar_view_mode?->value) == 'title')>Titre de l'événement</option>
-                            <option value="full" @selected(old('calendar_view_mode', $room?->calendar_view_mode?->value) == 'full')>Complet</option>
+                            <option value="slot" @selected(old('calendar_view_mode', $room?->calendar_view_mode?->value ?? 'slot') == 'slot')>{{ __('Slots only') }}</option>
+                            <option value="title" @selected(old('calendar_view_mode', $room?->calendar_view_mode?->value) == 'title')>{{ __('Event title') }}</option>
+                            <option value="full" @selected(old('calendar_view_mode', $room?->calendar_view_mode?->value) == 'full')>{{ __('Full') }}</option>
                         </select>
                         @error('calendar_view_mode')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -635,17 +649,17 @@
 
             <!-- Paramètres régionaux -->
             <div class="form-group">
-                <h3 class="form-group-title">Paramètres régionaux (optionnel)</h3>
-                <p class="text-sm text-gray-600 mb-4">Laissez vide pour utiliser les paramètres du propriétaire</p>
+                <h3 class="form-group-title">{{ __('Regional settings (optional)') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ __('Leave empty to use the owner settings') }}</p>
 
                 <fieldset class="form-element">
                     <div class="form-field">
-                        <label for="timezone" class="form-element-title">Fuseau horaire</label>
+                        <label for="timezone" class="form-element-title">{{ __('Timezone') }}</label>
                         @include('partials._timezone_select', [
                             'name' => 'timezone',
                             'id' => 'timezone',
                             'value' => old('timezone') ?? $room?->timezone,
-                            'defaultTimezone' => $ownerTimezones[old('owner_id') ?? $room?->owner_id] ?? $systemSettings?->getTimezone() ?? 'Non défini',
+                            'defaultTimezone' => $ownerTimezones[old('owner_id') ?? $room?->owner_id] ?? $systemSettings?->getTimezone() ?? __('Not defined'),
                         ])
                         @error('timezone')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -655,7 +669,7 @@
             </div>
 
             <div class="form-group">
-                <h3 class="form-group-title">Emails</h3>
+                <h3 class="form-group-title">{{ __('Emails') }}</h3>
                 <fieldset class="form-element">
                     <div class="form-field">
                         <label class="flex items-center gap-2">
@@ -666,7 +680,7 @@
                                 value="1"
                                 @checked(old('disable_mailer', $room?->disable_mailer))
                             >
-                            <span>Désactiver l'envoi d'emails pour cette salle</span>
+                            <span>{{ __('Disable sending emails for this room') }}</span>
                         </label>
                     </div>
                 </fieldset>
@@ -674,14 +688,14 @@
 
             <div class="btn-group justify-end mt-6">
                 <a href="{{ route('rooms.index', ['view' => 'mine']) }}" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {{ isset($room) ? 'Mettre à jour' : 'Créer' }}
+                    {{ isset($room) ? __('Update') : __('Create') }}
                 </button>
                 @if(isset($room))
                     <button type="button" onclick="confirmDeleteRoom()" class="btn btn-delete">
-                        Supprimer
+                        {{ __('Delete') }}
                     </button>
                 @endif
             </div>
@@ -700,7 +714,7 @@
     window.ownersCaldavValid = @json($ownersCaldavValid);
 
     function confirmDeleteRoom() {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cette salle ?')) {
+        if (confirm('{{ __('Are you sure you want to delete this room?') }}')) {
             document.getElementById('delete-room-form').submit();
         }
     }

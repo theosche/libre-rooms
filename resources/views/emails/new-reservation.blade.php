@@ -1,13 +1,13 @@
 @extends('emails.layout')
 
 @section('content')
-    <h1>Votre demande de réservation</h1>
+    <h1>{{ __('Your reservation request') }}</h1>
 
-    <p>Bonjour,</p>
+    <p>{{ __('Hello') }},</p>
 
     <p>
-        Nous avons bien reçu votre demande de réservation de la salle <em>{{ $room->name }}</em>.
-        La réservation doit être validée par un·e admin. Vous recevrez ensuite un email de confirmation.
+        {{ __('We have received your reservation request for the room :room.', ['room' => $room->name]) }}
+        {{ __('The reservation must be validated by an admin. You will then receive a confirmation email.') }}
     </p>
 
     <div class="highlight-box">
@@ -17,17 +17,17 @@
         @endif
     </div>
 
-    <h2>{{ $reservation->events->count() > 1 ? 'Dates préréservées' : 'Date préréservée' }}</h2>
+    <h2>{{ $reservation->events->count() > 1 ? __('Pre-reserved dates') : __('Pre-reserved date') }}</h2>
     <ul>
         @foreach ($reservation->events as $event)
             <li>
-                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} au {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
+                {{ $event->startLocalTz()->format('d.m.Y - H:i') }} {{ __('to') }} {{ $event->endLocalTz()->format('d.m.Y - H:i') }}
                 <a href="{{ route('reservations.event-ics', ['hash' => $reservation->hash, 'uid' => $event->uid]) }}" style="font-size: 12px;">(ics)</a>
             </li>
         @endforeach
     </ul>
 
-    <p>Pour toute question, n'hésitez pas à nous contacter en réponse à cet email.</p>
+    <p>{{ __('For any questions, feel free to contact us by replying to this email.') }}</p>
 
-    <p>Avec nos meilleures salutations,</p>
+    <p>{{ __('Best regards,') }}</p>
 @endsection

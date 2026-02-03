@@ -4,10 +4,10 @@
 <table class="events-table">
     <thead>
         <tr>
-            <th class="date-col">Début</th>
-            <th class="date-col">Fin</th>
-            <th>Options</th>
-            <th class="price-col">Prix</th>
+            <th class="date-col">{{ __('Start') }}</th>
+            <th class="date-col">{{ __('End') }}</th>
+            <th>{{ __('Options') }}</th>
+            <th class="price-col">{{ __('Price') }}</th>
         </tr>
     </thead>
     <tbody>

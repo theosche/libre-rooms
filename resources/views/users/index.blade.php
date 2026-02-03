@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Utilisateurs')
+@section('title', __('Users'))
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Gestion des utilisateurs</h1>
+        <h1 class="page-header-title">{{ __('User management') }}</h1>
         <nav class="page-submenu">
             <a href="{{ route('users.create') }}" class="page-submenu-item page-submenu-action">
-                + Nouvel utilisateur
+                + {{ __('New user') }}
             </a>
         </nav>
-        <p class="mt-2 text-sm text-gray-600">{{ $users->total() }} {{ $users->total() > 1 ? 'utilisateurs' : 'utilisateur' }} au total</p>
+        <p class="mt-2 text-sm text-gray-600">{{ $users->total() }} {{ $users->total() > 1 ? __('users') : __('user') }} {{ __('total') }}</p>
     </div>
 
     <!-- Filtres -->
@@ -21,16 +21,16 @@
                 <!-- Filtre par propriétaire -->
                 <div>
                     <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-2">
-                        Droits admin
+                        {{ __('Admin rights') }}
                     </label>
                     <select name="owner_id" id="owner_id" class="w-full rounded-md border-gray-300 shadow-sm">
-                        <option value="">Tout afficher</option>
-                        <option value="admin" @selected(request('owner_id') == "admin")>Tous les comptes admins</option>
-                        <option value="not_admin" @selected(request('owner_id') == "not_admin")>Tous les comptes sans droits admins</option>
-                        <option value="global_admin" @selected(request('owner_id') == "global_admin")>Administrateurs globaux</option>
+                        <option value="">{{ __('Show all') }}</option>
+                        <option value="admin" @selected(request('owner_id') == "admin")>{{ __('All admin accounts') }}</option>
+                        <option value="not_admin" @selected(request('owner_id') == "not_admin")>{{ __('All accounts without admin rights') }}</option>
+                        <option value="global_admin" @selected(request('owner_id') == "global_admin")>{{ __('Global administrators') }}</option>
                         @foreach($owners as $owner)
                             <option value="{{ $owner->id }}" @selected(request('owner_id') == $owner->id)>
-                                Admin pour: {{ $owner->contact->display_name() }}
+                                {{ __('Admin for') }}: {{ $owner->contact->display_name() }}
                             </option>
                         @endforeach
                     </select>
@@ -39,11 +39,11 @@
                 <!-- Boutons d'action -->
                 <div class="flex items-end gap-2">
                     <button type="submit" class="btn btn-primary">
-                        Filtrer
+                        {{ __('Filter') }}
                     </button>
                     @if(request()->hasAny(['owner_id', 'global_admin_only']))
                         <a href="{{ route('users.index') }}" class="btn btn-secondary">
-                            Réinitialiser
+                            {{ __('Reset') }}
                         </a>
                     @endif
                 </div>
@@ -57,16 +57,16 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Utilisateur
+                        {{ __('User') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Email
+                        {{ __('Email') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Rôles
+                        {{ __('Roles') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -82,7 +82,7 @@
                                         </a>
                                     </div>
                                     @if(!$user->email_verified_at)
-                                        <div class="text-xs text-yellow-600">Email non vérifié</div>
+                                        <div class="text-xs text-yellow-600">{{ __('Email not verified') }}</div>
                                     @endif
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                             <div class="text-sm text-gray-900">
                                 @if($user->is_global_admin)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                        Admin global
+                                        {{ __('Global admin') }}
                                     </span>
                                 @endif
 
@@ -121,18 +121,18 @@
                                 @endif
 
                                 @if(!$user->is_global_admin && $user->owners->isEmpty())
-                                    <span class="text-xs text-gray-500 italic">Aucun rôle</span>
+                                    <span class="text-xs text-gray-500 italic">{{ __('No role') }}</span>
                                 @endif
                             </div>
                         </td>
                         <td class="px-4 py-3 text-right text-sm font-medium">
                             <div class="action-group">
                                 <a href="{{ route('users.edit', $user) }}" class="link-primary">
-                                    Modifier
+                                    {{ __('Edit') }}
                                 </a>
                                 @if($user->id !== auth()->id())
                                     <button type="button" onclick="confirmDelete({{ $user->id }})" class="link-danger">
-                                        Supprimer
+                                        {{ __('Delete') }}
                                     </button>
                                     <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy', $user) }}" method="POST" class="hidden">
                                         @csrf
@@ -145,7 +145,7 @@
                 @empty
                     <tr>
                         <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
-                            Aucun utilisateur trouvé.
+                            {{ __('No user found.') }}
                         </td>
                     </tr>
                 @endforelse
@@ -164,7 +164,7 @@
 <!-- Modal de confirmation de suppression -->
 <script>
     function confirmDelete(userId) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')) {
+        if (confirm('{{ __('Are you sure you want to delete this user? This action cannot be undone.') }}')) {
             document.getElementById('delete-form-' + userId).submit();
         }
     }

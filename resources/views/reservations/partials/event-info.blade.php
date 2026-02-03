@@ -1,8 +1,8 @@
  <div class="form-group" id="event-info-form-group">
-    <h3 class="form-group-title">Informations générales</h3>
+    <h3 class="form-group-title">{{ __('General information') }}</h3>
     <fieldset class="form-element">
         <div class="form-field">
-            <label for="res_title" class="form-element-title">Nom de l'événement/activité *</label>
+            <label for="res_title" class="form-element-title">{{ __('Event/activity name') }} *</label>
             <input
                 type="text"
                 id="res_title"
@@ -17,7 +17,7 @@
     </fieldset>
      <fieldset class="form-element">
          <div class="form-field">
-             <label for="res_description" class="form-element-title">Description et demandes particulières</label>
+             <label for="res_description" class="form-element-title">{{ __('Description and special requests') }}</label>
              <textarea
                  rows="5"
                  id="res_description"

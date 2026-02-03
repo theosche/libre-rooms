@@ -40,7 +40,7 @@ class OwnerUserController extends Controller
             'email' => ['required', 'email', 'exists:users,email'],
             'role' => ['required', 'string', 'in:' . implode(',', array_column(OwnerUserRoles::cases(), 'value'))],
         ], [
-            'email.exists' => 'Aucun utilisateur trouvé avec cette adresse email.',
+            'email.exists' => __('No user found with this email address.'),
         ]);
 
         // Check if user can add this role
@@ -52,7 +52,7 @@ class OwnerUserController extends Controller
         // Check if it's the current user
         if ($user->id === $currentUser->id) {
             return redirect()->route('owners.users.index', $owner)
-                ->with('error', 'Vous ne pouvez pas modifier votre propre rôle.');
+                ->with('error', __('You cannot modify your own role.'));
         }
 
         // Check if user already has access
@@ -65,7 +65,7 @@ class OwnerUserController extends Controller
             if (! $currentUser->isAdminOf($owner)) {
                 if ($existingRole->hasAtLeast(OwnerUserRoles::MODERATOR) && $newRole === OwnerUserRoles::VIEWER) {
                     return redirect()->route('owners.users.index', $owner)
-                        ->with('error', 'Vous ne pouvez pas rétrograder un·e modérateur·ice ou admin en lecteur·ice.');
+                        ->with('error', __('You cannot demote a moderator or admin to viewer.'));
                 }
             }
 
@@ -73,14 +73,14 @@ class OwnerUserController extends Controller
             $user->owners()->updateExistingPivot($owner->id, ['role' => $validated['role']]);
 
             return redirect()->route('owners.users.index', $owner)
-                ->with('success', 'Le rôle de l\'utilisateur a été mis à jour.');
+                ->with('success', __('User role updated.'));
         }
 
         // Attach user to owner
         $user->owners()->attach($owner->id, ['role' => $validated['role']]);
 
         return redirect()->route('owners.users.index', $owner)
-            ->with('success', 'L\'utilisateur a été ajouté avec succès.');
+            ->with('success', __('User added successfully.'));
     }
 
     /**
@@ -93,7 +93,7 @@ class OwnerUserController extends Controller
         // Check if user has access to this owner
         if (! $owner->users()->where('users.id', $user->id)->exists()) {
             return redirect()->route('owners.users.index', $owner)
-                ->with('error', 'Cet utilisateur n\'a pas d\'accès à ce propriétaire.');
+                ->with('error', __('This user does not have access to this owner.'));
         }
 
         // Check if can remove this specific user
@@ -103,6 +103,6 @@ class OwnerUserController extends Controller
         $owner->users()->detach($user->id);
 
         return redirect()->route('owners.users.index', $owner)
-            ->with('success', 'L\'utilisateur a été retiré avec succès.');
+            ->with('success', __('User removed successfully.'));
     }
 }

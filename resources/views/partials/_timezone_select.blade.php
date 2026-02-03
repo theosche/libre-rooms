@@ -6,7 +6,7 @@
     - $value: current value (nullable)
     - $defaultTimezone: default timezone to show in placeholder (optional)
     - $required: whether field is required (default: false)
-    - $showDefaultOption: show "Paramètres par défaut" option (default: true)
+    - $showDefaultOption: show "{{ __('Default settings') }}" option (default: true)
 --}}
 
 @php
@@ -77,7 +77,7 @@
 <select name="{{ $name }}" id="{{ $id }}" @if($required) required @endif>
     @if($showDefaultOption)
         <option value="">
-            Paramètres par défaut
+            {{ __('Default settings') }}
             @if(isset($defaultTimezone))
                 ({{ $defaultTimezone }})
             @endif

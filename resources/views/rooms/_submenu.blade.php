@@ -3,11 +3,11 @@
         {{-- Navigation items --}}
         <a href="{{ route('rooms.index', ['view' => 'available']) }}"
            class="page-submenu-item page-submenu-nav {{ request()->routeIs('rooms.index') && ($view ?? 'available') === 'available' ? 'active' : '' }}">
-            Salles disponibles
+            {{ __('Available rooms') }}
         </a>
         <a href="{{ route('rooms.index', ['view' => 'mine']) }}"
            class="page-submenu-item page-submenu-nav {{ request()->routeIs('rooms.index') && ($view ?? '') === 'mine' ? 'active' : '' }}">
-            Mes salles
+            {{ __('My rooms') }}
         </a>
 
         @can('create', App\Models\Room::class)
@@ -17,15 +17,15 @@
             {{-- Secondary navigation --}}
             <a href="{{ route('room-discounts.index') }}"
                class="page-submenu-item page-submenu-secondary {{ request()->routeIs('room-discounts.*') ? 'active' : '' }}">
-                Réductions
+                {{ __('Discounts') }}
             </a>
             <a href="{{ route('room-options.index') }}"
                class="page-submenu-item page-submenu-secondary {{ request()->routeIs('room-options.*') ? 'active' : '' }}">
-                Options
+                {{ __('Options') }}
             </a>
             <a href="{{ route('custom-fields.index') }}"
                class="page-submenu-item page-submenu-secondary {{ request()->routeIs('custom-fields.*') ? 'active' : '' }}">
-                Champs perso.
+                {{ __('Custom fields') }}
             </a>
 
             {{-- Separator --}}
@@ -34,19 +34,19 @@
             {{-- Action buttons --}}
             @if(request()->routeIs('rooms.index'))
                 <a href="{{ route('rooms.create') }}" class="page-submenu-item page-submenu-action">
-                    + Nouvelle salle
+                    + {{ __('New room') }}
                 </a>
             @elseif(request()->routeIs('room-discounts.*'))
                 <a href="{{ route('room-discounts.create') }}" class="page-submenu-item page-submenu-action">
-                    + Ajouter réduction
+                    + {{ __('Add discount') }}
                 </a>
             @elseif(request()->routeIs('room-options.*'))
                 <a href="{{ route('room-options.create') }}" class="page-submenu-item page-submenu-action">
-                    + Ajouter option
+                    + {{ __('Add option') }}
                 </a>
             @elseif(request()->routeIs('custom-fields.*'))
                 <a href="{{ route('custom-fields.create') }}" class="page-submenu-item page-submenu-action">
-                    + Ajouter champ
+                    + {{ __('Add field') }}
                 </a>
             @endif
         @endcan

@@ -1,22 +1,22 @@
 @extends('layouts.app')
 
-@section('title', 'Utilisateurs - ' . $owner->contact->display_name())
+@section('title', __('Users') . ' - ' . $owner->contact->display_name())
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Utilisateurs</h1>
+        <h1 class="page-header-title">{{ __('Users') }}</h1>
         <p class="mt-2 text-sm text-gray-600">
-            Gérer les utilisateurs ayant accès au propriétaire <strong>{{ $owner->contact->display_name() }}</strong>
+            {{ __('Manage users with access to owner') }} <strong>{{ $owner->contact->display_name() }}</strong>
         </p>
         <nav class="page-submenu">
             <a href="{{ route('owners.index') }}"
                class="page-submenu-item page-submenu-nav">
-                Retour aux propriétaires
+                {{ __('Back to owners') }}
             </a>
             <span class="page-submenu-separator"></span>
             <button type="button" onclick="openAddUserModal()" class="page-submenu-item page-submenu-action cursor-pointer">
-                + Ajouter un utilisateur
+                + {{ __('Add user') }}
             </button>
         </nav>
     </div>
@@ -29,11 +29,11 @@
                 </svg>
             </div>
             <div class="ml-3">
-                <h3 class="text-sm font-medium text-blue-800">Rôles et permissions</h3>
+                <h3 class="text-sm font-medium text-blue-800">{{ __('Roles and permissions') }}</h3>
                 <p class="mt-1 text-sm text-blue-700">
-                    <strong>Administrateur</strong> : gestion complète du propriétaire et de ses salles<br>
-                    <strong>Modérateur</strong> : gestion des réservations et des accès lecteurs<br>
-                    <strong>Lecteur</strong> : accès en lecture seule aux salles privées
+                    <strong>{{ __('Administrator') }}</strong> : {{ __('full management of owner and its rooms') }}<br>
+                    <strong>{{ __('Moderator') }}</strong> : {{ __('management of reservations and viewer access') }}<br>
+                    <strong>{{ __('Viewer') }}</strong> : {{ __('read-only access to private rooms') }}
                 </p>
             </div>
         </div>
@@ -45,16 +45,16 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nom
+                        {{ __('Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Email
+                        {{ __('Email') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Rôle
+                        {{ __('Role') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -74,7 +74,7 @@
                                 {{ $user->name }}
                             @endif
                             @if($user->id === auth()->id())
-                                <span class="text-xs text-gray-500">(vous)</span>
+                                <span class="text-xs text-gray-500">({{ __('you') }})</span>
                             @endif
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
@@ -97,11 +97,11 @@
                             <div class="action-group">
                             @if($canRemove)
                                 <form action="{{ route('owners.users.destroy', [$owner, $user]) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Êtes-vous sûr de vouloir retirer cet utilisateur ?');">
+                                      onsubmit="return confirm('{{ __('Are you sure you want to remove this user?') }}');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="link-danger">
-                                        Retirer
+                                        {{ __('Remove') }}
                                     </button>
                                 </form>
                             @else
@@ -113,7 +113,7 @@
                 @empty
                     <tr>
                         <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-                            Aucun utilisateur n'a d'accès à ce propriétaire.
+                            {{ __('No user has access to this owner.') }}
                         </td>
                     </tr>
                 @endforelse
@@ -125,28 +125,28 @@
 <!-- Modal Ajouter un utilisateur -->
 <div id="add-user-modal" class="fixed inset-0 bg-gray-600/50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Ajouter un utilisateur</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Add user') }}</h3>
         <p class="text-sm text-gray-600 mb-4">
-            Ajouter un utilisateur au propriétaire "<strong>{{ $owner->contact->display_name() }}</strong>"
+            {{ __('Add a user to owner') }} "<strong>{{ $owner->contact->display_name() }}</strong>"
         </p>
         <form action="{{ route('owners.users.store', $owner) }}" method="POST">
             @csrf
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                    Email de l'utilisateur
+                    {{ __('User email') }}
                 </label>
                 <input type="email" name="email" id="email" required
                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                        value="{{ old('email') }}"
-                       placeholder="utilisateur@exemple.com">
-                <p class="text-xs text-gray-500 mt-1">L'utilisateur doit avoir un compte existant. Si l'utilisateur existe déjà, son rôle sera mis à jour.</p>
+                       placeholder="{{ __('user@example.com') }}">
+                <p class="text-xs text-gray-500 mt-1">{{ __('User must have an existing account. If the user already exists, their role will be updated.') }}</p>
                 @error('email')
                     <span class="text-red-600 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div class="mb-4">
                 <label for="role" class="block text-sm font-medium text-gray-700 mb-1">
-                    Rôle
+                    {{ __('Role') }}
                 </label>
                 <select name="role" id="role" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -167,10 +167,10 @@
             </div>
             <div class="flex gap-3 justify-end">
                 <button type="button" onclick="closeAddUserModal()" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </button>
                 <button type="submit" class="btn btn-primary">
-                    Ajouter
+                    {{ __('Add') }}
                 </button>
             </div>
         </form>

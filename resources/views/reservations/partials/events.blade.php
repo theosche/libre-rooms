@@ -1,5 +1,5 @@
 <div class="form-group" id="events-form-group">
-    <h3 class="form-group-title">Dates et heures de réservation *</h3>
+    <h3 class="form-group-title">{{ __('Reservation dates and times') }} *</h3>
     @error('events')
         <span class="text-red-600 text-sm block mb-2">{{ $message }}</span>
     @enderror
@@ -18,7 +18,7 @@
         id="add-event"
         class="btn btn-confirm"
     >
-        Ajouter une date
+        {{ __('Add a date') }}
     </button>
 </div>
 
@@ -31,7 +31,7 @@
                     type="button"
                     class="event-remove"
                     id="event-remove-__INDEX__"
-                    aria-label="Supprimer cette date"
+                    aria-label="{{ __('Remove this date') }}"
                 >
                     ✕
                 </button>

@@ -45,7 +45,7 @@ class ReauthController extends Controller
 
         if (! Hash::check($request->input('password'), $user->password)) {
             return back()->withErrors([
-                'password' => 'Le mot de passe est incorrect.',
+                'password' => __('The password is incorrect.'),
             ]);
         }
 
@@ -70,7 +70,7 @@ class ReauthController extends Controller
             ->where('provider_id', $provider->id)
             ->exists();
 
-        abort_unless($hasProvider, 403, 'Ce fournisseur d\'identité n\'est pas lié à votre compte.');
+        abort_unless($hasProvider, 403, __('This identity provider is not linked to your account.'));
 
         // Mark this as a reauthentication flow in session
         // The OidcController callback will check this flag

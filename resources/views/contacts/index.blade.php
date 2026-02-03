@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'Mes contacts')
+@section('title', __('My contacts'))
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
-        <h1 class="page-header-title">Contacts</h1>
+        <h1 class="page-header-title">{{ __('Contacts') }}</h1>
 
         @include('contacts._submenu', ['view' => $view, 'user' => $user])
 
         @if($view === 'all')
-            <p class="mt-2 text-sm text-gray-600">Liste de tous les contacts du système</p>
+            <p class="mt-2 text-sm text-gray-600">{{ __('List of all contacts in the system') }}</p>
         @else
-            <p class="mt-2 text-sm text-gray-600">Liste de tous vos contacts</p>
+            <p class="mt-2 text-sm text-gray-600">{{ __('List of all your contacts') }}</p>
         @endif
     </div>
 
@@ -22,22 +22,22 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Type
+                        {{ __('Type') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Entité
+                        {{ __('Entity') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Prénom et nom
+                        {{ __('Full name') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Contact
+                        {{ __('Contact') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Partagé avec
+                        {{ __('Shared with') }}
                     </th>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {{ __('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -61,17 +61,17 @@
                         <td class="px-4 py-3 text-sm text-gray-900">
                             <div class="grid grid-cols-2 items-center gap-2">
                                 @if($contact->email)
-                                    <a href="mailto:{{ $contact->email }}" class="text-blue-600 hover:text-blue-800" title="Email: {{ $contact->email }}">
+                                    <a href="mailto:{{ $contact->email }}" class="text-blue-600 hover:text-blue-800" title="{{ __('Email') }}: {{ $contact->email }}">
                                         <i class="fa-regular fa-envelope"></i>
                                     </a>
                                 @endif
                                 @if($contact->invoice_email)
-                                    <a href="mailto:{{ $contact->invoice_email }}" class="text-green-600 hover:text-green-800" title="Email facturation: {{ $contact->invoice_email }}">
+                                    <a href="mailto:{{ $contact->invoice_email }}" class="text-green-600 hover:text-green-800" title="{{ __('Billing email') }}: {{ $contact->invoice_email }}">
                                         <i class="fa-regular fa-file-lines"></i>
                                     </a>
                                 @endif
                                 @if($contact->phone)
-                                    <a href="tel:{{ $contact->phone }}" class="text-blue-600 hover:text-blue-800" title="Téléphone: {{ $contact->phone }}">
+                                    <a href="tel:{{ $contact->phone }}" class="text-blue-600 hover:text-blue-800" title="{{ __('Phone') }}: {{ $contact->phone }}">
                                         <x-icons.phone/>
                                     </a>
                                 @endif
@@ -114,9 +114,9 @@
                                 </div>
                             @else
                                 @if($view === 'all')
-                                    <span class="text-gray-400">Aucun utilisateur</span>
+                                    <span class="text-gray-400">{{ __('No user') }}</span>
                                 @else
-                                    <span class="text-gray-400">Vous seul·e</span>
+                                    <span class="text-gray-400">{{ __('Only you') }}</span>
                                 @endif
                             @endif
                         </td>
@@ -127,23 +127,23 @@
                             <div class="action-group">
                                 @if($canManage)
                                     <a href="#" class="link-primary" onclick="event.preventDefault(); showShareModal({{ $contact->id }}, '{{ addslashes($contact->display_name()) }}')">
-                                        Partager
+                                        {{ __('Share') }}
                                     </a>
                                 @endif
                                 <a href="{{ route('contacts.edit', $contact) }}" class="link-primary">
-                                    Modifier
+                                    {{ __('Edit') }}
                                 </a>
                                 @if($canManage)
                                     <form method="POST" action="{{ route('contacts.destroy', $contact) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         @if($userOwnsContact && $contact->users->where('id', '!=', $user->id)->count() > 0)
-                                            <button type="submit" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir retirer ce contact de votre liste ? D\'autres utilisateurs y ont également accès, il ne sera pas supprimé définitivement.')">
-                                                Retirer
+                                            <button type="submit" class="link-danger" onclick="return confirm(__('Are you sure you want to remove this contact from your list? Other users also have access to it, it will not be permanently deleted.'))">
+                                                {{ __('Remove') }}
                                             </button>
                                         @else
-                                            <button type="submit" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce contact ? Cette action est irréversible.')">
-                                                Supprimer
+                                            <button type="submit" class="link-danger" onclick="return confirm(__('Are you sure you want to permanently delete this contact? This action cannot be undone.'))">
+                                                {{ __('Delete') }}
                                             </button>
                                         @endif
                                     </form>
@@ -154,7 +154,7 @@
                 @empty
                     <tr>
                         <td colspan="7" class="px-4 py-3 text-center text-gray-500">
-                            Aucun contact trouvé
+                            {{ __('No contact found') }}
                         </td>
                     </tr>
                 @endforelse
@@ -171,15 +171,15 @@
 <!-- Modal de partage -->
 <div id="shareModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Partager le contact</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Share contact') }}</h3>
         <p class="text-sm text-gray-600 mb-4">
-            Partager "<span id="shareContactName"></span>" avec un autre utilisateur
+            {{ __('Share') }} "<span id="shareContactName"></span>" {{ __('with another user') }}
         </p>
         <form method="POST" action="#" id="shareForm">
             @csrf
             <div class="mb-4">
                 <label for="share_email" class="block text-sm font-medium text-gray-700 mb-1">
-                    Email de l'utilisateur
+                    {{ __('User email') }}
                 </label>
                 <input type="email" name="email" id="share_email" required
                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -187,10 +187,10 @@
             </div>
             <div class="flex gap-3 justify-end">
                 <button type="button" onclick="hideShareModal()" class="btn btn-secondary">
-                    Annuler
+                    {{ __('Cancel') }}
                 </button>
                 <button type="submit" class="btn btn-primary">
-                    Partager
+                    {{ __('Share') }}
                 </button>
             </div>
         </form>

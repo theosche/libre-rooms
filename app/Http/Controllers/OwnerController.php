@@ -57,7 +57,7 @@ class OwnerController extends Controller
         $contacts = $user->is_global_admin ? Contact::all() : $user->contacts;
 
         if ($contacts->isEmpty()) {
-            return redirect()->route('contacts.create')->with('error', 'Impossible de créer un propriétaire: les propriétaires sont associés à un contact. Vous devez d\'abord créer un contact');
+            return redirect()->route('contacts.create')->with('error', __('Cannot create owner: owners must be associated with a contact. Please create a contact first.'));
         }
 
         return view('owners.form', [
@@ -90,7 +90,7 @@ class OwnerController extends Controller
         $user->owners()->attach($owner->id, ['role' => OwnerUserRoles::ADMIN->value]);
 
         return redirect()->route('owners.index')
-            ->with('success', 'Le propriétaire a été créé avec succès.');
+            ->with('success', __('Owner created successfully.'));
     }
 
     /**
@@ -143,7 +143,7 @@ class OwnerController extends Controller
         $owner->update($validated);
 
         return redirect()->route('owners.index')
-            ->with('success', 'Le propriétaire a été mis à jour avec succès.');
+            ->with('success', __('Owner updated successfully.'));
     }
 
     /**
@@ -163,7 +163,7 @@ class OwnerController extends Controller
             $user->owners()->detach($owner->id);
 
             return redirect()->route('owners.index')
-                ->with('success', 'Le propriétaire a été retiré de votre liste.');
+                ->with('success', __('Owner removed from your list.'));
         }
 
         // Before deleting, check for active reservations across all rooms
@@ -174,7 +174,7 @@ class OwnerController extends Controller
 
         if ($activeReservations) {
             return redirect()->route('owners.edit', $owner)
-                ->with('error', 'Ce propriétaire a des réservations en cours (en attente ou confirmées). Veuillez les annuler avant de supprimer le propriétaire.');
+                ->with('error', __('This owner has active reservations (pending or confirmed). Please cancel them before deleting the owner.'));
         }
 
         // Check for unpaid/uncancelled invoices
@@ -187,14 +187,14 @@ class OwnerController extends Controller
 
         if ($unpaidInvoices) {
             return redirect()->route('owners.edit', $owner)
-                ->with('error', 'Ce propriétaire a des factures impayées. Veuillez les marquer comme payées ou les annuler avant de supprimer le propriétaire.');
+                ->with('error', __('This owner has unpaid invoices. Please mark them as paid or cancel them before deleting the owner.'));
         }
 
         // Delete the owner entirely (this will cascade to rooms)
         $owner->delete();
 
         return redirect()->route('owners.index')
-            ->with('success', 'Le propriétaire a été supprimé définitivement.');
+            ->with('success', __('Owner deleted permanently.'));
     }
 
 }

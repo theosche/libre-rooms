@@ -1,4 +1,5 @@
 // Geocoding functionality using Nominatim API
+const t = window.translations || {};
 
 document.addEventListener('DOMContentLoaded', () => {
     const geocodeButton = document.getElementById('geocode-button');
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (parts.length < 2) {
-            showError('Veuillez remplir au moins la rue et la ville.');
+            showError(t.geocode_fill_fields || 'Please fill in at least the street and city.');
             return;
         }
 
@@ -57,13 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
             if (!response.ok) {
-                throw new Error('Erreur lors de la recherche');
+                throw new Error('Search error');
             }
 
             const results = await response.json();
 
             if (results.length === 0) {
-                showError('Adresse non trouvée. Veuillez vérifier ou entrer les coordonnées manuellement.');
+                showError(t.geocode_not_found || 'Address not found. Please check or enter coordinates manually.');
                 return;
             }
 
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Geocoding error:', error);
-            showError('Erreur lors de la recherche. Veuillez réessayer.');
+            showError(t.geocode_error || 'Search error. Please try again.');
         } finally {
             geocodeButton.disabled = false;
             if (geocodeLoading) {
