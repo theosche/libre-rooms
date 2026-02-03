@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6">
-    @if(request()->routeIs('profile'))
+    @if($user?->id === auth()->user()->id)
         <div class="form-header">
             <h1 class="form-title">{{ __('My profile') }}</h1>
             <p class="form-subtitle">{{ __('Manage your personal information') }}</p>

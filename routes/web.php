@@ -174,6 +174,8 @@ Route::controller(UserController::class)->middleware(['auth', 'verified', 'globa
     Route::get('/users', 'index')->name('users.index');
     Route::get('/users/create', 'create')->name('users.create');
     Route::post('/users', 'store')->name('users.store');
+});
+Route::controller(UserController::class)->middleware(['auth', 'recently_authenticated', 'verified', 'global_admin'])->group(function () {
     Route::get('/users/{user}/edit', 'edit')->name('users.edit');
     Route::put('/users/{user}', 'update')->name('users.update');
     Route::delete('/users/{user}', 'destroy')->name('users.destroy');

@@ -303,20 +303,13 @@ class UserController extends Controller
     /**
      * Show user's own profile
      */
-    public function profile(): View
+    public function profile(): View | RedirectResponse
     {
         $user = auth()->user();
         if (! $user->is_global_admin) {
             return view('users.profile', ['user' => $user]);
         } else {
-            $user->load(['owners']);
-            $owners = Owner::with('contact')->orderBy('id')->get();
-
-            return view('users.form', [
-                'user' => $user,
-                'owners' => $owners,
-                'ownerRoles' => OwnerUserRoles::cases(),
-            ]);
+            return redirect()->route('users.edit', $user);
         }
     }
 
