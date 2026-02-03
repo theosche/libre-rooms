@@ -115,16 +115,16 @@ Route::middleware(['auth', 'recently_authenticated'])->group(function () {
     Route::put('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password.update');
 });
 
-Route::controller(RoomController::class)->group(function () {
-    Route::get('/rooms', 'index')->name('rooms.index');
-    Route::get('/rooms/{room:slug}', 'show')->name('rooms.show');
-});
 Route::controller(RoomController::class)->middleware(['auth', 'verified'])->group(function () {
     Route::get('/rooms/create', 'create')->name('rooms.create');
     Route::post('/rooms', 'store')->name('rooms.store');
     Route::get('/rooms/{room:slug}/edit', 'edit')->name('rooms.edit');
     Route::put('/rooms/{room:slug}', 'update')->name('rooms.update');
     Route::delete('/rooms/{room:slug}', 'destroy')->name('rooms.destroy');
+});
+Route::controller(RoomController::class)->group(function () {
+    Route::get('/rooms', 'index')->name('rooms.index');
+    Route::get('/rooms/{room:slug}', 'show')->name('rooms.show');
 });
 
 Route::controller(RoomUserController::class)->middleware(['auth', 'verified'])->group(function () {
