@@ -73,6 +73,7 @@ class RoomRules
                 'required',
                 Rule::in(array_map(fn ($case) => $case->value, PriceModes::cases())),
             ],
+            'free_price_explanation' => ['nullable', 'string'],
             'price_short' => ['nullable', 'numeric', 'min:0'],
             'price_full_day' => ['required', 'numeric', 'min:0'],
             // max_hours_short is required if price_short is set

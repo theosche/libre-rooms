@@ -76,6 +76,35 @@
                 </fieldset>
 
                 <fieldset class="form-element">
+                    <div class="form-element-row">
+                        <div class="form-field">
+                            <label class="flex items-center gap-2">
+                                <input type="hidden" name="hide_email" value="0">
+                                <input
+                                    type="checkbox"
+                                    name="hide_email"
+                                    value="1"
+                                    @checked(old('hide_email', $owner?->hide_email ?? false))
+                                >
+                                {{ __('Hide email on public pages') }}
+                            </label>
+                        </div>
+                        <div class="form-field">
+                            <label class="flex items-center gap-2">
+                                <input type="hidden" name="hide_phone" value="0">
+                                <input
+                                    type="checkbox"
+                                    name="hide_phone"
+                                    value="1"
+                                    @checked(old('hide_phone', $owner?->hide_phone ?? false))
+                                >
+                                {{ __('Hide phone number on public pages') }}
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-element">
                     <div class="form-field">
                         <label for="slug" class="form-element-title">{{ __('Slug (unique identifier)') }}</label>
                         <input

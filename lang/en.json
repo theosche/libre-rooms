@@ -259,6 +259,7 @@
     "A discount of :amount has been applied.": "A discount of :amount has been applied.",
     "Due date:": "Due date:",
     "Download the invoice": "Download the invoice",
+    "Download confirmation": "Download confirmation",
     "For any questions, feel free to contact us by replying to this email.": "For any questions, feel free to contact us by replying to this email.",
 
     "Late invoices": "Late invoices",
@@ -817,7 +818,7 @@
     "If the calendar does not exist, the system will try to create it.": "If the calendar does not exist, the system will try to create it.",
     "Calendar integration mode": "Calendar integration mode",
     "Disabled": "Disabled",
-    "Enabled (user form)": "Enabled (user form)",
+    "Enabled (public form)": "Enabled (public form)",
     "Admin only": "Admin only",
     "Define whether a calendar view of the room should be visible directly in the reservation form.": "Define whether a calendar view of the room should be visible directly in the reservation form.",
     "Calendar display mode": "Calendar display mode",
@@ -870,7 +871,6 @@
     "You do not have permission to cancel this reservation.": "You do not have permission to cancel this reservation.",
     "Reservation cancelled. Warning - invoice already paid.": "Reservation cancelled. Warning - invoice already paid.",
     "Reservation cancelled successfully.": "Reservation cancelled successfully.",
-    "No user found with this email address.": "No user found with this email address.",
     "This user already has access to this room.": "This user already has access to this room.",
     "This user does not have direct access to this room.": "This user does not have direct access to this room.",
     "You cannot modify your own role.": "You cannot modify your own role.",
@@ -979,5 +979,14 @@
     "Europe": "Europe",
     "Americas": "Americas",
     "Asia & Pacific": "Asia & Pacific",
-    "Africa & Middle East": "Africa & Middle East"
+    "Africa & Middle East": "Africa & Middle East",
+
+    "Explanation for free contribution": "Explanation for free contribution",
+    "Optional text explaining the free contribution policy": "Optional text explaining the free contribution policy",
+    "Hide email on public pages": "Hide email on public pages",
+    "Hide phone number on public pages": "Hide phone number on public pages",
+
+    "Card view": "Card view",
+    "List view": "List view",
+    "More info": "More info"
 }

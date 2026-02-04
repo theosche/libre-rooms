@@ -79,7 +79,7 @@
                         <textarea
                             id="description"
                             name="description"
-                            rows="4"
+                            rows="6"
                         >{{ old('description', $room?->description) }}</textarea>
                         @error('description')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -334,6 +334,21 @@
                         </select>
                         <small class="text-gray-600">{{ __('If free contribution is selected, the following settings are used to calculate a suggested price') }}</small>
                         @error('price_mode')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-element" id="free-price-explanation-field" style="display: none;">
+                    <div class="form-field">
+                        <label for="free_price_explanation" class="form-element-title">{{ __('Explanation for free contribution') }}</label>
+                        <textarea
+                            id="free_price_explanation"
+                            name="free_price_explanation"
+                            rows="3"
+                        >{{ old('free_price_explanation', $room?->free_price_explanation ?? '') }}</textarea>
+                        <small class="text-gray-600">{{ __('Optional text explaining the free contribution policy') }}</small>
+                        @error('free_price_explanation')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
@@ -622,7 +637,7 @@
                         <label for="embed_calendar_mode" class="form-element-title">{{ __('Calendar integration mode') }}</label>
                         <select name="embed_calendar_mode" id="embed_calendar_mode">
                             <option value="disabled" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value ?? 'disabled') == 'disabled')>{{ __('Disabled') }}</option>
-                            <option value="enabled" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value) == 'enabled')>{{ __('Enabled (user form)') }}</option>
+                            <option value="enabled" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value) == 'enabled')>{{ __('Enabled (public form)') }}</option>
                             <option value="admin_only" @selected(old('embed_calendar_mode', $room?->embed_calendar_mode?->value) == 'admin_only')>{{ __('Admin only') }}</option>
                         </select>
                         <small class="text-gray-600">{{ __('Define whether a calendar view of the room should be visible directly in the reservation form.') }}</small>

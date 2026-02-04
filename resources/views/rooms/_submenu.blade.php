@@ -1,11 +1,11 @@
 @can('viewMine', App\Models\Room::class)
     <nav class="page-submenu">
         {{-- Navigation items --}}
-        <a href="{{ route('rooms.index', ['view' => 'available']) }}"
+        <a href="{{ route('rooms.index', ['view' => 'available', 'display' => request('display', 'cards')]) }}"
            class="page-submenu-item page-submenu-nav {{ request()->routeIs('rooms.index') && ($view ?? 'available') === 'available' ? 'active' : '' }}">
             {{ __('Available rooms') }}
         </a>
-        <a href="{{ route('rooms.index', ['view' => 'mine']) }}"
+        <a href="{{ route('rooms.index', ['view' => 'mine', 'display' => request('display', 'cards')]) }}"
            class="page-submenu-item page-submenu-nav {{ request()->routeIs('rooms.index') && ($view ?? '') === 'mine' ? 'active' : '' }}">
             {{ __('My rooms') }}
         </a>

@@ -34,6 +34,7 @@ class Room extends Model
         'active',
         'is_public',
         'price_mode',
+        'free_price_explanation',
         'price_short',
         'price_full_day',
         'max_hours_short',

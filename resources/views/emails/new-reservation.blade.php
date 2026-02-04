@@ -27,6 +27,10 @@
         @endforeach
     </ul>
 
+    <p>
+        <a href="{{ route('reservations.prebook.pdf', $reservation) }}" class="btn">{{ __('Download confirmation') }}</a>
+    </p>
+
     <p>{{ __('For any questions, feel free to contact us by replying to this email.') }}</p>
 
     <p>{{ __('Best regards,') }}</p>

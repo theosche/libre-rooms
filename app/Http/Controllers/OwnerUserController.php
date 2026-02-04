@@ -40,7 +40,7 @@ class OwnerUserController extends Controller
             'email' => ['required', 'email', 'exists:users,email'],
             'role' => ['required', 'string', 'in:' . implode(',', array_column(OwnerUserRoles::cases(), 'value'))],
         ], [
-            'email.exists' => __('No user found with this email address.'),
+            'email.exists' => __('No user found with this email.'),
         ]);
 
         // Check if user can add this role

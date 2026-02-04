@@ -6,9 +6,13 @@
 <div class="max-w-7xl mx-auto py-6">
     <div class="page-header">
         <h1 class="page-header-title">{{ $room->name }}</h1>
-        <p class="mt-2 text-sm text-gray-600">
-            {{ $room->owner->contact->display_name() }}
-        </p>
+        @if ($user?->isAdminOf($room->owner))
+            <a href="{{ route('owners.edit', $room->owner) }}">
+                <p class="mt-2 text-sm text-gray-600">{{ $room->owner->contact->display_name() }}</p>
+            </a>
+        @else
+            <p class="mt-2 text-sm text-gray-600">{{ $room->owner->contact->display_name() }}</p>
+        @endif
         <nav class="page-submenu">
             <a href="{{ route('rooms.index') }}"
                class="page-submenu-item page-submenu-nav">
@@ -216,14 +220,14 @@
                         <p class="text-sm font-medium mb-2 text-gray-900">{{ $room->owner->contact->display_name() }}</p>
                     @endif
 
-                    @if($room->owner->contact->email)
+                    @if($room->owner->contact->email && !$room->owner->hide_email)
                         <a href="mailto:{{ $room->owner->contact->email }}" class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
                             <i class='fa-regular fa-envelope'></i>
                             {{ $room->owner->contact->email }}
                         </a>
                     @endif
 
-                    @if($room->owner->contact->phone)
+                    @if($room->owner->contact->phone && !$room->owner->hide_phone)
                         <a href="tel:{{ $room->owner->contact->phone }}" class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
                             <x-icons.phone />
                             {{ $room->owner->contact->phone }}

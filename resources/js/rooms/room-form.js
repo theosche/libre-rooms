@@ -228,6 +228,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Other form functionality
     // ================================
 
+    // Free price explanation - visible only when price_mode is 'free'
+    const priceModeSelect = document.getElementById('price_mode');
+    const freePriceExplanationField = document.getElementById('free-price-explanation-field');
+
+    if (priceModeSelect && freePriceExplanationField) {
+        function toggleFreePriceExplanation() {
+            if (priceModeSelect.value === 'free') {
+                freePriceExplanationField.style.display = '';
+            } else {
+                freePriceExplanationField.style.display = 'none';
+            }
+        }
+
+        priceModeSelect.addEventListener('change', toggleFreePriceExplanation);
+        toggleFreePriceExplanation();
+    }
+
     // Max hours short - required if price_short is filled
     const priceShortInput = document.getElementById('price_short');
     const maxHoursShortInput = document.getElementById('max_hours_short');

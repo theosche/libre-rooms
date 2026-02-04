@@ -23,6 +23,8 @@ class Owner extends Model
         'slug',
         'website',
         'contact_id',
+        'hide_email',
+        'hide_phone',
         'invoice_due_mode',
         'invoice_due_days',
         'invoice_due_days_after_reminder',
@@ -55,6 +57,8 @@ class Owner extends Model
     ];
 
     protected $casts = [
+        'hide_email' => 'boolean',
+        'hide_phone' => 'boolean',
         'invoice_due_mode' => InvoiceDueModes::class,
         'payment_instructions' => 'array',
         'late_invoices_reminder' => LateInvoicesReminderFrequency::class,

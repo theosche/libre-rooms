@@ -1,5 +1,8 @@
  <div class="form-group" id="free-price-form-group">
     <h3 class="form-group-title">{{ __('Free pricing') }}</h3>
+    @if($room->free_price_explanation)
+        <p class="text-gray-600 mb-4">{{ $room->free_price_explanation }}</p>
+    @endif
     <fieldset class="form-element">
         <div class="form-field">
             <label for="free-price" class="form-element-title">{{ __('Set your own price for the reservation in :currency', ['currency' => $currency]) }} *</label>

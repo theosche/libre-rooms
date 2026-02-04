@@ -943,6 +943,24 @@ div.container-full-form {
     }
 }
 
+/* Tooltip positioned to the right */
+.tooltip-container.tooltip-right .tooltip-content {
+    bottom: auto;
+    left: 125%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.tooltip-container.tooltip-right .tooltip-content::after {
+    top: 50%;
+    left: auto;
+    right: 100%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-right-color: #1f2937;
+    border-top-color: transparent;
+}
+
 /* ================================
    Responsive Tables
    ================================ */

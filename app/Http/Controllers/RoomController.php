@@ -27,6 +27,7 @@ class RoomController extends Controller
     {
         $user = auth()->user();
         $view = $request->input('view', 'available'); // 'available' or 'mine'
+        $display = $request->input('display', 'cards'); // 'cards' or 'list'
 
         // Check if user can access "mine" view (must have moderator+ role on at least one owner)
         $canViewMine = $user && $user->can('viewMine', Room::class);
@@ -39,14 +40,14 @@ class RoomController extends Controller
             // "mine" view: rooms from owners where user has moderator+ role
             $manageableOwnerIds = $user->getOwnerIdsWithMinRole(OwnerUserRoles::MODERATOR);
 
-            $query = Room::with(['owner.contact', 'discounts', 'options'])
+            $query = Room::with(['owner.contact', 'discounts', 'options', 'images'])
                 ->whereIn('owner_id', $manageableOwnerIds);
 
             // Owners for filter: only those with moderator+ role
             $owners = Owner::with('contact')->whereIn('id', $manageableOwnerIds)->get();
         } else {
             // "available" view: all rooms accessible to the user (public + private with access)
-            $query = Room::with(['owner.contact', 'discounts', 'options'])
+            $query = Room::with(['owner.contact', 'discounts', 'options', 'images'])
                 ->where('active', true)
                 ->where(function ($q) use ($user) {
                     // Public rooms are always visible
@@ -99,6 +100,7 @@ class RoomController extends Controller
             'owners' => $owners,
             'user' => $user,
             'view' => $view,
+            'display' => $display,
         ]);
     }
 

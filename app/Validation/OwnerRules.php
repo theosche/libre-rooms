@@ -102,6 +102,8 @@ class OwnerRules
 
         $rules = [
             'contact_id' => $contactIdRules,
+            'hide_email' => ['boolean'],
+            'hide_phone' => ['boolean'],
             'slug' => [
                 'required',
                 'string',
