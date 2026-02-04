@@ -253,7 +253,6 @@ class RoomController extends Controller
                 $counter++;
             }
         }
-
         // Handle image removals first
         $this->handleImageRemovals($request, $room);
 

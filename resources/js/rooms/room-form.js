@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
             files.forEach(file => {
                 if (!file.type.startsWith('image/')) return;
 
-                const fileId = `new-${newFileCounter++}`;
+                const fileIndex = newFileCounter++;
+                const fileId = `new-${fileIndex}`;
                 const reader = new FileReader();
 
                 reader.onload = (event) => {
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
-                        <input type="hidden" name="image_order[]" value="new:${fileId}">
+                        <input type="hidden" name="image_order[]" value="new:${fileIndex}">
                     `;
 
                     imagesSortable.appendChild(div);
