@@ -88,7 +88,7 @@ class RoomPolicy
      */
     public function manageUsers(User $user, Room $room): bool
     {
-        return $user->hasOwnerRole($room->owner, OwnerUserRoles::MODERATOR);
+        return $user->canManageOwner($room->owner);
     }
 
     /**
@@ -97,9 +97,13 @@ class RoomPolicy
      */
     public function manageReservations(User $user, Room $room): bool
     {
-        return $user->hasOwnerRole($room->owner, OwnerUserRoles::MODERATOR);
+        return $user->canManageOwner($room->owner);
     }
 
+    public function manageUnavailabilities(User $user, Room $room): bool
+    {
+        return $user->canManageOwner($room->owner);
+    }
     /**
      * Determine whether the user can add any role to room users.
      * Admins can add any role, moderators can only add viewers.

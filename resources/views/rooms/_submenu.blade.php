@@ -27,11 +27,17 @@
                class="page-submenu-item page-submenu-secondary {{ request()->routeIs('custom-fields.*') ? 'active' : '' }}">
                 {{ __('Custom fields') }}
             </a>
+        @endcan
+        @if(auth()->user()->canManageAnyOwner())
+            @cannot('create', App\Models\Room::class)
+                <span class="page-submenu-separator"></span>
+            @endcannot
             <a href="{{ route('room-unavailabilities.index') }}"
                class="page-submenu-item page-submenu-secondary {{ request()->routeIs('room-unavailabilities.*') ? 'active' : '' }}">
                 {{ __('Unavailabilities') }}
             </a>
-
+        @endif
+        @can('create', App\Models\Room::class)
             {{-- Separator --}}
             <span class="page-submenu-separator"></span>
 
@@ -52,11 +58,12 @@
                 <a href="{{ route('custom-fields.create',['room_id' => $currentRoomId]) }}" class="page-submenu-item page-submenu-action">
                     + {{ __('Add field') }}
                 </a>
-            @elseif(request()->routeIs('room-unavailabilities.*'))
-                <a href="{{ route('room-unavailabilities.create',['room_id' => $currentRoomId]) }}" class="page-submenu-item page-submenu-action">
-                    + {{ __('Add unavailability') }}
-                </a>
             @endif
         @endcan
+        @if(request()->routeIs('room-unavailabilities.*') && auth()->user()->canManageAnyOwner())
+            <a href="{{ route('room-unavailabilities.create',['room_id' => $currentRoomId]) }}" class="page-submenu-item page-submenu-action">
+                + {{ __('Add unavailability') }}
+            </a>
+        @endif
     </nav>
 @endcan

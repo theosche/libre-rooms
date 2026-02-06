@@ -838,6 +838,7 @@
     "Go to page :page": "Go to page :page",
 
     "You must be an administrator of at least one owner to access this page.": "You must be an administrator of at least one owner to access this page.",
+    "You must have moderation rights for at least one owner to access this page.": "You must have moderation rights for at least one owner to access this page.",
     "You must be an administrator of at least one owner to create a custom field.": "You must be an administrator of at least one owner to create a custom field.",
     "You do not have administration rights for this owner.": "You do not have administration rights for this owner.",
     "You do not have administration rights for this custom field.": "You do not have administration rights for this custom field.",
@@ -1008,8 +1009,8 @@
     "Unavailability updated successfully.": "Unavailability updated successfully.",
     "Unavailability deleted successfully.": "Unavailability deleted successfully.",
     "Are you sure you want to delete this unavailability?": "Are you sure you want to delete this unavailability?",
-    "You must be an administrator of at least one owner to create an unavailability.": "You must be an administrator of at least one owner to create an unavailability.",
-    "You do not have administration rights for this unavailability.": "You do not have administration rights for this unavailability.",
+    "You must have moderation rights for at least one owner to create an unavailability.": "You must have moderation rights for at least one owner to create an unavailability.",
+    "You do not have moderation rights for this unavailability.": "You do not have moderation rights for this unavailability.",
     "No unavailabilities found": "No unavailabilities found",
     "Period": "Period",
     "Bookable days": "Bookable days",

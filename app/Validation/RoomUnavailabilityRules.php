@@ -3,6 +3,7 @@
 namespace App\Validation;
 
 use Illuminate\Validation\Rule;
+use App\Enums\OwnerUserRoles;
 
 class RoomUnavailabilityRules
 {
@@ -15,7 +16,7 @@ class RoomUnavailabilityRules
             $roomRule = Rule::exists('rooms', 'id');
         } else {
             // User must be admin of the room's owner
-            $ownerIds = $user->owners()->wherePivot('role', 'admin')->pluck('owners.id');
+            $ownerIds = $user->getOwnerIdsWithMinRole(OwnerUserRoles::MODERATOR);
             $roomRule = Rule::exists('rooms', 'id')->whereIn('owner_id', $ownerIds);
         }
 

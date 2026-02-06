@@ -38,6 +38,11 @@
                    class="page-submenu-item page-submenu-nav">
                     {{ __('Custom fields') }}
                 </a>
+            @endcan
+            @can('manageUnavailabilities', $room)
+                @cannot('update', $room)
+                    <span class="page-submenu-separator"></span>
+                @endcannot
                 <a href="{{ route('room-unavailabilities.index', ['room_id'=>$room->id]) }}"
                    class="page-submenu-item page-submenu-nav">
                     {{ __('Unavailabilities') }}

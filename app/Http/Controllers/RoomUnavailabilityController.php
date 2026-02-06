@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\RoomUnavailability;
 use App\Support\DateHelper;
 use App\Validation\RoomUnavailabilityRules;
+use App\Enums\OwnerUserRoles;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -20,16 +21,11 @@ class RoomUnavailabilityController extends Controller
     {
         $user = auth()->user();
 
-        if (! $user?->canAdminAnyOwner()) {
-            abort(403, __('You must be an administrator of at least one owner to access this page.'));
+        if (! $user?->canManageAnyOwner()) {
+            abort(403, __('You must have moderation rights for at least one owner to access this page.'));
         }
 
-        // Get owner IDs where user has admin rights
-        if ($user->is_global_admin) {
-            $ownerIds = Owner::pluck('id');
-        } else {
-            $ownerIds = $user->owners()->wherePivot('role', 'admin')->pluck('owners.id');
-        }
+        $ownerIds = $user->getOwnerIdsWithMinRole(OwnerUserRoles::MODERATOR);
 
         // Build query
         $query = RoomUnavailability::with(['room.owner.contact'])
@@ -66,16 +62,15 @@ class RoomUnavailabilityController extends Controller
     {
         $user = auth()->user();
 
-        // Check if user has admin rights for at least one owner
-        if (! $user?->canAdminAnyOwner()) {
-            abort(403, __('You must be an administrator of at least one owner to create an unavailability.'));
+        if (! $user?->canManageAnyOwner()) {
+            abort(403, __('You must have moderation rights for at least one owner to create an unavailability.'));
         }
 
         // Get rooms where user has admin rights
         if ($user->is_global_admin) {
             $rooms = Room::with('owner.contact')->orderBy('name', 'asc')->get();
         } else {
-            $ownerIds = $user->owners()->wherePivot('role', 'admin')->pluck('owners.id');
+            $ownerIds = $user->getOwnerIdsWithMinRole(OwnerUserRoles::MODERATOR);
             $rooms = Room::with('owner.contact')->whereIn('owner_id', $ownerIds)->orderBy('name', 'asc')->get();
         }
 
@@ -110,16 +105,15 @@ class RoomUnavailabilityController extends Controller
     {
         $user = auth()->user();
 
-        // Check if user has admin rights for this unavailability's room's owner
-        if (! $user->isAdminOf($roomUnavailability->room->owner)) {
-            abort(403, __('You do not have administration rights for this unavailability.'));
+        if (! $user->canManageOwner($roomUnavailability->room->owner)) {
+            abort(403, __('You do not have moderation rights for this unavailability.'));
         }
 
         // Get rooms where user has admin rights
         if ($user->is_global_admin) {
             $rooms = Room::with('owner.contact')->orderBy('name', 'asc')->get();
         } else {
-            $ownerIds = $user->owners()->wherePivot('role', 'admin')->pluck('owners.id');
+            $ownerIds = $user->getOwnerIdsWithMinRole(OwnerUserRoles::MODERATOR);
             $rooms = Room::with('owner.contact')->whereIn('owner_id', $ownerIds)->orderBy('name', 'asc')->get();
         }
 
@@ -157,9 +151,9 @@ class RoomUnavailabilityController extends Controller
         $user = auth()->user();
 
         // Check if user has admin rights for this unavailability's room's owner
-        if (! $user->isAdminOf($roomUnavailability->room->owner)) {
+        if (! $user->canManageOwner($roomUnavailability->room->owner)) {
             return redirect()->route('room-unavailabilities.index')
-                ->with('error', __('You do not have administration rights for this unavailability.'));
+                ->with('error', __('You do not have moderation rights for this unavailability.'));
         }
 
         $roomUnavailability->delete();

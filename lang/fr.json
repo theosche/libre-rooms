@@ -838,6 +838,7 @@
     "Go to page :page": "Aller à la page :page",
 
     "You must be an administrator of at least one owner to access this page.": "Vous devez être admin d'au moins un propriétaire pour accéder à cette page.",
+    "You must have moderation rights for at least one owner to access this page.": "Vous devez avoir les droits de modération pour au moins un propriétaire pour accéder à cette page.",
     "You must be an administrator of at least one owner to create a custom field.": "Vous devez être admin d'au moins un propriétaire pour créer un champ personnalisé.",
     "You do not have administration rights for this owner.": "Vous n'avez pas les droits d'administration pour ce propriétaire.",
     "You do not have administration rights for this custom field.": "Vous n'avez pas les droits d'administration pour ce champ personnalisé.",
@@ -1008,8 +1009,8 @@
     "Unavailability updated successfully.": "Indisponibilité mise à jour avec succès.",
     "Unavailability deleted successfully.": "Indisponibilité supprimée avec succès.",
     "Are you sure you want to delete this unavailability?": "Êtes-vous sûr·e de vouloir supprimer cette indisponibilité ?",
-    "You must be an administrator of at least one owner to create an unavailability.": "Vous devez être admin d'au moins un propriétaire pour créer une indisponibilité.",
-    "You do not have administration rights for this unavailability.": "Vous n'avez pas les droits d'administration pour cette indisponibilité.",
+    "You must have moderation rights for at least one owner to create an unavailability.": "Vous devez avoir les droits de modération pour au moins un propriétaire pour créer une indisponibilité.",
+    "You do not have moderation rights for this unavailability.": "Vous n'avez pas les droits de modération pour cette indisponibilité.",
     "No unavailabilities found": "Aucune indisponibilité trouvée",
     "Period": "Période",
     "Bookable days": "Jours réservables",
