@@ -136,9 +136,9 @@
                                     @endif
                                     <p class="text-orange-700">
                                         <span class="font-medium">{{ __('Until') }}:</span>
-                                        {{ $currentUnavailability->end->setTimezone($room->getTimezone())->format('H:i') }}
-                                        @if(!$currentUnavailability->end->setTimezone($room->getTimezone())->isToday())
-                                            ({{ $currentUnavailability->end->setTimezone($room->getTimezone())->format('d.m.Y') }})
+                                        {{ $currentUnavailability->endLocalTz()->format('H:i') }}
+                                        @if(!$currentUnavailability->endLocalTz()->isToday())
+                                            ({{ $currentUnavailability->endLocalTz()->format('d.m.Y') }})
                                         @endif
                                     </p>
                                 </div>

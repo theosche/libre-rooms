@@ -70,8 +70,8 @@ class AvailabilityService
         return $events->map(function (ReservationEvent $event) use ($timezone) {
             return [
                 'uid' => $event->uid,
-                'start' => $event->start->setTimezone($timezone),
-                'end' => $event->end->setTimezone($timezone),
+                'start' => $event->start->copy()->setTimezone($timezone),
+                'end' => $event->end->copy()->setTimezone($timezone),
                 'title' => $event->reservation->title,
                 'description' => $event->reservation->description,
                 'tenant' => $event->reservation->tenant->display_name(),

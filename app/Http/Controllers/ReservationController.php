@@ -42,8 +42,8 @@ class ReservationController extends Controller
                 'locale' => str_replace('_', '-', $room->owner->getLocale()),
             ],
             'unavailabilities' => $room->unavailabilities->map(fn ($u) => [
-                'start' => $u->start->setTimezone($timezone)->format('Y-m-d\TH:i'),
-                'end' => $u->end->setTimezone($timezone)->format('Y-m-d\TH:i'),
+                'start' => $u->start->copy()->setTimezone($timezone)->format('Y-m-d\TH:i'),
+                'end' => $u->end->copy()->setTimezone($timezone)->format('Y-m-d\TH:i'),
                 'title' => $u->title,
             ])->values(),
             'options' => $room->options->where('active', true)->map(fn ($o) => [

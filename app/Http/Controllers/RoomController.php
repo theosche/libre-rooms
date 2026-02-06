@@ -225,7 +225,6 @@ class RoomController extends Controller
         // 1. Check if currently occupied by a reservation (compare in UTC)
         $currentSlot = collect($busySlots)
             ->first(fn ($slot) => $slot['start'] <= $nowUtc && $slot['end'] > $nowUtc);
-
         if ($currentSlot) {
             $status = RoomCurrentStatus::OCCUPIED;
             // Find when room will be free again (next gap or end of current event)
@@ -373,7 +372,6 @@ class RoomController extends Controller
             // Check for unavailability at this time (DB is UTC)
             $nextUnavail = $room->unavailabilities
                 ->first(fn ($u) => $u->start <= $current && $u->end > $current);
-
             if ($nextUnavail) {
                 $current = $nextUnavail->end->copy();
 
