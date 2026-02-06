@@ -8,9 +8,9 @@ use App\Enums\ReservationStatus;
 use App\Enums\RoomCurrentStatus;
 use App\Models\Image;
 use App\Models\Owner;
-use App\Models\ReservationEvent;
 use App\Models\Room;
 use App\Models\SystemSettings;
+use App\Services\Availability\AvailabilityService;
 use App\Validation\RoomRules;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -199,7 +199,7 @@ class RoomController extends Controller
     /**
      * Display the current availability status of the room.
      */
-    public function available(Room $room): View
+    public function available(Room $room, AvailabilityService $availabilityService): View
     {
         // Check access
         if (! $room->isAccessibleBy(auth()->user())) {
@@ -211,27 +211,25 @@ class RoomController extends Controller
         $nowUtc = now('UTC');
         $nowLocal = $nowUtc->copy()->setTimezone($timezone);
 
+        // Load busy slots from AvailabilityService (handles both local DB and CalDAV)
+        // Request in UTC for comparisons
+        $busySlots = $availabilityService->loadBusySlots($room, 'UTC', $nowUtc->copy()->subDay(), $nowUtc->copy()->addWeeks(2));
+
         // Determine current status
         $status = RoomCurrentStatus::FREE;
-        $currentEvent = null;
+        $currentSlot = null;
         $currentUnavailability = null;
         $freeUntil = null;
         $freeFrom = null;
 
         // 1. Check if currently occupied by a reservation (compare in UTC)
-        $currentEvent = ReservationEvent::with(['reservation.tenant'])
-            ->whereHas('reservation', function ($q) use ($room) {
-                $q->where('room_id', $room->id)
-                    ->where('status', ReservationStatus::CONFIRMED);
-            })
-            ->where('start', '<=', $nowUtc)
-            ->where('end', '>', $nowUtc)
-            ->first();
+        $currentSlot = collect($busySlots)
+            ->first(fn ($slot) => $slot['start'] <= $nowUtc && $slot['end'] > $nowUtc);
 
-        if ($currentEvent) {
+        if ($currentSlot) {
             $status = RoomCurrentStatus::OCCUPIED;
             // Find when room will be free again (next gap or end of current event)
-            $freeFrom = $this->findNextFreeTime($room, $currentEvent->end, $timezone);
+            $freeFrom = $this->findNextFreeTime($room, $currentSlot['end']->copy(), $timezone, $busySlots);
         }
 
         // 2. Check if currently in an unavailability period (compare in UTC)
@@ -241,7 +239,7 @@ class RoomController extends Controller
 
             if ($currentUnavailability) {
                 $status = RoomCurrentStatus::UNAVAILABLE;
-                $freeFrom = $this->findNextFreeTime($room, $currentUnavailability->end, $timezone);
+                $freeFrom = $this->findNextFreeTime($room, $currentUnavailability->end->copy(), $timezone, $busySlots);
             }
         }
 
@@ -255,20 +253,20 @@ class RoomController extends Controller
 
         // 4. If free, find until when
         if ($status === RoomCurrentStatus::FREE) {
-            $freeUntil = $this->findFreeUntil($room, $nowUtc, $timezone);
+            $freeUntil = $this->findFreeUntil($room, $nowUtc, $timezone, $busySlots);
         }
 
         // Prepare event info based on calendar_view_mode
         $eventInfo = null;
-        if ($currentEvent && $room->calendar_view_mode !== CalendarViewModes::SLOT) {
+        if ($currentSlot && $room->calendar_view_mode !== CalendarViewModes::SLOT) {
             $eventInfo = [
-                'title' => $currentEvent->reservation->title,
-                'start' => $currentEvent->startLocalTz(),
-                'end' => $currentEvent->endLocalTz(),
+                'title' => $currentSlot['title'] ?? __('Occupied'),
+                'start' => $currentSlot['start']->copy()->setTimezone($timezone),
+                'end' => $currentSlot['end']->copy()->setTimezone($timezone),
             ];
             if ($room->calendar_view_mode === CalendarViewModes::FULL) {
-                $eventInfo['tenant'] = $currentEvent->reservation->tenant->display_name();
-                $eventInfo['description'] = $currentEvent->reservation->description;
+                $eventInfo['tenant'] = $currentSlot['tenant'] ?? null;
+                $eventInfo['description'] = $currentSlot['description'] ?? null;
             }
         }
 
@@ -282,7 +280,7 @@ class RoomController extends Controller
         return view('rooms.available', [
             'room' => $room,
             'status' => $status,
-            'currentEvent' => $currentEvent,
+            'currentSlot' => $currentSlot,
             'eventInfo' => $eventInfo,
             'currentUnavailability' => $currentUnavailability,
             'freeUntil' => $freeUntilLocal,
@@ -353,25 +351,21 @@ class RoomController extends Controller
 
     /**
      * Find the next free time after a given point.
-     * All comparisons with DB data are in UTC. Returns UTC.
+     * All comparisons are in UTC. Returns UTC.
      */
-    private function findNextFreeTime(Room $room, Carbon $fromUtc, string $timezone): Carbon
+    private function findNextFreeTime(Room $room, Carbon $fromUtc, string $timezone, array $busySlots): Carbon
     {
         $current = $fromUtc->copy();
+        $slotsCollection = collect($busySlots);
 
         // Check for consecutive events or unavailabilities
         for ($i = 0; $i < 100; $i++) { // Safety limit
-            // Check for event at this time (DB is UTC)
-            $nextEvent = ReservationEvent::whereHas('reservation', function ($q) use ($room) {
-                $q->where('room_id', $room->id)
-                    ->where('status', ReservationStatus::CONFIRMED);
-            })
-                ->where('start', '<=', $current)
-                ->where('end', '>', $current)
-                ->first();
+            // Check for busy slot at this time (slots are in UTC)
+            $overlappingSlot = $slotsCollection
+                ->first(fn ($slot) => $slot['start'] <= $current && $slot['end'] > $current);
 
-            if ($nextEvent) {
-                $current = $nextEvent->end->copy();
+            if ($overlappingSlot) {
+                $current = $overlappingSlot['end']->copy();
 
                 continue;
             }
@@ -406,23 +400,20 @@ class RoomController extends Controller
 
     /**
      * Find until when the room is free.
-     * All comparisons with DB data are in UTC. Returns UTC.
+     * All comparisons are in UTC. Returns UTC.
      */
-    private function findFreeUntil(Room $room, Carbon $fromUtc, string $timezone): ?Carbon
+    private function findFreeUntil(Room $room, Carbon $fromUtc, string $timezone, array $busySlots): ?Carbon
     {
         $limits = [];
 
-        // Next event (DB is UTC)
-        $nextEvent = ReservationEvent::whereHas('reservation', function ($q) use ($room) {
-            $q->where('room_id', $room->id)
-                ->where('status', ReservationStatus::CONFIRMED);
-        })
-            ->where('start', '>', $fromUtc)
-            ->orderBy('start')
+        // Next busy slot (slots are in UTC)
+        $nextSlot = collect($busySlots)
+            ->filter(fn ($slot) => $slot['start'] > $fromUtc)
+            ->sortBy(fn ($slot) => $slot['start'])
             ->first();
 
-        if ($nextEvent) {
-            $limits[] = $nextEvent->start;
+        if ($nextSlot) {
+            $limits[] = $nextSlot['start'];
         }
 
         // Next unavailability (DB is UTC)
@@ -462,7 +453,7 @@ class RoomController extends Controller
         if ($room->day_start_time || $room->day_end_time) {
             $info['hours'] = [
                 'start' => $room->day_start_time ? substr($room->day_start_time, 0, 5) : '00:00',
-                'end' => $room->day_end_time ? substr($room->day_end_time, 0, 5) : '24:00',
+                'end' => $room->day_end_time ? substr($room->day_end_time, 0, 5) : '00:00',
             ];
         }
 
