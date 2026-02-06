@@ -1,9 +1,9 @@
 <div class="form-group" id="events-form-group">
     <h3 class="form-group-title">{{ __('Reservation dates and times') }} *</h3>
-    @if($allowed_weekdays)
+    @if(! $room->openedEveryday())
         <div class="form-element flex justify-between">
             <dt class="text-gray-600">{{ __('Bookable days') }}</dt>
-            <dd class="text-gray-900 text-right">{{ implode(', ', $room->allowedWeekdayNames()) }}</dd>
+            <dd class="text-gray-900 text-right">{{ $room->allowed_weekdays ? implode(', ', $room->allowedWeekdayNames()) : __('None.days') }}</dd>
         </div>
     @endif
     @if($day_start_time || $day_end_time)

@@ -49,11 +49,11 @@ class RoomFactory extends Factory
             'reservation_advance_limit' => fake()->optional()->numberBetween(90, 700),
             'allowed_weekdays' => fake()->boolean(50)
                 ? collect(range(1, 7))->random(fake()->numberBetween(1, 7))->sort()->values()->toArray()
-                : null,
-            'day_start_time' => fn (array $attributes) => $attributes['allowed_weekdays']
+                : [1,2,3,4,5,6,7],
+            'day_start_time' => fake()->boolean(50)
                 ? sprintf('%02d:00', fake()->numberBetween(5, 9))
                 : null,
-            'day_end_time' => fn (array $attributes) => $attributes['allowed_weekdays']
+            'day_end_time' => fake()->boolean(50)
                 ? sprintf('%02d:00', fake()->numberBetween(20, 23))
                 : null,
             'use_special_discount' => fake()->boolean(30),

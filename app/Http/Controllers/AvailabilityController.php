@@ -110,17 +110,16 @@ class AvailabilityController
      */
     private function buildBusinessHours(Room $room): array|bool
     {
-        if (! $room->allowed_weekdays && ! $room->day_start_time && ! $room->day_end_time) {
+        if ($room->openedEveryday() && ! $room->day_start_time && ! $room->day_end_time) {
             return false; // No restrictions = no businessHours
         }
-
         return [
             // Convert ISO weekday (1-7, Mon-Sun) to FullCalendar format (0-6, Sun-Sat)
             'daysOfWeek' => $room->allowed_weekdays
                 ? array_map(fn ($d) => $d % 7, $room->allowed_weekdays) // 1→1, 2→2, ..., 7→0
-                : [0, 1, 2, 3, 4, 5, 6],
+                : [],
             'startTime' => $room->day_start_time ? substr($room->day_start_time, 0, 5) : '00:00',
-            'endTime' => $room->day_end_time ? substr($room->day_end_time, 0, 5) : '24:00',
+            'endTime' => $room->day_end_time ? substr($room->day_end_time, 0, 5) : '00:00',
         ];
     }
 }

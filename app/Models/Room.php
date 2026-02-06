@@ -79,6 +79,11 @@ class Room extends Model
         'allowed_weekdays' => 'array',
     ];
 
+    public function openedEveryday(): bool
+    {
+        return count($this->allowed_weekdays) === 7;
+    }
+
     public function getTimezone(): string
     {
         return app(SettingsService::class)->timezone(room: $this);

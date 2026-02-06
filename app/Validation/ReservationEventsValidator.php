@@ -101,7 +101,7 @@ class ReservationEventsValidator
             }
 
             // Weekday check - check ALL days between start and end (admin bypass)
-            if ($room->allowed_weekdays && ! $canManage) {
+            if (! $canManage) {
                 $current = $startInRoomTz->copy()->startOfDay();
                 $endDay = $endInRoomTz->copy()->startOfDay();
 

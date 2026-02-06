@@ -296,11 +296,9 @@ class RoomController extends Controller
     private function isOutsideBookableHours(Room $room, Carbon $timeInRoomTz): bool
     {
         // Check weekday
-        if ($room->allowed_weekdays) {
-            $dayOfWeek = $timeInRoomTz->dayOfWeekIso; // 1=Mon, 7=Sun
-            if (! in_array($dayOfWeek, $room->allowed_weekdays)) {
-                return true;
-            }
+        $dayOfWeek = $timeInRoomTz->dayOfWeekIso; // 1=Mon, 7=Sun
+        if (! in_array($dayOfWeek, $room->allowed_weekdays)) {
+            return true;
         }
 
         // Check time range
@@ -326,7 +324,7 @@ class RoomController extends Controller
 
         for ($i = 0; $i < $maxDays; $i++) {
             // Check if this day is allowed
-            if ($room->allowed_weekdays && ! in_array($current->dayOfWeekIso, $room->allowed_weekdays)) {
+            if (! in_array($current->dayOfWeekIso, $room->allowed_weekdays)) {
                 $current->addDay()->startOfDay();
 
                 continue;
@@ -443,8 +441,11 @@ class RoomController extends Controller
     {
         $info = [];
 
-        if ($room->allowed_weekdays) {
+        if (! $room->openedEveryday()) {
             $days = array_map(fn ($d) => $this->dayName($d), $room->allowed_weekdays);
+            if (empty($days)) {
+                $days = [__('None.days')];
+            }
             $info['days'] = $days;
         }
 

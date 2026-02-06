@@ -274,7 +274,7 @@
             @endif
 
             <!-- Booking rules -->
-            @if($room->reservation_cutoff_days || $room->reservation_advance_limit || $room->allowed_weekdays || $room->day_start_time || $room->day_end_time)
+            @if($room->reservation_cutoff_days || $room->reservation_advance_limit || !$room->openedEveryday() || $room->day_start_time || $room->day_end_time)
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Booking conditions') }}</h3>
                     <dl class="space-y-2 text-sm">
@@ -290,10 +290,10 @@
                                 <dd class="text-gray-900">{{ $room->reservation_advance_limit }} {{ __('days in advance') }}</dd>
                             </div>
                         @endif
-                        @if($room->allowed_weekdays)
+                        @if(!$room->openedEveryday())
                             <div class="flex justify-between">
                                 <dt class="text-gray-600">{{ __('Bookable days') }}</dt>
-                                <dd class="text-gray-900 text-right">{{ implode(', ', $room->allowedWeekdayNames()) }}</dd>
+                                <dd class="text-gray-900 text-right">{{ $room->allowed_weekdays ? implode(', ', $room->allowedWeekdayNames()) : __('None.days') }}</dd>
                             </div>
                         @endif
                         @if($room->day_start_time || $room->day_end_time)

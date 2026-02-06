@@ -206,15 +206,13 @@ function isNonBookable(ev) {
     }
 
     // Weekday check - check ALL days between start and end
-    if (settings.allowed_weekdays) {
-        let current = ev.start.startOf('day');
-        const endDay = ev.end.startOf('day');
+    let current = ev.start.startOf('day');
+    const endDay = ev.end.startOf('day');
 
-        while (current <= endDay) {
-            const day = String(current.weekday); // Luxon: 1=Mon, 7=Sun
-            if (!settings.allowed_weekdays.includes(day)) return true;
-            current = current.plus({ days: 1 });
-        }
+    while (current <= endDay) {
+        const day = String(current.weekday); // Luxon: 1=Mon, 7=Sun
+        if (!settings.allowed_weekdays.includes(day)) return true;
+        current = current.plus({ days: 1 });
     }
 
     // Unavailability check

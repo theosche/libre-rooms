@@ -19,6 +19,10 @@ class RoomRules
         if ($owner && ! $owner->caldavSettings()->valid()) {
             $request->merge(['external_slot_provider' => null]);
         }
+        if (! $request->has('allowed_weekdays')) {
+            $request->merge(['allowed_weekdays' => []]);
+        }
+
     }
 
     public static function rules(Request $request): array
@@ -91,7 +95,7 @@ class RoomRules
             'reservation_advance_limit' => ['nullable', 'integer', 'min:0'],
 
             // Booking rules
-            'allowed_weekdays' => ['nullable', 'array'],
+            'allowed_weekdays' => ['array'],
             'allowed_weekdays.*' => ['integer', 'between:1,7'],
             'day_start_time' => ['nullable', 'date_format:H:i'],
             'day_end_time' => ['nullable', 'date_format:H:i', 'after:day_start_time'],

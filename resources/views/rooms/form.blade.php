@@ -560,7 +560,6 @@
                                 </label>
                             @endforeach
                         </div>
-                        <small class="text-gray-600">{{ __('If none selected, all days are allowed.') }}</small>
                         @error('allowed_weekdays')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror

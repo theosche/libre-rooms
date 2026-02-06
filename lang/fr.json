@@ -1048,5 +1048,6 @@
     "Reason": "Raison",
     "Bookable days": "Jours réservables",
     "More info": "Plus d'infos",
-    "Book this room": "Réserver cette salle"
+    "Book this room": "Réserver cette salle",
+    "None.days": "Aucun jour"
 }
