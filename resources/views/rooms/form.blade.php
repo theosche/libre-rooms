@@ -568,9 +568,10 @@
                 </fieldset>
 
                 <fieldset class="form-element">
+                    <label class="form-element-title">{{ __('Reservable times - Please note that this will prevent multi-day events') }}</label>
                     <div class="form-element-row">
                         <div class="form-field">
-                            <label for="day_start_time" class="form-element-title">{{ __('Day start time') }}</label>
+                            <label for="day_start_time" class="text-sm text-gray-600 mb-4">{{ __('Day start time') }}</label>
                             <input
                                 type="time"
                                 id="day_start_time"
@@ -584,7 +585,7 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="day_end_time" class="form-element-title">{{ __('Day end time') }}</label>
+                            <label for="day_end_time" class="text-sm text-gray-600 mb-4">{{ __('Day end time') }}</label>
                             <input
                                 type="time"
                                 id="day_end_time"

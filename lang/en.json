@@ -1014,6 +1014,7 @@
     "No unavailabilities found": "No unavailabilities found",
     "Period": "Period",
     "Bookable days": "Bookable days",
+    "Reservable times - Please note that this will prevent multi-day events": "Reservable times - Please note that this will prevent multi-day events",
     "Start time": "Start time",
     "End time": "End time",
     "Allowed booking days": "Allowed booking days",

@@ -1014,6 +1014,7 @@
     "No unavailabilities found": "Aucune indisponibilité trouvée",
     "Period": "Période",
     "Bookable days": "Jours réservables",
+    "Reservable times - Please note that this will prevent multi-day events": "Horaires réservables - Attention, cela empêchera les événements multi-jours",
     "Start time": "Heure de début",
     "End time": "Heure de fin",
     "Allowed booking days": "Jours de réservation autorisés",
