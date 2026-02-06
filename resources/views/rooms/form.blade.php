@@ -477,7 +477,7 @@
                     <small class="text-gray-600">{{ __('Allows admins to grant special discounts on a case-by-case basis') }}</small>
                 </fieldset>
 
-                <fieldset class="form-element">
+                <fieldset class="form-element" id="donation-fieldset">
                     <div class="form-field">
                         <label class="flex items-center gap-2">
                             <input type="hidden" name="use_donation" value="0">
@@ -487,9 +487,10 @@
                                 value="1"
                                 @checked(old('use_donation', $room?->use_donation))
                             >
-                            <span>{{ __('Allow donations') }}</span>
+                            <span>{{ __('Enable donations') }}</span>
                         </label>
                     </div>
+                    <small class="text-gray-600">{{ __('Display an optional field in the booking form to add a donation') }}</small>
                 </fieldset>
             </div>
 

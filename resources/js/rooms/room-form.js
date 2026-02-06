@@ -229,20 +229,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // ================================
 
     // Free price explanation - visible only when price_mode is 'free'
+    // Also hide "use_donation" checkbox in this case
     const priceModeSelect = document.getElementById('price_mode');
     const freePriceExplanationField = document.getElementById('free-price-explanation-field');
+    const donationFieldset = document.getElementById('donation-fieldset');
 
-    if (priceModeSelect && freePriceExplanationField) {
-        function toggleFreePriceExplanation() {
+    if (priceModeSelect && donationFieldset && freePriceExplanationField) {
+        function toggleFreePrice() {
             if (priceModeSelect.value === 'free') {
                 freePriceExplanationField.style.display = '';
+                donationFieldset.style.display = 'none';
             } else {
                 freePriceExplanationField.style.display = 'none';
+                donationFieldset.style.display = '';
             }
         }
 
-        priceModeSelect.addEventListener('change', toggleFreePriceExplanation);
-        toggleFreePriceExplanation();
+        priceModeSelect.addEventListener('change', toggleFreePrice);
+        toggleFreePrice();
     }
 
     // Max hours short - required if price_short is filled
