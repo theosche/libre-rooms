@@ -839,6 +839,7 @@ div.container-full-form {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    width: fit-content;
 }
 
 .contact-info-icons a {
