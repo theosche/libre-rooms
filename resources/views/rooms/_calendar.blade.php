@@ -107,8 +107,7 @@
                     await new Promise(resolve => setTimeout(resolve, 100));
                 }
                 const data = window.calendarEventsData;
-                // Handle both old format (array) and new format (object)
-                calendarEvents = data.events || data;
+                calendarEvents = data.events;
                 unavailabilities = data.unavailabilities || [];
                 businessHours = data.businessHours || false;
             } else {
@@ -149,6 +148,13 @@
                 // Use fetched events + unavailabilities as background events
                 events: [...calendarEvents, ...unavailabilities],
 
+                eventClick: function(info) {
+                    info.jsEvent.preventDefault(); // don't let the browser navigate
+
+                    if (info.event.url) {
+                        window.open(info.event.url);
+                    }
+                },
                 // Business hours from room configuration
                 businessHours: businessHours,
 

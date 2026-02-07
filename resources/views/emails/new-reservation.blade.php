@@ -28,7 +28,7 @@
     </ul>
 
     <p>
-        <a href="{{ route('reservations.prebook.pdf', $reservation) }}" class="btn">{{ __('Download confirmation') }}</a>
+        <a href="{{ route('reservations.prebook.pdf', $reservation->hash) }}" class="btn">{{ __('Download confirmation') }}</a>
     </p>
 
     <p>{{ __('For any questions, feel free to contact us by replying to this email.') }}</p>

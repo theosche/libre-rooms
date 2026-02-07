@@ -98,4 +98,9 @@ class Reservation extends Model
         return (in_array($this->status, [ReservationStatus::PENDING, ReservationStatus::CANCELLED])
                 && !$this->isPaid());
     }
+
+    public function url(): string
+    {
+
+    }
 }

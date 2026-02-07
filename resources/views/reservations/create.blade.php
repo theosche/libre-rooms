@@ -55,7 +55,7 @@
         <div class="container-full-form">
             <div class="form-header">
                 <h1 class="form-title">{{ $isCreate ? __('New reservation') : __('Edit reservation') }}</h1>
-                <p class="form-subtitle">{{ $room->name }}</p>
+                <a href="{{ route('rooms.show', $room) }}"><p class="form-subtitle">{{ $room->name }}</p></a>
             </div>
             <form method="POST" class="reservation-form styled-form"
                   action="{{$isCreate ? route('reservations.store', $room) : ($isEdit ? route('reservations.update', $reservation) : "")}}">

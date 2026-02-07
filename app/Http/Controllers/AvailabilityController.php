@@ -11,22 +11,25 @@ class AvailabilityController
     public function show(Room $room, AvailabilityService $service)
     {
         $user = auth()->user();
-        $isAdmin = $user && ($user->is_global_admin || $user->isAdminOf($room->owner));
         $timezone = $room->getTimezone();
 
         // Determine view mode: admin always sees FULL
-        $viewMode = $isAdmin ? CalendarViewModes::FULL : $room->calendar_view_mode;
+        $canManage = $user?->canManageReservationsFor($room);
+        $viewMode = $canManage ? CalendarViewModes::FULL : $room->calendar_view_mode;
 
         // Load all busy slots (service returns all information)
         $busySlots = $service->loadBusySlots($room, $timezone);
 
         // Format events based on view mode
-        $events = array_map(function ($slot) use ($viewMode) {
+        $events = array_map(function ($slot) use ($viewMode, $canManage) {
             $event = [
                 'start' => $slot['start']->format('Y-m-d\TH:i'),
                 'end' => $slot['end']->format('Y-m-d\TH:i'),
                 'uid' => $slot['uid'],
             ];
+            if ($canManage) {
+                $event['url'] = $slot['url'];
+            }
 
             // Add title and description based on view mode
             switch ($viewMode->value) {

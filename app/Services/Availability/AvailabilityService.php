@@ -37,20 +37,31 @@ class AvailabilityService
 
         $parser = new IcalParser;
         $parser->parseString($fullIcs);
-        $busySlots = array_map(function ($e) use ($timezone) {
-            return [
+        $icalEvents = (array) $parser->getEvents();
+
+        // Restore original timezone
+        date_default_timezone_set($originalTimezone);
+
+        // Find which UIDs correspond to reservation events in one query
+        $uids = array_filter(array_column($icalEvents, 'UID'));
+        $uidToReservationHash = ReservationEvent::whereIn('uid', $uids)
+            ->pluck('hash', 'uid');
+
+        $busySlots = array_map(function ($e) use ($timezone, $uidToReservationHash) {
+            $slot = [
                 'start' => Carbon::instance($e['DTSTART'])->setTimezone(new DateTimeZone($timezone)),
                 'end' => Carbon::instance($e['DTEND'])->setTimezone(new DateTimeZone($timezone)),
                 'uid' => $e['UID'],
                 'title' => $e['SUMMARY'] ?? null,
                 'description' => $e['DESCRIPTION'] ?? null,
             ];
-        },
-            (array) ($parser->getEvents())
-        );
 
-        // Restore original timezone
-        date_default_timezone_set($originalTimezone);
+            if (isset($uidToReservationHash[$e['UID']])) {
+                $slot['url'] = route('reservations.prebook.pdf', $uidToReservationHash[$e['UID']]);
+            }
+
+            return $slot;
+        }, $icalEvents);
 
         return $busySlots;
     }
@@ -82,6 +93,7 @@ class AvailabilityService
                 'title' => $event->reservation->title,
                 'description' => $event->reservation->description,
                 'tenant' => $event->reservation->tenant->display_name(),
+                'url' => route('reservations.prebook.pdf', $event->reservation->hash)
             ];
         })->toArray();
     }
