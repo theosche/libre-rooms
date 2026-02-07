@@ -47,12 +47,5 @@ class AppServiceProvider extends ServiceProvider
             // Use our custom OIDC provider instead of the outdated package
             $event->extendSocialite('nextcloud', \App\Services\Auth\OidcProvider::class);
         });
-
-        // Force HTTPS URLs when:
-        // 1. APP_URL explicitly uses https, OR
-        // 2. Current request is secure (user accessed via HTTPS, even before APP_URL is configured)
-        if (str_starts_with(config('app.url') ?? '', 'https://') || request()->secure() || request()->server('HTTP_X_FORWARDED_PROTO') === 'https') {
-            URL::forceScheme('https');
-        }
     }
 }

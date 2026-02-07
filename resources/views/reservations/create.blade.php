@@ -75,11 +75,7 @@
         {{-- 1. Contact --}}
         @include('reservations.partials.contact',['contacts'=>$contacts,'tenant'=>$reservation?->tenant])
 
-        {{-- 2. Custom fields --}}
-        @include('reservations.partials.custom-fields',['customFields' => $room->customFields->where('active', true),
-                                                        'customFieldValues' => $reservation?->customFieldValues])
-
-        {{-- 3. Discounts --}}
+        {{-- 2. Discounts --}}
         @include('reservations.partials.discounts',[
             'discounts' => $room->discounts->where('active', true),
             'enabledDiscounts' => $enabledDiscounts,
@@ -87,13 +83,17 @@
             'owner' => $room->owner,
             ])
 
-        {{-- 4. Event infos --}}
+        {{-- 3. Event infos --}}
         @include('reservations.partials.event-info',[
             'title' => $reservation?->title,
             'description' => $reservation?->description,
             ])
 
-        {{-- 4.5. Calendar --}}
+        {{-- 4. Custom fields --}}
+        @include('reservations.partials.custom-fields',['customFields' => $room->customFields->where('active', true),
+                                                            'customFieldValues' => $reservation?->customFieldValues])
+
+            {{-- 5. Calendar --}}
         @if($room->embed_calendar_mode === App\Enums\EmbedCalendarModes::ADMIN_ONLY && $isAdmin ||
             $room->embed_calendar_mode === App\Enums\EmbedCalendarModes::ENABLED)
             <div class="form-group">
@@ -106,7 +106,7 @@
             </div>
         @endif
 
-        {{-- 5. Events --}}
+        {{-- 6. Events --}}
         @include('reservations.partials.events', [
             'availableOptions' => $room->options->where('active',true),
             'events' => $events,
@@ -116,7 +116,7 @@
             'day_end_time' => $room->day_end_time,
             ])
 
-        {{-- 6. Donation --}}
+        {{-- 7. Donation --}}
         @if ($room->use_donation && !($room->price_mode == App\Enums\PriceModes::FREE))
             @include('reservations.partials.donation',[
             'reservationDonation' => $reservation?->donation,
@@ -124,7 +124,7 @@
             ])
         @endif
 
-        {{-- 7. Special discount --}}
+        {{-- 8. Special discount --}}
         @if ($room->use_special_discount && $isAdmin && !($room->price_mode == App\Enums\PriceModes::FREE))
             @include('reservations.partials.special-discount',[
             'specialDiscount' => $reservation?->special_discount,
@@ -132,7 +132,7 @@
             ])
         @endif
 
-        {{-- 8. Price summary --}}
+        {{-- 9. Price summary --}}
         @include('reservations.partials.price-summary', [
             'discounts' => $room->discounts->where('active', true),
             'reservationDiscounts' => $reservation?->discounts->modelKeys() ?? [],
@@ -142,7 +142,7 @@
             'owner' => $room->owner,
             ])
 
-        {{-- 9. Free price --}}
+        {{-- 10. Free price --}}
         @if ($room->price_mode == App\Enums\PriceModes::FREE)
             @include('reservations.partials.free-price',[
             'freePrice' => $reservation?->donation,
@@ -150,14 +150,14 @@
             ])
         @endif
 
-        {{-- 10. Charter --}}
+        {{-- 11. Charter --}}
         @include('reservations.partials.charter',[
         'charter_mode' => $room->charter_mode,
         'charter_str' => $room->charter_str,
         'isCreate' => $isCreate,
         ])
 
-        {{-- 11. Custom message --}}
+        {{-- 12. Custom message --}}
         @if ($isAdmin)
             @include('reservations.partials.custom-message', ['customMessage' => $reservation?->custom_message])
         @endif
